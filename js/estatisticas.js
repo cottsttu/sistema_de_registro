@@ -22,6 +22,41 @@
     window.OCORRENCIAS_FILTRADAS = []; 
     window.AGENTES_FILTRADOS = []; 
 
+    async function carregarImagemPdf(caminho) {
+        if (window.STTU_EMBLEMA_DATA_URL) return window.STTU_EMBLEMA_DATA_URL;
+        const url = new URL(caminho, window.location.href).href;
+        return await new Promise(async (resolve, reject) => {
+            const timeoutId = setTimeout(() => reject(new Error("Tempo excedido ao carregar emblema.")), 1500);
+            try {
+                const resposta = await fetch(url, { cache: "force-cache" });
+                if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
+                const blob = await resposta.blob();
+                const reader = new FileReader();
+                reader.onload = () => {
+                    clearTimeout(timeoutId);
+                    resolve(reader.result);
+                };
+                reader.onerror = () => {
+                    clearTimeout(timeoutId);
+                    reject(reader.error || new Error("Falha ao ler emblema."));
+                };
+                reader.readAsDataURL(blob);
+            } catch (error) {
+                clearTimeout(timeoutId);
+                reject(error);
+            }
+        });
+    }
+
+    async function adicionarEmblemaPdf(doc, x = 14, y = 8, largura = 22, altura = 22) {
+        try {
+            const emblema = await carregarImagemPdf("src/emblemasttu.jpeg");
+            doc.addImage(emblema, "JPEG", x, y, largura, altura);
+        } catch (error) {
+            console.error("Erro ao inserir o emblema no PDF:", error);
+        }
+    }
+
     function normalizarHora(valor) {
         const texto = String(valor || "").trim();
         const match = texto.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/);
@@ -83,6 +118,8 @@
                 
                 if (docSnap.exists()) {
                     const dados = docSnap.data();
+                    const nomeDisplay = document.getElementById('nomeUsuarioDisplay');
+                    if (nomeDisplay) nomeDisplay.innerText = "OLÁ, " + (dados.nome || "Usuário");
                     const isVisualizador = (dados.cargo === 'visualizador' || dados.nivel_acesso === 'leitura') && dados.cargo !== 'admin';
 
                     if (isVisualizador) {
@@ -95,9 +132,9 @@
                     const resetarTimer = () => {
                         clearTimeout(tempoInatividade);
                         tempoInatividade = setTimeout(() => {
-                            alert("Sessão encerrada.");
+                            alert("Sessão encerrada por inatividade (15min).");
                             signOut(auth).then(() => window.location.href = "login.html");
-                        }, 30 * 60 * 1000);
+                        }, 15 * 60 * 1000);
                     };
                     window.onload = resetarTimer; document.onmousemove = resetarTimer; document.onclick = resetarTimer;
                     
@@ -313,16 +350,17 @@
     }
 
     // --- FUNÇÃO: GERAR PDF DO KPI CLICADO ---
-    window.baixarPdfKpi = (kpiKey, kpiLabel) => {
+    window.baixarPdfKpi = async (kpiKey, kpiLabel) => {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF('l', 'mm', 'a4');
+        await adicionarEmblemaPdf(doc);
         
         doc.setFontSize(14);
         doc.setFont("helvetica", "bold");
-        doc.text(`Relatório Analítico: ${kpiLabel}`, 14, 20);
+        doc.text(`Relatório Analítico: ${kpiLabel}`, doc.internal.pageSize.width / 2, 20, { align: "center" });
         doc.setFontSize(10);
         doc.setFont("helvetica", "normal");
-        doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')}`, 14, 26);
+        doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')}`, doc.internal.pageSize.width / 2, 26, { align: "center" });
         
         let cabecalho = [];
         let corpo = [];
@@ -381,7 +419,7 @@
         }
         
         doc.autoTable({
-            startY: 32,
+            startY: 38,
             head: cabecalho,
             body: corpo,
             theme: 'grid',
@@ -394,7 +432,7 @@
     };
 
     // --- NOVA FUNÇÃO: BAIXAR PDF CONDUTORES ---
-    window.baixarPdfCondutores = () => {
+    window.baixarPdfCondutores = async () => {
         const tbody = document.getElementById('tbodyCondutores');
         if (tbody.rows.length === 0 || tbody.innerText.includes("Nenhum condutor")) {
             alert("Não há dados de condutores para exportar.");
@@ -403,6 +441,7 @@
 
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF('p', 'mm', 'a4');
+        await adicionarEmblemaPdf(doc);
 
         doc.setFontSize(14);
         doc.setFont("helvetica", "bold");
@@ -481,12 +520,13 @@
     }
 
     // --- FUNÇÃO PARA GERAR O PDF INDIVIDUAL ---
-    window.gerarPdfOcorrencia = (index) => {
+    window.gerarPdfOcorrencia = async (index) => {
         const o = window.OCORRENCIAS_FILTRADAS[index];
         if (!o) return;
 
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
+        await adicionarEmblemaPdf(doc);
         
         doc.setFontSize(16);
         doc.setFont("helvetica", "bold");

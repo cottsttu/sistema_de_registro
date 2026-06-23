@@ -27,3 +27,20 @@
 .inline-auditoria-3 { width: 200px; }
 .inline-auditoria-4 { width: 150px; }
 
+body {
+    margin: 0 !important;
+    padding: 86px 20px 20px !important;
+}
+
+.header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 990 !important;
+    min-height: 66px !important;
+    box-sizing: border-box !important;
+    border-radius: 0 !important;
+    padding: 12px 20px !important;
+}
+

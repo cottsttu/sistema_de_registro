@@ -1,6 +1,6 @@
 ﻿async function iniciarObservacoes() {
     const {initializeApp} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js");
-    const {getFirestore, collection, addDoc, query, onSnapshot, orderBy, updateDoc, doc, serverTimestamp, getDoc, where, getDocs} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
+    const {getFirestore, collection, addDoc, query, onSnapshot, orderBy, updateDoc, deleteDoc, doc, serverTimestamp, getDoc, where, getDocs} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
     const {getAuth, onAuthStateChanged, signOut} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js");
 
     const firebaseConfig = {
@@ -17,28 +17,176 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const agentesDB = ["ADRIANA GOMES DA SILVA - 43.071-4", "ADRIANO ANDRÉ GUEDES COSTA - 43.079-0", "ADRIANO NASCIMENTO DA FONSECA - 49.991-9", "AFRÂNIO MEDEIROS DA COSTA - 43.151-6", "AGRICIO BELCHIOR BANDEIRA NETO - 43.127-3", "AILTON ANDRADE - 62.095-5", "ALCINEIDE JUSTO SIQUEIRA - 62.100-5", "ALDREY LUIZ MORAIS DA SILVA - 62.549-3", "ALDRIN MAGNO DANTAS SIQUEIRA - 43.080-3", "ALESSANDRA DORA DA SILVA COSTA - 43.199-1", "ALEX SERAFIM DA SILVA - 15.231-5", "ALEXANDRA BARROS DO NASCIMENTO - 49.953-6", "ALEXANDRE DE SOUZA - 13.174-1", "ALEXANDRE MAGNO FREITAS COSMO - 61.947-7", "ALEXSANDRO NASCIMENTO BARBOSA - 43.072-2", "ALYENE PATRICIA CRUZ BRITO ALVES - 64.545-0", "ALISSON EMANOEL DE OLIVEIRA FAGUNDES - 49.995-1", "ALLAN ARAÚJO DE MEDEIROS - 43.073-1", "ANA MARIA DA SILVA ALVES - 13.141-5", "ANDERSON RODRIGO DO NASCIMENTO - 63.802-1", "ANDRE CORCINO DE LIMA FILHO - 00.387-5", "ANDREA CASTRO GALVÃO - 62.097-1", "ANDREIA CARLA SILVA FONSECA E SOUZA - 14.071-6", "ANDREZA CABRAL CÂMARA NUNES - 61.710-5", "ANNE CAROLINE MACEDO DE ARAÚJO - 60.233-7", "ANTÃO LOPES DE ARAÚJO FILHO - 43.100-1", "ANTONIO CLEMENTINO DA ROCHA - 13.632-8", "ANTONIO GUILHERME DOS SANTOS - 14.206-9", "ANTONIO SARMENTO RODRIGUES FILHO - 13.634-4", "BARBARA KALYANA DOS SANTOS GOMES - 43.102-8", "CARLOS EUBER DE FREITAS NEVES - 43.077-3", "CARLOS EUGÊNIO BARBOSA DE OLIVEIRA - 00.282-8", "CARLOS VALENTIM ALVES - 13.140-7", "CARLYLE CÂMARA DOS SANTOS - 43.150-8", "CARMOZINA REGIA DE MELO DANTAS - 43.084-6", "CAROLINA DE CÁSSIA DEFENTE - 43.101-0", "CASSIO CLAY PEREIRA - 14.190-9", "CASTRICIANO BRAZ DOS SANTOS - 13.593-3", "CHIARA LUCIA DE GUMÃO GONÇALVES COSTA - 43.096-0", "CLAUDIA JACQUELINE GALVÃO SOUZA - 14.937-3", "CLEIDE MARIA DOS SANTOS SILVA - 13.614-0", "CLEONEIDE CORREIA RAMALHO RIBEIRO - 13.609-3", "CRISTIANE DE MACEDO E SILVA - 62.873-5", "DANIEL ALBURQUERQUE EMERENCIANO GONÇALVES - 43.090-1", "DANIELLE PEREIRA DE OLIVEIRA - 60.072-5", "DANILSON BENTES MARINHO - 13.116-4", "DAVI FIRMINO DE LIMA - 14.953-5", "DENÍLSON ARAÚJO DA COSTA - 60.090-3", "DIONISIO CARDOSO DA COSTA - 13.659-0", "DANILO CLAUDIO LIRA DOS SANTOS - 72.245-7", "EDÍLSON FERREIRA DOS SANTOS - 00.417-1", "EDILSON OLIVEIRA DA SILVA - 13.147-4", "EDINALVA DUARTE LEAL DE MEDEIROS - 00.463-4", "EDINÁSIO COSTA SOARES - 49.986-2", "EDJA DE PAULA MAIA - 45.570-9", "EDSON RAIMUNDO DA SILVA - 13.463-5", "EDVALDO MANOEL DA SILVA - 00.465-1", "EDVALDO SOARES DA SILVA - 09.325-4", "ELIZABETE RANYELA MORAIS DE MOURA - 43.198-2", "ERNESTO MORAIS VIANA - 14.930-6", "EVALDO FELIX FERREIRA - 00.518-5", "EVERALDO ALEXANDRE FREIRE - 14.043-1", "FERNANDA FREITAS DE HOLANDA - 60.066-1", "FRANCISCO GILSON LEONIDAS DA SILVA - 13.679-4", "FRANZ BIAGGIO FULCO GAAG - 65.247-4", "GENALDO AZEVEDO TRINDADE - 43.086-2", "GILDIBERTO DE SOUZA ALVES - 08.646-1", "GILMAR GOMES DO NASCIMENTO - 06.726-1", "GUTEMBERG PEREIRA - 08.015-2", "HAILSON CABRAL DO NASCIMENTO - 00.375-1", "HARLLEY CAMPOS MARQUES - 65.420-5", "HEITOR RODRIGUES DE LIMA - 43.097-8", "HEMERSON MELO DA SILVA - 49.952-8", "HERANDY DE ARAÚJO CABRAL - 49.950-1", "HERQUILES LIMA DOS SANTOS - 43.149-4", "HEWERTON MOURA DA SILVA - 43.098-6", "ISABELA SILVA NICÁCIO DE BRITO - 60.234-5", "ISRAEL FERREIRA PEREIRA - 13.110-5", "IVAN DE CARVALHO MEDEIROS - 00.431-6", "IVES SILVA DE SOUZA - 62.151-0", "JAIR JEFFERSON DE CARVALHO - 13.896-7", "JARDEL BEZERRA DE ANDRADE - 62.189-7", "JARDS MEDEIROS DE OLIVEIRA - 62.826-3", "JATSON FRANCISCO DA SILVA BANDEIRA - 13.727-8", "JEFFERSON STANLEY DA SILVA - 62.919-7", "JOÃO BATISTA MONTEIRO DE AQUINO - 00.482-1", "JOÃO BATISTA ROCHA FILHO - 49.994-3", "JOÃO BATISTA VARELA BARCA - 15.710-4", "JOÃO CLAUDIO OLIVEIRA DE FARIAS - 00.383-2", "JOÃO FERREIRA - 06.644-3", "JOÃO MARIA ALMEIDA DE MOURA - 43.070-6", "JOÃO MARIA MACEDO ROCHA - 43.201-6", "JOÃO PAULO DE OLIVEIRA - 43.082-0", "JOÃO WILLAMS DA SILVA - 62.253-2", "JONAS CRISTINO DA SILVA - 14.931-4", "JORGE LUIZ BARROS DO NASCIMENTO - 62.431-4", "JORGE LUIZ SIQUEIRA DE OLIVEIRA - 62.191-9", "JOSÉ EUDES BEZERRA - 49.985-4", "JOSÉ ALBERTO FREIRE DA COSTA - 42.766-7", "JOSE ALVES DE SOUZA NETO - 00.544-4", "JOSE AUTEMAR RICARDO - 00.475-8", "JOSE DINIZ RAMOS - 00.575-4", "JOSE EBER DA SILVA - 13.105-9", "JOSÉ GONÇALVES MANGABEIRA DE MEDEIROS - 43.083-8", "JOSÉ RICARDO GOMES CAVALCANTE - 13.102-4", "JOSE ROBERTO DA SILVA DE OLIVEIRA - 14.922-5", "JOSÉ ROOSEVELT MEDEIROS JÚNIOR - 62.416-1", "JOSEMAR DA SILVA DAMASCENO - 60.068-7", "JOSEMAR TAVARES CÂMARA JUNIOR - 43.152-4", "JOSENILSON TEIXEIRA DE SOUZA - 00.386-7", "KASTEEN CARLOS DE AQUINO E SILVA - 43.076-5", "KLEBER SILVESTRE LUSTOSA - 49.825-4", "LAILTON RIBEIRO DA COSTA - 43.078-1", "LEONARDO BATISTA DE SOUZA SILVA - 64.542-7", "LEONARDO DA SILVEIRA LUCENA - 43.122-2", "MADSON LIMA CAVALCANTI DE OLIVEIRA - 49.989-7", "MANOEL NOBREGA DE OLIVEIRA - 13.758-8", "MARA LUCIA BARROS DE SOUZA - 70.665-5", "MARCELO BATISTA DE ANDRADE - 61.952-3", "MARCELO FRANÇA DA SILVA - 60.073-3", "MARCELO ZAERDSON LINS MEDEIROS - 62.184-6", "MARCILIO DE OLIVEIRA RODRIGUES - 49.951-0", "MÁRCIO JOSÉ DA SILVA - 68.159-8", "MARCOS ANTONIO DE OLIVEIRA - 07.326-1", "MARIA DE LOURDES DA SILVA FILHA - 43.200-8", "MARIA DO CARMO DA SILVA - 00.571-1", "MARIA DO SOCORRO LIMA MARTINS - 14.070-8", "MARIA DO SOCORRO SILVA DE ANDRADE - 14.114-3", "MARIA GORETE DUTRA DE OLIVEIRA - 13.988-2", "MARIA JANEIDE BEZERRA DA SILVA - 00.536-3", "MARIA SANTANA BORGES DA SILVA - 00.561-4", "MARIO JOSE DA SILVA LEMOS - 14.944-6", "MARISA GILVANEIDE BERTO - 00.538-0", "MARYANE CRISTINA LOPES PEREIRA - 43.112-5", "MAXIMIANO CAPIM DE MIRANDA - 13.462-7", "MAXWELL FERNANDES DA SILVA - 13.136-9", "MIGUEL ÂNGELO DE SANTANA - 62.092-1", "MOISES PEREIRA DE ARAUJO - 08.229-5", "NADJANIA MARIA DAMASCENO VALLE - 62.368-7", "NAOMI SUASSUNA DOS SANTOS - 60.237-0", "NEUZELIDES PRISCILA SILVA ANDRADE - 49.949-8", "NEWDENBERG FERREIRA GALVÃO - 43.081-1", "NEWTON DE SOUZA PEREIRA FILHO - 60.064-4", "NUBIA SILENE DA SILVA COSTA - 14.109-7", "PATRÍCIA CRISTINA CAVALCANTE - 45.990-9", "RAIMUNDO NONATO DE MEDEIROS NETO - 00.249-6", "RAPHAELLE CAVALCANTE R. DE ARAUJO - 62.149-8", "RECIO RONALDO ANDRADE DE PAIVA - 09.532-0", "REGINA VICÊNCIA CRISPIM - 62.250-8", "RICARDO SERGIO GOMES DA SILVA - 13.477-5", "RITA DE CÁSSIA SILVA - 49.992-7", "ROBSON LUIZ DE AZEVEDO - 00.184-8", "RODRIGO COSTA - 43.087-1", "ROGELIO FERNANDES DE MELO - 13.095-8", "RONALDO JORGE DA SILVA - 13.096-6", "RONALDO MARINHO DE SOUZA - 62.825-5", "RONALDO TEIXEIRA DE ARAÚJO - 62.257-5", "ROSEMBERG PEREIRA - 00.137-6", "SANDRA DA SILVA BEZERRIL BACELAR - 61.712-1", "SARAH POLYANA DIAS DOS SANTOS - 43.154-1", "SEVERINA SOARES NETA CARNEIRO - 00.327-1", "SEVERINO FERNANDES MAIA - 00.192-9", "SEVERINO SOLANO DA SILVA - 00.486-3", "SOLANO LOPES DANTAS - 00.663-7", "SYBELLE DE ARAÚJO DANTAS - 63.386-1", "TALITHA LOUISE FORTUNATO BEZERRA - 49.990-1", "THALES GALVÃO DE ARAUJO - 63.803-0", "THALLES THIAGO MEDEIROS DE SOUZA - 49.988-9", "THIAGO DE LIRA BEZERRA - 43.075-7", "THIAGO HENRIQUE FERREIRA DA SILVA - 60.275-2", "VALDELICE FERREIRA DE OLIVEIRA - 00.507-0", "VANESSA GALDINO DA SILVA - 61.955-8", "WALDICK GUERRA DE MEDEIROS - 13.281-1", "WALTER PEDRO DA SILVA - 00.358-1", "WANDERCLEY SILVA NEVES - 70.563-2", "WANDRÉ WAGNER DA SILVA - 62.367-9", "ZELIO CUNHA - 13.400-7"];
+    const listarAgentesCondutoresUrl = "https://us-central1-sttu-registros.cloudfunctions.net/listarAgentesCondutoresHttp";
+    let agentesDB = [...(window.STTU_AGENTES_PADRAO || [])];
+    let agentesDatalistDisponiveis = [];
 
     let nomeUsuarioLogado = "ANÔNIMO";
     let isVisualizador = false;
+    let isAdmin = false;
+    let maletasRegistradasHoje = new Set();
+    let registrosObservacoesHoje = [];
 
-    window.onload = () => {
+    function normalizarListaAgentes(lista) {
+        return [...new Set((lista || [])
+            .map((agente) => String(agente || "").trim().toUpperCase())
+            .filter(Boolean))]
+            .sort((a, b) => a.localeCompare(b, "pt-BR"));
+    }
+
+    function normalizarBuscaAgente(valor) {
+        return String(valor || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toUpperCase()
+            .trim();
+    }
+
+    function filtrarAgentesDisponiveis(valor = "", mostrarTodos = false) {
+        const termo = normalizarBuscaAgente(valor);
+        if (!mostrarTodos && termo.length < 1) return [];
+        return agentesDatalistDisponiveis
+            .filter((agente) => mostrarTodos || normalizarBuscaAgente(agente).startsWith(termo))
+            .slice(0, mostrarTodos ? 300 : 30);
+    }
+
+    function atualizarDatalistAgentes(valor = "", mostrarTodos = false) {
+        const dataList = document.getElementById('listaAgentes');
+        if (!dataList) return;
+
+        dataList.innerHTML = '';
+        filtrarAgentesDisponiveis(valor, mostrarTodos).forEach((agente) => {
+                const optData = document.createElement('option');
+                optData.value = agente;
+                dataList.appendChild(optData);
+            });
+    }
+
+    function prepararCampoAgenteComSeta(campo) {
+        if (!campo || campo.dataset.agentPickerReady === "true") return;
+        campo.dataset.agentPickerReady = "true";
+        campo.removeAttribute('list');
+
+        const wrapper = document.createElement('span');
+        wrapper.className = 'agent-picker';
+        campo.parentNode.insertBefore(wrapper, campo);
+        wrapper.appendChild(campo);
+
+        const botao = document.createElement('button');
+        botao.type = 'button';
+        botao.className = 'agent-picker-arrow';
+        botao.setAttribute('aria-label', 'Abrir lista de agentes');
+        botao.textContent = '▾';
+        wrapper.appendChild(botao);
+
+        const lista = document.createElement('div');
+        lista.className = 'agent-picker-list';
+        wrapper.appendChild(lista);
+
+        const fecharLista = () => {
+            lista.classList.remove('open');
+            lista.innerHTML = "";
+        };
+
+        const abrirLista = (mostrarTodos = false) => {
+            const opcoes = filtrarAgentesDisponiveis(campo.value, mostrarTodos);
+            lista.innerHTML = "";
+            opcoes.forEach((agente) => {
+                const item = document.createElement('button');
+                item.type = 'button';
+                item.className = 'agent-picker-option';
+                item.textContent = agente;
+                item.addEventListener('mousedown', (event) => {
+                    event.preventDefault();
+                    campo.value = agente;
+                    campo.dispatchEvent(new Event('input', { bubbles: true }));
+                    campo.dispatchEvent(new Event('change', { bubbles: true }));
+                    fecharLista();
+                });
+                lista.appendChild(item);
+            });
+            lista.classList.toggle('open', opcoes.length > 0);
+        };
+
+        botao.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            atualizarDatalistAgentes("", true);
+            campo.focus();
+            abrirLista(true);
+        });
+
+        campo.addEventListener('focus', () => {
+            if (normalizarBuscaAgente(campo.value).length < 1) {
+                campo.removeAttribute('list');
+                atualizarDatalistAgentes("");
+                fecharLista();
+            }
+        });
+
+        campo.addEventListener('blur', () => {
+            setTimeout(() => {
+                if (normalizarBuscaAgente(campo.value).length < 1) campo.removeAttribute('list');
+                fecharLista();
+            }, 160);
+        });
+
+        campo.addEventListener('input', () => {
+            if (normalizarBuscaAgente(campo.value).length >= 1) {
+                abrirLista(false);
+            } else {
+                fecharLista();
+            }
+        });
+    }
+
+    function preencherListasAgentes(lista = agentesDB) {
         const selectAfast = document.getElementById('afast-lista-agentes');
         selectAfast.innerHTML = '<option value="">-- SELECIONE NA LISTA --</option>';
         
-        const dataList = document.getElementById('listaAgentes');
-        dataList.innerHTML = '';
+        agentesDatalistDisponiveis = normalizarListaAgentes(lista);
+        atualizarDatalistAgentes(document.activeElement?.getAttribute?.('list') === 'listaAgentes' ? document.activeElement.value : "");
 
-        agentesDB.forEach(agente => {
+        agentesDatalistDisponiveis.forEach(agente => {
             const optSelect = document.createElement('option');
             optSelect.value = agente;
             optSelect.innerText = agente;
             selectAfast.appendChild(optSelect);
-
-            const optData = document.createElement('option');
-            optData.value = agente;
-            dataList.appendChild(optData);
         });
+    }
+
+    async function carregarAgentesCondutores(user) {
+        preencherListasAgentes(agentesDB);
+
+        try {
+            const token = await user.getIdToken(true);
+            const resposta = await fetch(listarAgentesCondutoresUrl, {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+
+            const resultado = await resposta.json().catch(() => ({}));
+            if (!resposta.ok || !resultado.ok) {
+                throw new Error(resultado.message || `Erro HTTP ${resposta.status}`);
+            }
+
+            const agentesServidor = (resultado.agentes || [])
+                .map((agente) => agente && typeof agente === "object" ? agente.nome : agente)
+                .filter(Boolean);
+
+            if (agentesServidor.length) {
+                agentesDB = normalizarListaAgentes(agentesServidor);
+                preencherListasAgentes(agentesDB);
+            }
+        } catch (error) {
+            console.error("Erro ao carregar agentes/condutores do servidor:", error);
+            agentesDB = normalizarListaAgentes(window.STTU_AGENTES_PADRAO || agentesDB);
+            preencherListasAgentes(agentesDB);
+        }
+    }
+
+    function inicializarFormularioObservacoes() {
+        preencherListasAgentes(agentesDB);
 
         document.getElementById('turno-select').value = "SELECIONE";
         const btn = document.getElementById('btn-registrar-inicio');
@@ -47,18 +195,58 @@
         btn.style.backgroundColor = "#27ae60";
 
         document.querySelectorAll('.verificar-item').forEach(el => {
-            el.addEventListener('input', function() {
+            const marcarConferido = function() {
                 this.classList.remove('input-pendente');
                 this.classList.add('input-ok');
+            };
+            el.addEventListener('input', marcarConferido);
+            el.addEventListener('change', marcarConferido);
+            el.addEventListener('click', marcarConferido);
+        });
+
+        document.querySelectorAll('input[type="number"]').forEach((campo) => {
+            campo.min = "0";
+            campo.addEventListener('keydown', (event) => {
+                if (event.key === '-' || event.key === 'e' || event.key === 'E' || event.key === '+') {
+                    event.preventDefault();
+                }
+            });
+            campo.addEventListener('input', function() {
+                const valor = String(this.value || "").replace(/[^\d]/g, "");
+                this.value = valor === "" ? "" : String(Math.max(0, Number(valor)));
+            });
+            campo.addEventListener('blur', function() {
+                if (this.value === "" || Number(this.value) < 0) this.value = "0";
             });
         });
-    };
+
+        document.querySelectorAll('input[list="listaAgentes"]').forEach((campo) => {
+            prepararCampoAgenteComSeta(campo);
+            campo.addEventListener('input', function() {
+                const inicio = this.selectionStart;
+                const fim = this.selectionEnd;
+                this.value = this.value.toUpperCase();
+                this.setSelectionRange(inicio, fim);
+                this.removeAttribute('list');
+                atualizarDatalistAgentes(this.value);
+            });
+            campo.addEventListener('focus', function() {
+                if (normalizarBuscaAgente(this.value).length >= 1) {
+                    atualizarDatalistAgentes(this.value);
+                } else {
+                    this.removeAttribute('list');
+                    atualizarDatalistAgentes("");
+                }
+            });
+        });
+    }
+
+    inicializarFormularioObservacoes();
 
     function resetarEquipamentos() {
         const ids = [
             'qtd-cel-atend', 'qtd-fonte-cel', 'qtd-cabo-cel', 'qtd-zap',
-            'qtd-radio-movel', 'qtd-impressora', 'qtd-ar', 'qtd-m4744',
-            'qtd-m4746', 'qtd-m4750', 'qtd-m4751', 'qtd-m4756', 'qtd-m4754', 'qtd-radio-fixo'
+            'qtd-radio-movel', 'qtd-impressora', 'qtd-ar', 'qtd-radio-fixo'
         ];
         ids.forEach(id => {
             const el = document.getElementById(id);
@@ -76,6 +264,7 @@
 
                 if (docSnap.exists()) {
                     const dados = docSnap.data();
+                    carregarAgentesCondutores(user);
                     
                     nomeUsuarioLogado = dados.nome || "Usuário";
                     document.getElementById('nomeUsuarioDisplay').innerText = "OLÁ, " + nomeUsuarioLogado;
@@ -83,7 +272,9 @@
                     const nivel = dados.nivel_acesso || 'total';
                     const cargo = dados.cargo || '';
                     
+                    isAdmin = String(cargo || "").toLowerCase() === 'admin';
                     isVisualizador = (nivel === 'leitura' || cargo === 'visualizador') && cargo !== 'admin';
+                    renderizarRegistrosObservacoes(registrosObservacoesHoje);
 
                     if (isVisualizador) {
                         console.log("🔒 MODO APENAS LEITURA ATIVADO (NUCLEAR)");
@@ -109,15 +300,19 @@
 
                     if (dados.cargo !== 'visualizador') {
                         let tempoInatividade;
-                        const LIMITE_TEMPO = 30 * 60 * 1000; 
+                        const LIMITE_TEMPO = 15 * 60 * 1000; 
                         const resetarTimer = () => {
                             clearTimeout(tempoInatividade);
                             tempoInatividade = setTimeout(() => {
-                                alert("⚠️ Sessão encerrada por inatividade (30min).");
+                                alert("⚠️ Sessão encerrada por inatividade (15min).");
                                 signOut(auth).then(() => window.location.href = "login.html");
                             }, LIMITE_TEMPO);
                         };
-                        window.onload = resetarTimer; document.onmousemove = resetarTimer; document.onkeypress = resetarTimer; document.onclick = resetarTimer; document.onscroll = resetarTimer;
+                        resetarTimer();
+                        document.addEventListener('mousemove', resetarTimer);
+                        document.addEventListener('keypress', resetarTimer);
+                        document.addEventListener('click', resetarTimer);
+                        document.addEventListener('scroll', resetarTimer);
                     }
                 } else {
                     alert("Erro de cadastro. Contate o suporte.");
@@ -155,17 +350,17 @@
         where("data_filtro", "==", dataFiltro)
     );
 
-    onSnapshot(q, (snapshot) => {
+    function renderizarRegistrosObservacoes(registros = registrosObservacoesHoje) {
         const lista = document.getElementById('lista-registros');
         lista.innerHTML = "";
-        
-        if (snapshot.empty) {
+
+        if (!registros.length) {
+            atualizarPainelMaletasDia([]);
             lista.innerHTML = "<em>Nenhum registro encontrado para hoje.</em>";
             return;
         }
 
-        let registros = [];
-        snapshot.forEach(doc => { registros.push({ id: doc.id, ...doc.data() }); });
+        atualizarPainelMaletasDia(registros);
 
         registros.sort((a, b) => {
             const tA = a.timestamp ? a.timestamp.seconds : 0;
@@ -188,34 +383,76 @@
                 </div>
             `;
 
-            if (data.requerBaixa && !data.baixa && !isVisualizador) {
+            item.innerHTML = html;
+
+            if ((data.requerBaixa && !data.baixa && !isVisualizador) || isAdmin) {
                 const btnContainer = document.createElement('div');
+                btnContainer.className = 'registro-acoes';
                 btnContainer.style.display = 'flex';
                 btnContainer.style.flexDirection = 'column';
                 btnContainer.style.gap = '5px';
                 
-                const btnBaixa = document.createElement('button');
-                btnBaixa.className = 'btn btn-baixa';
-                btnBaixa.innerText = 'DAR BAIXA / DEVOLVER';
-                btnBaixa.onclick = () => window.darBaixaNoFirebase(id);
-                
-                const btnBaixaFalta = document.createElement('button');
-                btnBaixaFalta.className = 'btn btn-baixa-falta';
-                btnBaixaFalta.innerText = 'DEVOLVER C/ MATERIAIS EM FALTA';
-                btnBaixaFalta.onclick = () => window.abrirModalFalta(id, data.texto); 
+                if (data.requerBaixa && !data.baixa && !isVisualizador) {
+                    const btnBaixa = document.createElement('button');
+                    btnBaixa.className = 'btn btn-baixa';
+                    btnBaixa.innerText = 'DAR BAIXA / DEVOLVER';
+                    btnBaixa.onclick = () => window.darBaixaNoFirebase(id);
+                    
+                    const btnBaixaFalta = document.createElement('button');
+                    btnBaixaFalta.className = 'btn btn-baixa-falta';
+                    btnBaixaFalta.innerText = 'DEVOLVER C/ MATERIAIS EM FALTA';
+                    btnBaixaFalta.onclick = () => window.abrirModalFalta(id, data.texto); 
 
-                btnContainer.appendChild(btnBaixa);
-                btnContainer.appendChild(btnBaixaFalta);
+                    btnContainer.appendChild(btnBaixa);
+                    btnContainer.appendChild(btnBaixaFalta);
+                }
+
+                if (isAdmin) {
+                    const btnEditar = document.createElement('button');
+                    btnEditar.className = 'btn btn-editar-registro';
+                    btnEditar.innerText = 'EDITAR';
+                    btnEditar.onclick = () => window.editarRegistroObservacao(id, data.texto || "");
+
+                    const btnExcluir = document.createElement('button');
+                    btnExcluir.className = 'btn btn-excluir-registro';
+                    btnExcluir.innerText = 'EXCLUIR';
+                    btnExcluir.onclick = () => window.excluirRegistroObservacao(id);
+
+                    btnContainer.appendChild(btnEditar);
+                    btnContainer.appendChild(btnExcluir);
+                }
                 
-                item.innerHTML = html;
                 item.appendChild(btnContainer);
-            } else {
-                item.innerHTML = html;
             }
             
             lista.appendChild(item);
         });
+    }
+
+    onSnapshot(q, (snapshot) => {
+        registrosObservacoesHoje = [];
+        snapshot.forEach(doc => { registrosObservacoesHoje.push({ id: doc.id, ...doc.data() }); });
+        renderizarRegistrosObservacoes(registrosObservacoesHoje);
     });
+
+    function atualizarPainelMaletasDia(registros) {
+        const maletas = registros
+            .filter((registro) => registro.tipo_registro === "ENTREGA_MALETA" && !registro.baixa)
+            .map((registro) => String(registro.numero_maleta || "").replace(/\D/g, ""))
+            .filter(Boolean);
+
+        const unicas = [...new Set(maletas)].sort((a, b) => Number(a) - Number(b));
+        maletasRegistradasHoje = new Set(unicas);
+
+        const total = document.getElementById('maletas-dia-total');
+        const lista = document.getElementById('maletas-dia-lista');
+        if (total) total.textContent = String(unicas.length);
+        if (lista) {
+            lista.innerHTML = unicas.length
+                ? unicas.map((n) => `<span class="maleta-dia-badge">Nº ${n}</span>`).join('')
+                : 'Nenhuma em campo';
+        }
+    }
 
     async function salvarObservacao(texto, requerBaixa = false, extras = {}) {
         if (isVisualizador) return alert("Acesso Negado: Modo Visualizador.");
@@ -250,6 +487,41 @@
             });
         } catch (e) { console.error(e); }
     }
+
+    window.editarRegistroObservacao = async (idDoc, textoAtual) => {
+        if (!isAdmin) return alert("Acesso negado.");
+        const novoTexto = prompt("Edite o texto do registro:", textoAtual);
+        if (novoTexto === null) return;
+
+        const texto = novoTexto.trim();
+        if (!texto) return alert("O texto do registro não pode ficar vazio.");
+
+        try {
+            await updateDoc(doc(db, "observacoes_sttu", idDoc), {
+                texto: texto.toUpperCase(),
+                editadoPor: nomeUsuarioLogado,
+                editadoEm: serverTimestamp()
+            });
+            registrarLogAuditoria("EDITAR OBSERVAÇÃO", `Registro ${idDoc} editado por ${nomeUsuarioLogado}`);
+        } catch (error) {
+            console.error("Erro ao editar registro:", error);
+            alert("Erro ao editar registro.");
+        }
+    };
+
+    window.excluirRegistroObservacao = async (idDoc) => {
+        if (!isAdmin) return alert("Acesso negado.");
+        const confirmar = confirm("Tem certeza que deseja excluir este registro permanentemente?");
+        if (!confirmar) return;
+
+        try {
+            await deleteDoc(doc(db, "observacoes_sttu", idDoc));
+            registrarLogAuditoria("EXCLUIR OBSERVAÇÃO", `Registro ${idDoc} excluído por ${nomeUsuarioLogado}`);
+        } catch (error) {
+            console.error("Erro ao excluir registro:", error);
+            alert("Erro ao excluir registro.");
+        }
+    };
 
     window.darBaixaNoFirebase = async (idDoc) => {
         if (isVisualizador) return alert("Acesso Negado.");
@@ -450,12 +722,6 @@
             `RAD.MOV:${document.getElementById('qtd-radio-movel').value}, ` +
             `IMP:${document.getElementById('qtd-impressora').value}, ` +
             `AR:${document.getElementById('qtd-ar').value}, ` +
-            `M.4744:${document.getElementById('qtd-m4744').value}, ` +
-            `M.4746:${document.getElementById('qtd-m4746').value}, ` +
-            `M.4750:${document.getElementById('qtd-m4750').value}, ` +
-            `M.4751:${document.getElementById('qtd-m4751').value}, ` +
-            `M.4756:${document.getElementById('qtd-m4756').value}, ` +
-            `M.4754:${document.getElementById('qtd-m4754').value}, ` +
             `RAD.FIX:${document.getElementById('qtd-radio-fixo').value}`;
         
         await salvarObservacao(detalhes, false, {
@@ -480,7 +746,13 @@
         const maletaCustomizada = document.getElementById('maleta-customizada').value.trim();
         
         if (maletaCustomizada) {
-            maleta = maletaCustomizada;
+            maleta = maletaCustomizada.replace(/\D/g, "");
+        }
+
+        if (maleta && maletasRegistradasHoje.has(maleta)) {
+            alert(`⚠️ A MALETA Nº ${maleta} ainda está em campo. Dê baixa nela antes de registrar novamente.`);
+            document.getElementById('maleta-customizada').focus();
+            return;
         }
         
         const entreguePara = document.getElementById('entregue-para').value.trim().toUpperCase();
@@ -502,7 +774,7 @@
             
             if (!snapshot.empty) {
                 const docPreso = snapshot.docs[0];
-                const confirmar = confirm(`ERRO: A maleta ${maleta} consta como EM USO por outro agente desde ${new Date(docPreso.data().timestamp.seconds * 1000).toLocaleString()}.\n\nDeseja FORÇAR a devolução da anterior para liberar esta nova entrega?`);
+                const confirmar = confirm(`ERRO: A MALETA Nº ${maleta} consta como EM USO por outro agente desde ${new Date(docPreso.data().timestamp.seconds * 1000).toLocaleString()}.\n\nDeseja FORÇAR a devolução da anterior para liberar esta nova entrega?`);
                 if (confirmar) {
                    await updateDoc(doc(db, "observacoes_sttu", docPreso.id), { 
                        baixa: new Date().toLocaleTimeString('pt-BR') + " (FORÇADO)", 
@@ -524,7 +796,8 @@
         const qtdTc = document.getElementById('qtd-tc').value;
         const qtdMan = document.getElementById('qtd-manual').value;
 
-        const detalhes = `ENTREGA ${maleta ? 'DA MALETA '+maleta : 'DE EQUIPAMENTOS'}. ` +
+        const textoMaleta = maleta ? `DA MALETA Nº ${maleta}` : 'DE EQUIPAMENTOS';
+        const detalhes = `ENTREGA ${textoMaleta}. ` +
             `RETIRADO POR: ${nomeAgente}. ` + 
             `ENTREGUE PARA: ${entreguePara}. ` + 
             `ITENS: ETIL:${qtdEtil}, PITEIRA:${qtdPiteira}, IMP:${qtdImp}, CARR:${qtdCar}, BOB:${qtdBob}, ` +
@@ -540,12 +813,6 @@
         document.getElementById('maleta-customizada').value = "";
         document.getElementById('obs-extras').value = "";
         document.getElementById('entregue-para').value = ""; 
-    };
-
-    document.getElementById('btn-registrar-tentante').onclick = () => {
-        if (isVisualizador) return;
-        const campo = document.getElementById('texto-tentante');
-        if (campo.value.trim()) { salvarObservacao(`REGISTRO DE TENTANTE: ${campo.value.trim()}`); campo.value = ""; }
     };
 
     document.getElementById('btn-registrar-afastamento').onclick = () => {
@@ -659,6 +926,7 @@
     });
 
     document.getElementById('maleta-customizada').addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, "").slice(0, 4);
         document.querySelectorAll('.btn-maleta').forEach(b => b.classList.remove('selecionada'));
         document.getElementById('maleta-selecionada').value = "";
     });

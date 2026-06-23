@@ -1,5 +1,5 @@
 ﻿async function iniciarAgentes2() {
-    const {initializeApp} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js");
+    const {initializeApp, getApp, getApps} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js");
     const {getFirestore, collection, addDoc, serverTimestamp, onSnapshot, deleteDoc, doc, updateDoc, query, orderBy, where, getDoc} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
     const {getAuth, onAuthStateChanged, signOut} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js");// --- CONFIGURAÇÃO ---
     const firebaseConfig = {
@@ -12,7 +12,7 @@
         measurementId: "G-C7PSE7YFRG"
     };
 
-    const app = initializeApp(firebaseConfig);
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
@@ -27,7 +27,7 @@
     let listaHistoricoCache = []; 
     let listaAtivosCache = [];
 
-    // --- SEGURANÇA + TIMER DE 30 MIN ---
+    // --- SEGURANÇA + TIMER DE 15 MIN ---
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             try {
@@ -92,11 +92,11 @@
                     
                     if (cargoUsuario !== 'visualizador') {
                         let tempoInatividade;
-                        const LIMITE_TEMPO = 30 * 60 * 1000; 
+                        const LIMITE_TEMPO = 15 * 60 * 1000; 
                         const resetarTimer = () => {
                             clearTimeout(tempoInatividade);
                             tempoInatividade = setTimeout(() => {
-                                alert("⚠️ Sessão encerrada por inatividade (30min).");
+                                alert("⚠️ Sessão encerrada por inatividade (15min).");
                                 signOut(auth).then(() => window.location.href = "login.html");
                             }, LIMITE_TEMPO);
                         };
@@ -123,6 +123,7 @@
     }
 
     let agentesDB = [...(window.STTU_AGENTES_PADRAO || [])];
+    let agentesDatalistDisponiveis = [];
     
     const form = document.getElementById('registroForm');
     const tabelaAtivos = document.getElementById('tabelaAtivos').getElementsByTagName('tbody')[0];
@@ -212,10 +213,116 @@
             .replace(/"/g, "&quot;");
     }
 
+    function normalizarBuscaAgente(valor) {
+        return String(valor || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toUpperCase()
+            .trim();
+    }
+
+    function filtrarAgentesDisponiveis(valor = "", mostrarTodos = false) {
+        const termo = normalizarBuscaAgente(valor);
+        if (!mostrarTodos && termo.length < 1) return [];
+        return agentesDatalistDisponiveis
+            .filter((agente) => mostrarTodos || normalizarBuscaAgente(agente).startsWith(termo))
+            .slice(0, mostrarTodos ? 300 : 30);
+    }
+
+    function atualizarDatalistAgentes(valor = "", mostrarTodos = false) {
+        const dl = document.getElementById('listaAgentes');
+        if (!dl) return;
+
+        dl.innerHTML = "";
+        filtrarAgentesDisponiveis(valor, mostrarTodos).forEach((agente) => {
+                const opt = document.createElement('option');
+                opt.value = agente;
+                dl.appendChild(opt);
+            });
+    }
+
+    function prepararCampoAgenteComSeta(campo) {
+        if (!campo || campo.dataset.agentPickerReady === "true") return;
+        campo.dataset.agentPickerReady = "true";
+        campo.removeAttribute('list');
+
+        const wrapper = document.createElement('span');
+        wrapper.className = 'agent-picker';
+        campo.parentNode.insertBefore(wrapper, campo);
+        wrapper.appendChild(campo);
+
+        const botao = document.createElement('button');
+        botao.type = 'button';
+        botao.className = 'agent-picker-arrow';
+        botao.setAttribute('aria-label', 'Abrir lista de agentes');
+        botao.textContent = '▾';
+        wrapper.appendChild(botao);
+
+        const lista = document.createElement('div');
+        lista.className = 'agent-picker-list';
+        wrapper.appendChild(lista);
+
+        const fecharLista = () => {
+            lista.classList.remove('open');
+            lista.innerHTML = "";
+        };
+
+        const abrirLista = (mostrarTodos = false) => {
+            const opcoes = filtrarAgentesDisponiveis(campo.value, mostrarTodos);
+            lista.innerHTML = "";
+            opcoes.forEach((agente) => {
+                const item = document.createElement('button');
+                item.type = 'button';
+                item.className = 'agent-picker-option';
+                item.textContent = agente;
+                item.addEventListener('mousedown', (event) => {
+                    event.preventDefault();
+                    campo.value = agente;
+                    campo.dispatchEvent(new Event('input', { bubbles: true }));
+                    campo.dispatchEvent(new Event('change', { bubbles: true }));
+                    fecharLista();
+                });
+                lista.appendChild(item);
+            });
+            lista.classList.toggle('open', opcoes.length > 0);
+        };
+
+        botao.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            atualizarDatalistAgentes("", true);
+            campo.focus();
+            abrirLista(true);
+        });
+
+        campo.addEventListener('focus', () => {
+            if (normalizarBuscaAgente(campo.value).length < 1) {
+                campo.removeAttribute('list');
+                atualizarDatalistAgentes("");
+                fecharLista();
+            }
+        });
+
+        campo.addEventListener('blur', () => {
+            setTimeout(() => {
+                if (normalizarBuscaAgente(campo.value).length < 1) campo.removeAttribute('list');
+                fecharLista();
+            }, 160);
+        });
+
+        campo.addEventListener('input', () => {
+            if (normalizarBuscaAgente(campo.value).length >= 1) {
+                abrirLista(false);
+            } else {
+                fecharLista();
+            }
+        });
+    }
+
     function carregarAgentes(agentesSelecionadosNoForm = []) {
         const dl = document.getElementById('listaAgentes');
         dl.innerHTML = "";
-        const selectsAgentes = document.querySelectorAll('select.agente-input');
+        const camposAgentes = document.querySelectorAll('.agente-input');
         
         const agentesFiltrados = agentesDB.filter(agente => 
             !agentesSelecionadosNoForm.includes(agente) && 
@@ -223,31 +330,12 @@
         );
         
         const agentesOrdenados = agentesFiltrados.sort();
-        agentesOrdenados.forEach(agente => {
-            const opt = document.createElement('option');
-            opt.value = agente;
-            dl.appendChild(opt);
-        });
+        agentesDatalistDisponiveis = agentesOrdenados;
+        atualizarDatalistAgentes(document.activeElement?.classList?.contains('agente-input') ? document.activeElement.value : "");
 
-        selectsAgentes.forEach((select, index) => {
-            const valorAtual = select.value;
-            select.innerHTML = `<option value="">SELECIONE AGENTE ${index + 1}</option>`;
-
-            if (valorAtual && !agentesOrdenados.includes(valorAtual)) {
-                const optAtual = document.createElement('option');
-                optAtual.value = valorAtual;
-                optAtual.textContent = valorAtual;
-                select.appendChild(optAtual);
-            }
-
-            agentesOrdenados.forEach(agente => {
-                const opt = document.createElement('option');
-                opt.value = agente;
-                opt.textContent = agente;
-                select.appendChild(opt);
-            });
-
-            select.value = valorAtual;
+        camposAgentes.forEach((campo, index) => {
+            prepararCampoAgenteComSeta(campo);
+            campo.placeholder = `SELECIONE AGENTE ${index + 1}`;
         });
     }
 
@@ -1011,8 +1099,27 @@
             limparFormularioEquipe();
         });
         document.querySelectorAll('.agente-input').forEach(i => {
-            i.oninput = atualizarOpcoesDisponiveis;
-            i.onchange = atualizarOpcoesDisponiveis;
+            i.oninput = function() {
+                const inicio = this.selectionStart;
+                const fim = this.selectionEnd;
+                this.value = this.value.toUpperCase();
+                this.setSelectionRange(inicio, fim);
+                atualizarOpcoesDisponiveis();
+                this.removeAttribute('list');
+                atualizarDatalistAgentes(this.value);
+            };
+            i.onfocus = function() {
+                if (normalizarBuscaAgente(this.value).length >= 1) {
+                    atualizarDatalistAgentes(this.value);
+                } else {
+                    this.removeAttribute('list');
+                    atualizarDatalistAgentes("");
+                }
+            };
+            i.onchange = function() {
+                atualizarOpcoesDisponiveis();
+                atualizarDatalistAgentes(this.value);
+            };
         });
         
         gerarCamposDinamicos();

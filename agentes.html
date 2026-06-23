@@ -6,8 +6,8 @@
     <title>Controle de Frota e Agentes - STTU</title>
     <link rel="preload" as="image" href="src/imagem_fundo_branco.png" fetchpriority="high">
     <link rel="preload" as="image" href="src/imagem_de_fundo_login_editada.jpeg">
-    <link rel="stylesheet" href="css/agentes.css?v=20260619-1">
-    <link rel="stylesheet" href="css/app-menu.css">
+    <link rel="stylesheet" href="css/agentes.css?v=20260623-9">
+    <link rel="stylesheet" href="css/app-menu.css?v=20260623-6">
 </head>
 <body data-theme="day">
 <img class="page-background light" src="src/imagem_fundo_branco.png" alt="" aria-hidden="true" fetchpriority="high" decoding="sync">
@@ -77,11 +77,11 @@
                         <td><select id="veiculo"><option value="">Carregando...</option></select></td>
                         <td>
                             <div class="agentes-container">
-                                <div class="agente-row"><input type="radio" name="condutor" value="0" class="condutor-radio"><select class="agente-input"><option value="">SELECIONE AGENTE 1</option></select></div>
-                                <div class="agente-row"><input type="radio" name="condutor" value="1" class="condutor-radio"><select class="agente-input"><option value="">SELECIONE AGENTE 2</option></select></div>
-                                <div class="agente-row"><input type="radio" name="condutor" value="2" class="condutor-radio"><select class="agente-input"><option value="">SELECIONE AGENTE 3</option></select></div>
-                                <div class="agente-row"><input type="radio" name="condutor" value="3" class="condutor-radio"><select class="agente-input"><option value="">SELECIONE AGENTE 4</option></select></div>
-                                <div class="agente-row"><input type="radio" name="condutor" value="4" class="condutor-radio"><select class="agente-input"><option value="">SELECIONE AGENTE 5</option></select></div>
+                                <div class="agente-row"><input type="radio" name="condutor" value="0" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 1" autocomplete="off"></div>
+                                <div class="agente-row"><input type="radio" name="condutor" value="1" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 2" autocomplete="off"></div>
+                                <div class="agente-row"><input type="radio" name="condutor" value="2" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 3" autocomplete="off"></div>
+                                <div class="agente-row"><input type="radio" name="condutor" value="3" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 4" autocomplete="off"></div>
+                                <div class="agente-row"><input type="radio" name="condutor" value="4" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 5" autocomplete="off"></div>
                             </div>
                             <datalist id="listaAgentes"></datalist>
                         </td>
@@ -160,12 +160,12 @@
 </main>
 
 <script src="js/theme-switch.js"></script>
-<script src="js/app-menu.js"></script>
+<script src="js/app-menu.js?v=20260623-6"></script>
 <script src="js/agentes-lista.js?v=20260619-1"></script>
 <script src="js/agentes.js"></script>
 
 
-<script src="js/agentes-2.js?v=20260619-7"></script>
+<script src="js/agentes-2.js?v=20260623-7"></script>
 
 </body>
 </html>

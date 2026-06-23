@@ -5,12 +5,45 @@
 body {
     min-height: 100vh;
     margin: 0;
-    padding: 24px;
+    padding: 88px 24px 24px;
     font-family: "Segoe UI", Arial, sans-serif;
     color: #111827;
     background:
         linear-gradient(rgba(235, 241, 246, 0.9), rgba(235, 241, 246, 0.9)),
         url("../src/imagem_de_fundo_login_editada.jpeg") center / cover fixed;
+}
+
+.page-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 990;
+    min-height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    background: #2c3e50;
+    color: #ffffff;
+}
+
+.title-container {
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 button,

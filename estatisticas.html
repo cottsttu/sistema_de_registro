@@ -7,11 +7,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-    <link rel="stylesheet" href="css/estatisticas.css">
-    <link rel="stylesheet" href="css/app-menu.css">
+    <link rel="stylesheet" href="css/estatisticas.css?v=20260623-2">
+    <link rel="stylesheet" href="css/app-menu.css?v=20260623-6">
 </head>
 <body>
-    <nav class="app-shortcut-menu" aria-label="Atalhos principais">
+    <div class="page-header">
+        <div class="title-container">DASHBOARD ESTATÍSTICO</div>
+        <div class="header-actions">
+    <nav class="app-shortcut-menu app-menu-inline" aria-label="Atalhos principais">
         <a href="index.html" class="app-home-shortcut" aria-label="Página Inicial">
             <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M3 10.8 12 3l9 7.8"></path>
@@ -31,14 +34,15 @@
             <a href="relatorio_geral.html" data-page="relatorio_geral.html" class="app-menu-link">Relatórios</a>
         </div>
     </nav>
+            <div id="userInfo" class="inline-estatisticas-12">
+                <span id="nomeUsuarioDisplay" class="inline-estatisticas-13">Carregando...</span>
+                <button id="btnSair" class="btn-sair">SAIR</button>
+            </div>
+        </div>
+    </div>
 <div id="loading" class="loading-overlay">
         <div class="inline-estatisticas-1">Carregando banco de dados...</div>
         <div class="inline-estatisticas-2">Buscando todas as ocorrências e registros.</div>
-    </div>
-
-    <div class="page-header">
-        <div class="title-container">DASHBOARD ESTATÍSTICO</div>
-        <button id="btnSair" class="btn-sair">SAIR</button>
     </div>
 
     <div class="container">
@@ -128,8 +132,9 @@
     </div>
 
 <script src="js/theme-switch.js"></script>
-<script src="js/app-menu.js"></script>
-<script src="js/estatisticas.js?v=20260619-1"></script>
+<script src="js/app-menu.js?v=20260623-6"></script>
+<script src="js/pdf-emblema.js?v=20260623-1"></script>
+<script src="js/estatisticas.js?v=20260623-7"></script>
 
 </body>
 </html>

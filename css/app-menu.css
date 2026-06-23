@@ -33,6 +33,71 @@
     cursor: pointer;
 }
 
+.app-user-display {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 0 4px;
+    border: 0;
+    border-radius: 0;
+    color: #d8f6ff;
+    background: transparent;
+    box-shadow: none;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.app-user-display b,
+#nomeUsuarioDisplay b {
+    font-weight: 700;
+}
+
+.page-header #userInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #d8f6ff !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+}
+
+.page-header #nomeUsuarioDisplay {
+    color: #d8f6ff !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    text-shadow: none !important;
+    white-space: nowrap;
+}
+
+body[data-theme="day"] .page-header #userInfo,
+body[data-theme="day"] .page-header #nomeUsuarioDisplay {
+    color: #ecf0f1 !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+    text-shadow: none !important;
+}
+
+body[data-theme="night"] .app-user-display,
+body[data-theme="night"] .page-header #userInfo,
+body[data-theme="night"] .page-header #nomeUsuarioDisplay {
+    color: #d8f6ff !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+}
+
 .app-home-shortcut svg {
     width: 22px;
     height: 22px;

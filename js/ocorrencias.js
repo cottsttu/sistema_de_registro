@@ -28,7 +28,42 @@
     // Lista unificada
     let listaGlobalOcorrencias = [];
 
-    // --- SEGURANÇA + TIMER DE 30 MIN ---
+    async function carregarImagemPdf(caminho) {
+        if (window.STTU_EMBLEMA_DATA_URL) return window.STTU_EMBLEMA_DATA_URL;
+        const url = new URL(caminho, window.location.href).href;
+        return await new Promise(async (resolve, reject) => {
+            const timeoutId = setTimeout(() => reject(new Error("Tempo excedido ao carregar emblema.")), 1500);
+            try {
+                const resposta = await fetch(url, { cache: "force-cache" });
+                if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
+                const blob = await resposta.blob();
+                const reader = new FileReader();
+                reader.onload = () => {
+                    clearTimeout(timeoutId);
+                    resolve(reader.result);
+                };
+                reader.onerror = () => {
+                    clearTimeout(timeoutId);
+                    reject(reader.error || new Error("Falha ao ler emblema."));
+                };
+                reader.readAsDataURL(blob);
+            } catch (error) {
+                clearTimeout(timeoutId);
+                reject(error);
+            }
+        });
+    }
+
+    async function adicionarEmblemaPdf(doc, x = 14, y = 8, largura = 22, altura = 22) {
+        try {
+            const emblema = await carregarImagemPdf("src/emblemasttu.jpeg");
+            doc.addImage(emblema, "JPEG", x, y, largura, altura);
+        } catch (error) {
+            console.error("Erro ao inserir o emblema no PDF:", error);
+        }
+    }
+
+    // --- SEGURANÇA + TIMER DE 15 MIN ---
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             try {
@@ -112,11 +147,11 @@
 
                     if (dados.cargo !== 'visualizador') {
                         let tempoInatividade;
-                        const LIMITE_TEMPO = 30 * 60 * 1000; 
+                        const LIMITE_TEMPO = 15 * 60 * 1000; 
                         const resetarTimer = () => {
                             clearTimeout(tempoInatividade);
                             tempoInatividade = setTimeout(() => {
-                                alert("⚠️ Sessão encerrada por inatividade (30min).");
+                                alert("⚠️ Sessão encerrada por inatividade (15min).");
                                 signOut(auth).then(() => window.location.href = "login.html");
                             }, LIMITE_TEMPO);
                         };
@@ -661,11 +696,12 @@
     }
 
     // --- NOVA FUNÇÃO DE GERAR PDF ---
-    window.gerarPdfOcorrencia = (o) => {
+    window.gerarPdfOcorrencia = async (o) => {
         if (!o) return;
 
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
+        await adicionarEmblemaPdf(doc);
         
         doc.setFontSize(16);
         doc.setFont("helvetica", "bold");

@@ -83,7 +83,11 @@
 .inline-observacoes-5 { display: flex; gap: 10px; }
 .inline-observacoes-6 { margin-top: 0; min-height: 50px; }
 .inline-observacoes-7 { border-top: none; border-radius: 0 0 5px 5px; }
-.inline-observacoes-8 { padding: 8px; border: 1px solid #2c3e50; border-radius: 4px; width: 90px; font-weight: bold; color: #2c3e50; outline: none; margin-left: 5px; }
+.inline-observacoes-8 { padding: 10px 12px; border: 1px solid #2c3e50; border-radius: 4px; width: 92px; max-width: 100%; font-weight: bold; color: #2c3e50; outline: none; margin-left: 5px; }
+.maletas-dia-resumo { display: flex; align-items: center; gap: 10px; flex: 1 1 260px; min-width: 220px; padding: 8px 10px; border-radius: 6px; background: rgba(44, 62, 80, 0.08); color: #1b3444; font-size: 12px; font-weight: 600; }
+.maletas-dia-resumo strong { white-space: nowrap; color: #0e5669; }
+#maletas-dia-lista { display: flex; align-items: center; gap: 6px; overflow: hidden; white-space: nowrap; }
+.maleta-dia-badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 7px; border-radius: 999px; background: #1f9d4d; color: #fff; font-size: 11px; font-weight: 800; box-shadow: 0 0 8px rgba(31, 157, 77, 0.35); }
 .inline-observacoes-9 { grid-column: 1 / -1; margin-top: 10px; }
 .inline-observacoes-10 { font-size: 11px; font-weight: bold; color: #555; }
 .inline-observacoes-11 { margin-top: 2px; border-left: 4px solid #dc3545; }
@@ -439,11 +443,15 @@ body[data-theme="night"] select optgroup {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.72);
 }
 
-body[data-theme="day"] .btn,
-body[data-theme="day"] .btn-nav,
 body[data-theme="day"] .btn-linha,
 body[data-theme="day"] .btn-maleta {
     color: #183c46 !important;
+    text-shadow: none;
+}
+
+body[data-theme="day"] .btn,
+body[data-theme="day"] .btn-nav {
+    color: #fff !important;
     text-shadow: none;
 }
 
@@ -547,4 +555,201 @@ body[data-theme="day"] .footer-menu {
 }
 
 
+.page-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 990;
+    min-height: 66px;
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 12px 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.title-container {
+    font-size: 20px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.page-header #nomeUsuarioDisplay {
+    color: #d8f6ff;
+    font-size: 12px;
+    margin-right: 0;
+}
+
+.page-header .btn-sair-topo {
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.page-header #userInfo,
+.inline-estatisticas-12 {
+    gap: 18px;
+}
+
+.btn-registrar,
+.btn-entrega,
+.btn-remocao,
+.btn-inspetor,
+.btn-geral,
+.btn-cones,
+.inline-observacoes-22,
+.inline-observacoes-65,
+.btn-baixa-falta {
+    background: #c0392b !important;
+    color: #fff !important;
+}
+
+.btn-editar-registro {
+    background: #1f7a4d !important;
+    color: #fff !important;
+    font-size: 10px;
+    padding: 5px 9px;
+    white-space: nowrap;
+}
+
+.btn-excluir-registro {
+    background: #c0392b !important;
+    color: #fff !important;
+    font-size: 10px;
+    padding: 5px 9px;
+    white-space: nowrap;
+}
+
+.registros-container .btn-baixa {
+    background: #fff !important;
+    color: #c0392b !important;
+    border-color: #c0392b !important;
+    text-shadow: none !important;
+}
+
+body[data-theme="day"] .registros-container .btn-baixa,
+body:not([data-theme="night"]) .registros-container .btn-baixa {
+    background: #fff !important;
+    color: #c0392b !important;
+    border-color: #c0392b !important;
+    text-shadow: none !important;
+}
+
+.registros-container .registro-item {
+    border-bottom: 2px solid rgba(44, 62, 80, 0.28) !important;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+}
+
+body[data-theme="night"] .registros-container .registro-item {
+    border-bottom-color: rgba(85, 246, 255, 0.28) !important;
+}
+
+.registros-container .registro-item:last-child {
+    border-bottom: 0 !important;
+    margin-bottom: 0;
+}
+
+.agent-picker {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+}
+
+.agent-picker input {
+    width: 100% !important;
+    padding-right: 30px !important;
+}
+
+.agent-picker-arrow {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    width: 22px;
+    height: 22px;
+    transform: translateY(-50%);
+    border: 0;
+    border-left: 1px solid rgba(44, 62, 80, 0.18);
+    color: #2c3e50;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1;
+    cursor: pointer;
+}
+
+body[data-theme="night"] .agent-picker-arrow {
+    border-left-color: rgba(216, 246, 255, 0.18);
+    color: #d8f6ff;
+}
+
+.agent-picker-list {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 1200;
+    display: none;
+    max-height: 260px;
+    overflow-y: auto;
+    border: 1px solid rgba(44, 62, 80, 0.28);
+    border-radius: 8px;
+    background: #f8fcff;
+    box-shadow: 0 14px 28px rgba(44, 62, 80, 0.18);
+}
+
+.agent-picker-list.open {
+    display: block;
+}
+
+.agent-picker-option {
+    width: 100%;
+    display: block;
+    padding: 8px 10px;
+    border: 0;
+    border-bottom: 1px solid rgba(44, 62, 80, 0.10);
+    color: #102431;
+    background: transparent;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+}
+
+.agent-picker-option:hover,
+.agent-picker-option:focus-visible {
+    background: rgba(44, 62, 80, 0.10);
+    outline: none;
+}
+
+body[data-theme="night"] .agent-picker-list {
+    border-color: rgba(216, 246, 255, 0.24);
+    background: #102431;
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.34);
+}
+
+body[data-theme="night"] .agent-picker-option {
+    border-bottom-color: rgba(216, 246, 255, 0.10);
+    color: #f5fbff;
+}
+
+body[data-theme="night"] .agent-picker-option:hover,
+body[data-theme="night"] .agent-picker-option:focus-visible {
+    background: rgba(216, 246, 255, 0.10);
+}
 

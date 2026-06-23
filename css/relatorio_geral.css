@@ -7,7 +7,7 @@ body {
     min-height: 100vh;
     margin: 0;
     max-width: 100%;
-    padding: 34px 20px;
+    padding: 88px 20px 34px;
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
@@ -15,6 +15,39 @@ body {
     background: radial-gradient(circle at 50% 0%, #ffffff 0, #eef2f4 44%, #e3e8eb 100%);
     color: #101820;
     font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.page-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 990;
+    min-height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    background: #2c3e50;
+    color: #ffffff;
+}
+
+.title-container {
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .app-shortcut-menu {

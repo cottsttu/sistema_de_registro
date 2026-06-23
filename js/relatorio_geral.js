@@ -21,8 +21,40 @@
             }
         });
 
-        // --- IMAGEM (BRASÃO) ---
-        const imgData = "data:image/jpeg;base64,...HomvO1R1B8+iA=="; // COLE SEU CÓDIGO BASE64 COMPLETO AQUI
+        async function carregarImagemPdf(caminho) {
+            if (window.STTU_EMBLEMA_DATA_URL) return window.STTU_EMBLEMA_DATA_URL;
+            const url = new URL(caminho, window.location.href).href;
+            return await new Promise(async (resolve, reject) => {
+                const timeoutId = setTimeout(() => reject(new Error("Tempo excedido ao carregar emblema.")), 1500);
+                try {
+                    const resposta = await fetch(url, { cache: "force-cache" });
+                    if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
+                    const blob = await resposta.blob();
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        clearTimeout(timeoutId);
+                        resolve(reader.result);
+                    };
+                    reader.onerror = () => {
+                        clearTimeout(timeoutId);
+                        reject(reader.error || new Error("Falha ao ler emblema."));
+                    };
+                    reader.readAsDataURL(blob);
+                } catch (error) {
+                    clearTimeout(timeoutId);
+                    reject(error);
+                }
+            });
+        }
+
+        async function adicionarEmblemaPdf(doc, x = 14, y = 8, largura = 24, altura = 24) {
+            try {
+                const emblema = await carregarImagemPdf("src/emblemasttu.jpeg");
+                doc.addImage(emblema, "JPEG", x, y, largura, altura);
+            } catch (error) {
+                console.error("Erro ao inserir o emblema no PDF:", error);
+            }
+        }
 
         const hoje = new Date().toISOString().split('T')[0];
         document.getElementById('dataInicio').value = hoje;
@@ -176,16 +208,16 @@
             doc.setFontSize(14);
             doc.setTextColor(44, 62, 80);
             doc.setFont("helvetica", "bold");
-            doc.text(titulo, larguraPagina - 14, 20, { align: "right" });
+            doc.text(titulo, larguraPagina / 2, 20, { align: "center" });
             doc.setFontSize(10);
             doc.setTextColor(100);
             doc.setFont("helvetica", "normal");
-            doc.text(`DATA: ${dataTexto} | Período: ${horaIni} às ${horaFim}`, larguraPagina - 14, 32, { align: "right" });
+            doc.text(`DATA: ${dataTexto} | Período: ${horaIni} às ${horaFim}`, larguraPagina / 2, 32, { align: "center" });
             doc.setDrawColor(200);
             doc.line(14, 38, larguraPagina - 14, 38);
         }
 
-        function gerarPdfSecao(tipo) {
+        async function gerarPdfSecao(tipo) {
             if (!verificarPreviewCarregado()) return;
 
             const { jsPDF } = window.jspdf;
@@ -208,9 +240,10 @@
                 : [['Nº', 'SOLICITANTE', 'OCORRÊNCIA', 'LOCAL', 'REGIÃO', 'EQUIPE', 'ENVIO', 'SITUAÇÃO', 'FIM', 'RESULTADO', 'HISTÓRICO']];
             const headColor = isAgentes ? [41, 128, 185] : [142, 68, 173];
 
-            dias.forEach((dia, index) => {
+            for (const [index, dia] of dias.entries()) {
                 if (index > 0) doc.addPage();
                 aplicarCabecalhoPdf(doc, titulo, formatarDataBR(dia), horaIni, horaFim);
+                await adicionarEmblemaPdf(doc);
 
                 doc.setFontSize(12);
                 doc.setTextColor(0);
@@ -236,7 +269,7 @@
                     doc.setFont("helvetica", "normal");
                     doc.text("(Sem registros no horário selecionado)", 14, 58);
                 }
-            });
+            }
 
             doc.save(arquivo);
         }
@@ -548,7 +581,7 @@
         };
 
         // --- FUNÇÃO 2: GERAR PDF A PARTIR DA TELA (COM AS EDIÇÕES) ---
-        document.getElementById('btnGerarPDF').onclick = () => {
+        document.getElementById('btnGerarPDF').onclick = async () => {
             if (!verificarPreviewCarregado()) return;
 
             const { jsPDF } = window.jspdf;
@@ -568,22 +601,15 @@
             for (let i = 0; i < dias.length; i++) {
                 if (i > 0) { doc.addPage(); paginaAtual++; }
 
-                // INSERÇÃO DA IMAGEM CORRIGIDA
-                if (imgData && imgData.length > 50) { 
-                    try { 
-                        doc.addImage(imgData, 14, 10, 25, 25); 
-                    } catch(e){
-                        console.error("Erro ao inserir o brasão no PDF:", e);
-                    } 
-                }
+                await adicionarEmblemaPdf(doc, 14, 10, 25, 25);
                 
                 const larguraPagina = doc.internal.pageSize.width;
                 doc.setFontSize(14); doc.setTextColor(44, 62, 80); doc.setFont("helvetica", "bold");
-                doc.text("CENTRAL DE OPERAÇÕES DE TRÂNSITO E TRANSPORTE - COTT", larguraPagina - 14, 20, { align: "right" });
+                doc.text("CENTRAL DE OPERAÇÕES DE TRÂNSITO E TRANSPORTE - COTT", larguraPagina / 2, 20, { align: "center" });
                 
                 doc.setFontSize(10); doc.setTextColor(100); doc.setFont("helvetica", "normal");
                 // Adicionando a informação do horário no cabeçalho do PDF
-                doc.text(`DATA: ${formatarDataBR(dias[i])} | Período: ${horaIni} às ${horaFim}`, larguraPagina - 14, 32, { align: "right" });
+                doc.text(`DATA: ${formatarDataBR(dias[i])} | Período: ${horaIni} às ${horaFim}`, larguraPagina / 2, 32, { align: "center" });
                 doc.setDrawColor(200); doc.line(14, 38, larguraPagina - 14, 38); 
 
                 let finalY = 45;
@@ -663,7 +689,7 @@
             }
 
             document.getElementById('msgLoading').style.display = 'none';
-            doc.save("Relatorio_Editado.pdf");
+            doc.save("Relatorio_Geral.pdf");
         };
 }
 

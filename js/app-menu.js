@@ -29,6 +29,17 @@
         'observacoes.html'
     ]);
 
+    const menuOrder = [
+        'agentes.html',
+        'ocorrencias.html',
+        'relatorio_geral.html',
+        'observacoes.html',
+        'gestao_usuarios.html',
+        'admin.html',
+        'auditoria.html',
+        'estatisticas.html'
+    ];
+
     const getCurrentFile = () => (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
     const normalize = (value) => String(value || '').trim().toLowerCase();
 
@@ -52,6 +63,34 @@
         return new Set(defaultPages);
     }
 
+    function atualizarUsuarioMenu(userData, user) {
+        const nome = userData?.nome || user?.email || "Usuário";
+        const texto = `Olá, ${nome}`;
+        const displayExistente = document.getElementById('nomeUsuarioDisplay');
+
+        if (displayExistente) {
+            const atual = String(displayExistente.textContent || "").trim();
+            if (!atual || atual === "Carregando..." || atual === "...") {
+                displayExistente.textContent = texto;
+            }
+            return;
+        }
+
+        let display = menu.querySelector('.app-user-display');
+        if (!display) {
+            display = document.createElement('span');
+            display.className = 'app-user-display';
+            const logoutButton = menu.querySelector('.app-logout-button');
+            if (logoutButton) {
+                menu.insertBefore(display, logoutButton);
+            } else {
+                menu.appendChild(display);
+            }
+        }
+
+        display.textContent = texto;
+    }
+
     function filterMenu(allowedPages) {
         const currentFile = getCurrentFile();
 
@@ -61,6 +100,16 @@
                 link.remove();
             }
         });
+
+        const dropdown = menu.querySelector('.app-menu-dropdown');
+        if (dropdown) {
+            const orderedLinks = [...dropdown.querySelectorAll('.app-menu-link')].sort((a, b) => {
+                const pageA = normalize(a.getAttribute('data-page'));
+                const pageB = normalize(b.getAttribute('data-page'));
+                return menuOrder.indexOf(pageA) - menuOrder.indexOf(pageB);
+            });
+            orderedLinks.forEach((link) => dropdown.appendChild(link));
+        }
 
         if (currentFile === 'index.html') {
             menu.querySelector('.app-home-shortcut')?.remove();
@@ -96,7 +145,9 @@
             if (!user) return defaultPages;
 
             const userSnap = await getDoc(doc(db, "usuarios", user.uid));
-            return getAllowedPages(userSnap.exists() ? userSnap.data() : null);
+            const userData = userSnap.exists() ? userSnap.data() : null;
+            atualizarUsuarioMenu(userData, user);
+            return getAllowedPages(userData);
         } catch (error) {
             console.error("Erro ao filtrar menu:", error);
             return defaultPages;

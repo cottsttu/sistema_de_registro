@@ -80,15 +80,11 @@
             inset: 0;
             z-index: -2;
             pointer-events: none;
-            background:
-                radial-gradient(circle at 58% 44%, rgba(85, 246, 255, 0.08), transparent 34%),
-                rgba(255, 255, 255, 0.10);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         body[data-theme="night"]::before {
-            background:
-                radial-gradient(circle at 58% 44%, rgba(12, 78, 83, 0.18), transparent 34%),
-                linear-gradient(rgba(2, 9, 15, 0.16), rgba(2, 9, 15, 0.30));
+            background: rgba(2, 9, 15, 0.30);
         }
 
         .dashboard-page {
@@ -489,7 +485,7 @@
         }
 
         body.non-admin-panel .button-group {
-            grid-template-columns: repeat(auto-fit, minmax(210px, 260px));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             justify-content: center;
             align-items: center;
         }
@@ -504,7 +500,7 @@
             }
 
             body.non-admin-panel .button-group {
-                grid-template-columns: repeat(auto-fit, minmax(190px, 240px));
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             }
         }
 
@@ -841,5 +837,269 @@ body[data-theme="night"] .menu-card[data-tone] .menu-icon {
     object-fit: contain !important;
     object-position: center center !important;
     margin: 0 auto !important;
+}
+
+@media (min-width: 821px) {
+    body.non-admin-panel .button-group {
+        grid-template-columns: repeat(4, minmax(130px, 1fr)) !important;
+        justify-content: stretch !important;
+    }
+
+    body.non-admin-panel .panel-shell[data-visible-cards="3"] .button-group {
+        width: calc(75% - clamp(7px, 0.85vw, 12px));
+        margin-inline: auto;
+        grid-template-columns: repeat(3, minmax(130px, 1fr)) !important;
+    }
+
+    body.non-admin-panel .panel-shell[data-visible-cards="2"] .button-group {
+        width: calc(50% - clamp(11px, 1.35vw, 24px));
+        margin-inline: auto;
+        grid-template-columns: repeat(2, minmax(130px, 1fr)) !important;
+    }
+}
+
+@media (min-width: 1181px) {
+    body.non-admin-panel .button-group {
+        grid-template-columns: repeat(4, minmax(170px, 1fr)) !important;
+    }
+
+    body.non-admin-panel .panel-shell[data-visible-cards="3"] .button-group {
+        width: calc(75% - clamp(11px, 1.35vw, 24px));
+        grid-template-columns: repeat(3, minmax(170px, 1fr)) !important;
+    }
+
+    body.non-admin-panel .panel-shell[data-visible-cards="2"] .button-group {
+        width: calc(50% - clamp(22px, 2.7vw, 48px));
+        grid-template-columns: repeat(2, minmax(170px, 1fr)) !important;
+    }
+}
+
+/* Padronização visual com Observações/Ocorrências: sem neon. */
+body {
+    --cyan: #0b5c68;
+    --cyan-soft: rgba(44, 62, 80, 0.20);
+    --cyan-dim: rgba(44, 62, 80, 0.10);
+    --panel: rgba(245, 252, 255, 0.74);
+    --panel-strong: rgba(235, 247, 250, 0.82);
+    --white: #102431;
+    --muted: rgba(16, 36, 49, 0.76);
+}
+
+body[data-theme="night"] {
+    --cyan: #d8f6ff;
+    --cyan-soft: rgba(216, 246, 255, 0.18);
+    --cyan-dim: rgba(216, 246, 255, 0.08);
+    --panel: rgba(12, 28, 36, 0.62);
+    --panel-strong: rgba(12, 28, 36, 0.78);
+    --white: #f5fbff;
+    --muted: rgba(232, 246, 250, 0.78);
+}
+
+.hero-title,
+body[data-theme="day"] .hero-title,
+body[data-theme="night"] .hero-title {
+    text-shadow: none !important;
+}
+
+.user-info,
+body[data-theme="day"] .user-info {
+    color: #0b5c68 !important;
+    background: rgba(236, 248, 251, 0.82) !important;
+    border-color: rgba(12, 82, 96, 0.22) !important;
+    box-shadow: 0 8px 20px rgba(54, 82, 94, 0.16) !important;
+    text-shadow: none !important;
+}
+
+body[data-theme="night"] .user-info {
+    color: #d8f6ff !important;
+    background: rgba(30, 43, 48, 0.82) !important;
+    border-color: rgba(220, 236, 245, 0.22) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28) !important;
+}
+
+.panel-shell,
+body[data-theme="day"] .panel-shell,
+body[data-theme="night"] .panel-shell {
+    border-width: 1px !important;
+    border-radius: 24px !important;
+    box-shadow: 0 16px 34px rgba(54, 82, 94, 0.16) !important;
+}
+
+body[data-theme="day"] .panel-shell {
+    border-color: rgba(12, 82, 96, 0.36) !important;
+    background: rgba(245, 252, 255, 0.74) !important;
+}
+
+body[data-theme="night"] .panel-shell {
+    border-color: rgba(216, 246, 255, 0.26) !important;
+    background: rgba(12, 28, 36, 0.62) !important;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32) !important;
+}
+
+.menu-card,
+body[data-theme="day"] .menu-card,
+body[data-theme="night"] .menu-card {
+    border-width: 1px !important;
+    border-radius: 18px !important;
+    box-shadow: 0 10px 22px rgba(54, 82, 94, 0.14) !important;
+}
+
+body[data-theme="day"] .menu-card {
+    border-color: rgba(12, 82, 96, 0.36) !important;
+    background: rgba(246, 252, 255, 0.76) !important;
+}
+
+body[data-theme="night"] .menu-card {
+    border-color: rgba(216, 246, 255, 0.22) !important;
+    background: rgba(12, 28, 36, 0.58) !important;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.30) !important;
+}
+
+.menu-card::before {
+    display: none !important;
+}
+
+.menu-card:hover,
+.menu-card:focus-visible,
+body[data-theme="day"] .menu-card:hover,
+body[data-theme="day"] .menu-card:focus-visible {
+    border-color: rgba(12, 82, 96, 0.56) !important;
+    box-shadow: 0 14px 28px rgba(54, 82, 94, 0.18) !important;
+}
+
+body[data-theme="night"] .menu-card:hover,
+body[data-theme="night"] .menu-card:focus-visible {
+    border-color: rgba(216, 246, 255, 0.34) !important;
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34) !important;
+}
+
+.dashboard-page {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 100vh;
+    padding: 86px clamp(14px, 2vw, 24px) 24px !important;
+    gap: 18px !important;
+}
+
+.hero-title {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 990;
+    height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 !important;
+    padding: 0 300px 0 300px;
+    width: 100vw;
+    color: #ffffff !important;
+    background: #2c3e50;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.20);
+    font-size: 34px !important;
+    line-height: 1 !important;
+    letter-spacing: 1px !important;
+    text-align: center;
+}
+
+.topbar {
+    position: fixed !important;
+    top: 15px !important;
+    right: 20px !important;
+    z-index: 995 !important;
+}
+
+.theme-switch {
+    position: fixed !important;
+    top: 15px !important;
+    left: 20px !important;
+    z-index: 993 !important;
+    transform: scale(0.78);
+    transform-origin: left top;
+}
+
+.user-info,
+body[data-theme="day"] .user-info,
+body[data-theme="night"] .user-info {
+    min-height: 36px !important;
+    padding: 0 8px 0 12px !important;
+    border-radius: 10px !important;
+    gap: 8px !important;
+    font-size: 0.78rem !important;
+}
+
+.btn-logout {
+    min-height: 28px !important;
+    padding: 0 12px !important;
+    border-radius: 8px !important;
+    font-size: 0.78rem !important;
+}
+
+.panel-shell,
+body[data-theme="day"] .panel-shell,
+body[data-theme="night"] .panel-shell {
+    width: min(100%, 1180px) !important;
+    margin-top: 0 !important;
+    padding: 26px 30px 30px !important;
+    border-radius: 8px !important;
+}
+
+.panel-header {
+    margin-bottom: 22px !important;
+}
+
+.logo-sttu {
+    width: clamp(130px, 14vw, 190px) !important;
+    max-height: 92px !important;
+}
+
+.button-group {
+    grid-template-columns: repeat(4, minmax(150px, 1fr)) !important;
+    gap: 18px !important;
+}
+
+.menu-card,
+body[data-theme="day"] .menu-card,
+body[data-theme="night"] .menu-card {
+    min-height: 188px !important;
+    gap: 18px !important;
+    padding: 22px 18px !important;
+    border-radius: 8px !important;
+}
+
+.menu-icon {
+    width: 86px !important;
+    height: 86px !important;
+    aspect-ratio: auto !important;
+}
+
+.menu-title {
+    font-size: 1.45rem !important;
+}
+
+body[data-theme="night"] .menu-card {
+    color: #ffffff !important;
+}
+
+body[data-theme="night"] .menu-title {
+    color: #ffffff !important;
+}
+
+body[data-theme="night"] .menu-icon img {
+    filter: brightness(0) invert(1) !important;
+}
+
+@media (max-width: 980px) {
+    .hero-title {
+        justify-content: flex-start;
+        padding: 0 150px 0 86px;
+        font-size: 22px !important;
+        text-align: left;
+    }
+
+    .button-group {
+        grid-template-columns: repeat(2, minmax(145px, 1fr)) !important;
+    }
 }
 

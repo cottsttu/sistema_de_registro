@@ -55,11 +55,11 @@ async function iniciarIndex() {
         return "pendente";
     }
 
-    function mostrarUsuarioLogado(email) {
+    function mostrarUsuarioLogado(nomeUsuario) {
         const topbar = document.querySelector(".topbar");
         topbar.innerHTML = `
             <div class="user-info">
-                <span>Logado: <b>${email}</b></span>
+                <span>Olá, <b>${nomeUsuario}</b></span>
                 <button id="btnLogout" class="btn-logout">SAIR</button>
             </div>
         `;
@@ -115,6 +115,10 @@ async function iniciarIndex() {
         const temAdminCards = ["admin.html", "gestao_usuarios.html", "auditoria.html", "estatisticas.html"]
             .some((pagina) => paginasPermitidas.has(pagina));
         if (hrAdmin) hrAdmin.classList.toggle("hidden", !temAdminCards);
+
+        const painel = document.querySelector(".panel-shell");
+        const cardsVisiveis = document.querySelectorAll(".menu-card:not(.hidden)").length;
+        if (painel) painel.dataset.visibleCards = String(cardsVisiveis);
     }
 
     function liberarTelaIndex() {
@@ -161,7 +165,7 @@ async function iniciarIndex() {
                 return;
             }
 
-            mostrarUsuarioLogado(user.email);
+            mostrarUsuarioLogado(dados.nome || user.email);
 
             if (isAdmin) {
                 localStorage.setItem("sttu-index-admin-cache", "true");
@@ -210,12 +214,12 @@ async function iniciarIndex() {
 
             if (!isVisualizador) {
                 let tempoInatividade;
-                const limiteTempo = 20 * 60 * 1000;
+                const limiteTempo = 15 * 60 * 1000;
 
                 const resetarTimer = () => {
                     clearTimeout(tempoInatividade);
                     tempoInatividade = setTimeout(() => {
-                        alert("Sessão encerrada por inatividade (20min).");
+                        alert("Sessão encerrada por inatividade (15min).");
                         signOut(auth).then(() => window.location.href = "login.html");
                     }, limiteTempo);
                 };

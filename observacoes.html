@@ -6,12 +6,15 @@
     <title>STTU - Observações</title>
     <link rel="preload" as="image" href="src/imagem_fundo_branco.png" fetchpriority="high">
     <link rel="preload" as="image" href="src/imagem_de_fundo_login_editada.jpeg">
-    <link rel="stylesheet" href="css/observacoes.css">
-    <link rel="stylesheet" href="css/app-menu.css">
+    <link rel="stylesheet" href="css/observacoes.css?v=20260623-12">
+    <link rel="stylesheet" href="css/app-menu.css?v=20260623-6">
 </head>
 <body data-theme="day">
 
-        <nav class="app-shortcut-menu" aria-label="Atalhos principais">
+<div class="page-header">
+    <div class="title-container">Observações - STTU</div>
+    <div class="header-actions">
+        <nav class="app-shortcut-menu app-menu-inline" aria-label="Atalhos principais">
         <a href="index.html" class="app-home-shortcut" aria-label="Página Inicial">
             <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M3 10.8 12 3l9 7.8"></path>
@@ -30,16 +33,20 @@
             <a href="admin.html" data-page="admin.html" class="app-menu-link">Permissões</a>
             <a href="relatorio_geral.html" data-page="relatorio_geral.html" class="app-menu-link">Relatórios</a>
         </div>
-    </nav>
+        </nav>
+        <div id="userInfo" class="inline-observacoes-1">
+            <span id="nomeUsuarioDisplay">...</span>
+            <button id="btnSair" class="btn-sair-topo">SAIR</button>
+        </div>
+    </div>
+</div>
 <img class="page-background light" src="src/imagem_fundo_branco.png" alt="" aria-hidden="true" fetchpriority="high" decoding="sync">
     <img class="page-background dark" src="src/imagem_de_fundo_login_editada.jpeg" alt="" aria-hidden="true">
 <div class="container">
         <div class="header-box">
             <h1 class="header-title">Observações - STTU</h1>
             <div class="inline-observacoes-1">
-                <span id="nomeUsuarioDisplay">...</span>
                 <span id="displayData" class="data-hoje">--/--/----</span>
-                <button id="btnSair" class="btn-sair-topo">SAIR</button>
             </div>
         </div>
 
@@ -90,12 +97,6 @@
                 <div class="item-conferencia">RÁDIO MÓVEL: <input type="number" id="qtd-radio-movel" class="verificar-item input-pendente" value="0"></div>
                 <div class="item-conferencia">IMPRESSORA: <input type="number" id="qtd-impressora" class="verificar-item input-pendente" value="0"></div>
                 <div class="item-conferencia">CONTROLE AR: <input type="number" id="qtd-ar" class="verificar-item input-pendente" value="0"></div>
-                <div class="item-conferencia">MALETA 4744: <input type="number" id="qtd-m4744" class="verificar-item input-pendente" value="0"></div>
-                <div class="item-conferencia">MALETA 4746: <input type="number" id="qtd-m4746" class="verificar-item input-pendente" value="0"></div>
-                <div class="item-conferencia">MALETA 4750: <input type="number" id="qtd-m4750" class="verificar-item input-pendente" value="0"></div>
-                <div class="item-conferencia">MALETA 4751: <input type="number" id="qtd-m4751" class="verificar-item input-pendente" value="0"></div>
-                <div class="item-conferencia">MALETA 4756: <input type="number" id="qtd-m4756" class="verificar-item input-pendente" value="0"></div>
-                <div class="item-conferencia">MALETA 4754: <input type="number" id="qtd-m4754" class="verificar-item input-pendente" value="0"></div>
                 <div class="item-conferencia">RÁDIO FIXO: <input type="number" id="qtd-radio-fixo" class="verificar-item input-pendente" value="0"></div>
             </div>
             <div class="btn-group"><button class="btn btn-registrar" id="btn-registrar-inicio">REGISTRAR INÍCIO DE TURNO</button>
@@ -105,16 +106,13 @@
             <div class="config-turno"><strong>EQUIPAMENTOS POR MALETA / OUTROS:</strong></div>
             <div class="grid-equipamentos">
                 <div class="selecao-maleta" id="container-botoes-maleta">
-                    <span>SELECIONAR MALETA:</span>
-                    <button class="btn-maleta" data-id="4744">MALETA Nº 4744</button>
-                    <button class="btn-maleta" data-id="4745">MALETA Nº 4745</button>
-                    <button class="btn-maleta" data-id="4746">MALETA Nº 4746</button>
-                    <button class="btn-maleta" data-id="4750">MALETA Nº 4750</button>
-                    <button class="btn-maleta" data-id="4751">MALETA Nº 4751</button>
-                    <button class="btn-maleta" data-id="4754">MALETA Nº 4754</button>
-                    <button class="btn-maleta" data-id="4756">MALETA Nº 4756</button>
-                    <input type="number" id="maleta-customizada" placeholder="OUTRA..." min="0" class="inline-observacoes-8">
+                    <span>MALETA Nº:</span>
+                    <input type="number" id="maleta-customizada" placeholder="0000" min="0" max="9999" class="inline-observacoes-8">
                     <input type="hidden" id="maleta-selecionada" value="">
+                    <div class="maletas-dia-resumo" id="maletas-dia-resumo">
+                        <strong>Maletas em campo: <span id="maletas-dia-total">0</span></strong>
+                        <span id="maletas-dia-lista">Nenhuma em campo</span>
+                    </div>
                 </div>
                 <div class="item-conferencia">ETILÔMETRO: <input type="number" id="qtd-etil" value="1"></div>
                 <div class="item-conferencia">PITEIRA: <input type="number" id="qtd-piteira" value="2"></div>
@@ -128,7 +126,7 @@
                 
                 <div class="inline-observacoes-9">
                     <label class="inline-observacoes-10">ENTREGUE PARA (OBRIGATÓRIO):</label>
-                    <input type="text" id="entregue-para" class="outras-obs inline-observacoes-11" placeholder="NOME DO AGENTE QUE RECEBEU..." autocomplete="off">
+                    <input type="text" id="entregue-para" class="outras-obs inline-observacoes-11" list="listaAgentes" placeholder="NOME DO AGENTE QUE RECEBEU..." autocomplete="off">
                 </div>
 
                 <div class="inline-observacoes-12"><input type="text" id="obs-extras" class="outras-obs" placeholder="Outras observações..." autocomplete="off"></div>
@@ -136,14 +134,6 @@
             <div class="btn-group"><button class="btn btn-entrega" id="btn-registrar-maleta">REGISTRAR ENTREGA DE MALETA</button>
 
     </div>
-
-            <div class="config-turno"><strong>REGISTRO DE TENTANTES:</strong></div>
-            <div class="inline-observacoes-13">
-                <textarea id="texto-tentante" class="tentante-input" placeholder="Digite aqui o registo do tentante..." autocomplete="off"></textarea>
-                <div class="btn-group"><button class="btn btn-tentante" id="btn-registrar-tentante">REGISTRAR TENTANTE</button>
-
-    </div>
-            </div>
 
             <div class="config-turno inline-observacoes-14"><strong>AUSENTES:</strong></div>
             <div class="inline-observacoes-15">
@@ -292,8 +282,9 @@
     </div>
 
 <script src="js/theme-switch.js"></script>
-<script src="js/app-menu.js"></script>
-<script src="js/observacoes.js"></script>
+<script src="js/app-menu.js?v=20260623-6"></script>
+<script src="js/agentes-lista.js"></script>
+<script src="js/observacoes.js?v=20260623-12"></script>
 
 </body>
 </html>
