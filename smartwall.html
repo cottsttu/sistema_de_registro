@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smartwall - Ocorrências STTU</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/smartwall.css">
+    <link rel="stylesheet" href="css/app-menu.css">
+</head>
+<body>
+    <nav class="app-shortcut-menu" aria-label="Atalhos principais">
+        <a href="index.html" class="app-home-shortcut" aria-label="Página Inicial">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 10.8 12 3l9 7.8"></path>
+                <path d="M5.5 9.5V21h13V9.5"></path>
+                <path d="M9.5 21v-6h5v6"></path>
+            </svg>
+        </a>
+        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">☰</button>
+        <div class="app-menu-dropdown">
+            <a href="agentes.html" data-page="agentes.html" class="app-menu-link">Agentes</a>
+            <a href="auditoria.html" data-page="auditoria.html" class="app-menu-link">Auditoria</a>
+            <a href="gestao_usuarios.html" data-page="gestao_usuarios.html" class="app-menu-link">Cadastros</a>
+            <a href="estatisticas.html" data-page="estatisticas.html" class="app-menu-link">Estatísticas</a>
+            <a href="observacoes.html" data-page="observacoes.html" class="app-menu-link">Observações</a>
+            <a href="ocorrencias.html" data-page="ocorrencias.html" class="app-menu-link">Ocorrências</a>
+            <a href="admin.html" data-page="admin.html" class="app-menu-link">Permissões</a>
+            <a href="relatorio_geral.html" data-page="relatorio_geral.html" class="app-menu-link">Relatórios</a>
+        </div>
+    </nav>
+<div class="header">
+        <h1>📺 C.C.O - SMARTWALL STTU</h1>
+        <div>
+            <a href="index.html" class="btn-voltar">⬅ VOLTAR</a>
+            <span class="clock" id="relogio">00:00:00</span>
+        </div>
+    </div>
+
+    <div class="kpi-container">
+        <div class="kpi-card border-blue">
+            <h3>Total (Hoje)</h3>
+            <div class="value value-blue" id="kpiTotal">0</div>
+        </div>
+        <div class="kpi-card border-orange">
+            <h3>Em Andamento</h3>
+            <div class="value value-orange" id="kpiAndamento">0</div>
+        </div>
+        <div class="kpi-card border-green">
+            <h3>Concluídas (Hoje)</h3>
+            <div class="value value-green" id="kpiConcluidas">0</div>
+        </div>
+        <div class="kpi-card border-red has-tooltip" id="kpiVtrsCard" data-tooltip="Nenhuma VTR empenhada no momento.">
+            <h3>VTRs Empenhadas</h3>
+            <div class="value value-red" id="kpiVtrs">0</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="charts-section">
+            <div class="chart-box">
+                <h2>Ocorrências por Região (Ativas)</h2>
+                <div class="canvas-container">
+                    <canvas id="chartRegioes"></canvas>
+                </div>
+            </div>
+            <div class="chart-box">
+                <h2>Natureza das Ocorrências (Hoje)</h2>
+                <div class="canvas-container">
+                    <canvas id="chartTipos"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="active-list-section">
+            <h2>🚨 Últimas Ativas (Passe o mouse)</h2>
+            <div class="list-container" id="listaAtivas">
+                </div>
+        </div>
+    </div>
+
+    <script src="js/theme-switch.js"></script>
+<script src="js/app-menu.js"></script>
+<script src="js/smartwall.js"></script>
+
+
+
+
+
+
+
+
+
+
+

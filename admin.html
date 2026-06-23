@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Admin - STTU</title>
+    <link rel="stylesheet" href="css/admin.css?v=20260619-13">
+    <link rel="stylesheet" href="css/app-menu.css?v=20260619-3">
+</head>
+<body>
+    <nav class="app-shortcut-menu" aria-label="Atalhos principais">
+        <a href="index.html" class="app-home-shortcut" aria-label="Página Inicial">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 10.8 12 3l9 7.8"></path>
+                <path d="M5.5 9.5V21h13V9.5"></path>
+                <path d="M9.5 21v-6h5v6"></path>
+            </svg>
+        </a>
+        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">☰</button>
+        <button type="button" id="btnSair" class="app-logout-button">SAIR</button>
+        <div class="app-menu-dropdown">
+            <a href="agentes.html" data-page="agentes.html" class="app-menu-link">Agentes</a>
+            <a href="auditoria.html" data-page="auditoria.html" class="app-menu-link">Auditoria</a>
+            <a href="gestao_usuarios.html" data-page="gestao_usuarios.html" class="app-menu-link">Cadastros</a>
+            <a href="estatisticas.html" data-page="estatisticas.html" class="app-menu-link">Estatísticas</a>
+            <a href="observacoes.html" data-page="observacoes.html" class="app-menu-link">Observações</a>
+            <a href="ocorrencias.html" data-page="ocorrencias.html" class="app-menu-link">Ocorrências</a>
+            <a href="admin.html" data-page="admin.html" class="app-menu-link">Permissões</a>
+            <a href="relatorio_geral.html" data-page="relatorio_geral.html" class="app-menu-link">Relatórios</a>
+        </div>
+    </nav>
+<main class="admin-shell">
+    <header class="admin-title">
+        <span class="title-icon" aria-hidden="true">⚙</span>
+        <h1>Gerenciar Usuários</h1>
+    </header>
+
+    <section class="admin-layout">
+        <section class="users-panel" aria-label="Lista de usuários">
+            <div class="users-toolbar">
+                <button type="button" class="toolbar-btn add" id="btnNovoUsuario">+ Novo Usuário</button>
+                <div class="toolbar-actions">
+                    <button type="button" class="icon-tool" id="btnFiltrarUsuarios" title="Filtrar usuários">▾</button>
+                    <button type="button" class="icon-tool" id="btnOrdenarUsuarios" title="Ordenar usuários">☷</button>
+                    <label class="search-box">
+                        <input type="search" id="buscaUsuarios" placeholder="Busca...">
+                        <span aria-hidden="true">⌕</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="users-table-wrap">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Usuário / Matrícula</th>
+                            <th>Permissão</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaUsuarios">
+                        <tr><td colspan="4" class="empty-row">Carregando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <aside class="editor-panel" aria-label="Cadastrar ou editar usuário">
+            <h2>Cadastrar / Editar Usuário</h2>
+
+            <div class="form-group">
+                <label>UID:</label>
+                <input type="text" id="uidUser" placeholder="Selecione na lista abaixo..." readonly class="inline-admin-1">
+            </div>
+
+            <div class="form-group">
+                <label>Nome Completo:</label>
+                <input type="text" id="nomeUser" class="inline-admin-2">
+            </div>
+
+            <div class="form-group">
+                <label>Usuário / Matrícula:</label>
+                <input type="text" id="matUser">
+            </div>
+
+            <div class="form-group">
+                <label>Nova Senha:</label>
+                <div class="password-field">
+                    <input type="password" id="senhaUser" placeholder="" minlength="6">
+                    <button type="button" id="btnToggleSenhaAdmin" class="password-eye" aria-label="Exibir senha">👁</button>
+                </div>
+                <small class="field-help">Deixe em branco para manter a senha atual.</small>
+            </div>
+
+            <div class="form-group">
+                <label>Cargo / Permissão:</label>
+                <select id="cargoUser">
+                    <option value="agente">AGENTE (PADRÃO)</option>
+                    <option value="ciosp">CIOSP (SÓ OCORRÊNCIAS)</option>
+                    <option value="cir">CIR (SÓ OCORRÊNCIAS)</option>
+                    <option value="admin">ADMINISTRADOR</option>
+                    <option value="visualizador">VISUALIZADOR</option>
+                </select>
+            </div>
+
+            <button class="btn btn-salvar" id="btnSalvar">💾 SALVAR ALTERAÇÕES</button>
+            <button class="btn btn-limpar" id="btnLimparEditor" type="button">LIMPAR CAMPOS</button>
+            <button class="btn btn-excluir" id="btnExcluir">🗑️ EXCLUIR USUÁRIO</button>
+
+            <div class="card-contador">
+                <h3>Controle Global de Ocorrências</h3>
+                <p>Gerencie a numeração única para todas as ocorrências.</p>
+
+                <button class="btn btn-zerar" id="btnZerarContador">ZERAR CONTADOR</button>
+
+                <label class="counter-label">DEFINIR NÚMERO MANUAL</label>
+                <div class="counter-row">
+                    <input type="number" id="inputNovoContador" placeholder="Ex: 500">
+                    <button class="btn btn-definir" id="btnDefinirContador">DEFINIR</button>
+                </div>
+
+                <div class="counter-current">
+                    <strong>ÚLTIMO NÚMERO:</strong>
+                    <span id="displayContadorGlobal">Carregando...</span>
+                </div>
+            </div>
+        </aside>
+    </section>
+
+    <section class="agents-admin-panel" aria-label="Controle de agentes e condutores">
+        <div class="agents-admin-header">
+            <div>
+                <h2>Controle de Agentes e Condutores</h2>
+                <p>Cadastre, altere ou exclua agentes / condutor.</p>
+            </div>
+            <button type="button" class="toolbar-btn add" id="btnImportarAgentesLocais">Importar lista local</button>
+        </div>
+
+        <div class="agents-admin-grid">
+            <div class="agents-list-card">
+                <div class="agents-list-toolbar">
+                    <label class="search-box agents-search">
+                        <input type="search" id="buscaAgentesAdmin" placeholder="Buscar agente...">
+                        <span aria-hidden="true">⌕</span>
+                    </label>
+                    <span id="totalAgentesAdmin" class="agents-total">Total: --</span>
+                </div>
+
+                <div class="agents-table-wrap">
+                    <table class="agents-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Origem</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listaAgentesAdmin">
+                            <tr><td colspan="3" class="empty-row">Carregando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <form id="formAgenteAdmin" class="agent-editor-card" autocomplete="off">
+                <h3>Cadastrar / Editar Agente</h3>
+                <input type="hidden" id="agenteAdminId">
+                <div class="form-group">
+                    <label>Nome do agente / condutor:</label>
+                    <input type="text" id="agenteAdminNome" placeholder="Nome completo">
+                </div>
+                <div class="form-group">
+                    <label>Matrícula:</label>
+                    <input type="text" id="agenteAdminMatricula" inputmode="numeric" maxlength="8" placeholder="xx.xxx-x">
+                </div>
+                <button type="submit" class="btn btn-salvar">SALVAR AGENTE</button>
+                <button type="button" id="btnLimparAgenteAdmin" class="btn btn-limpar">LIMPAR AGENTE</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<script src="js/theme-switch.js?v=20260619-3"></script>
+<script src="js/app-menu.js?v=20260619-3"></script>
+<script src="js/agentes-lista.js?v=20260619-1"></script>
+<script src="js/admin.js?v=20260619-20"></script>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

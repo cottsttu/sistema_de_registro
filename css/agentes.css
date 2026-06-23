@@ -1,0 +1,1018 @@
+﻿body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        
+        .page-header { background-color: #36454f; color: white; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .title-container { font-size: 24px; font-weight: bold; }
+        
+        table { border-collapse: collapse; width: 100%; border: 1px solid #ddd; margin-bottom: 20px; background: white; }
+        th, td { border: 1px solid #ddd; padding: 6px; text-align: left; font-size: 11px; vertical-align: top; }
+        .date-header-row { background-color: #36454f; color: white; text-align: center; font-weight: bold; }
+        .data-header { background-color: #f2f2f2; text-align: center; font-weight: bold; }
+        
+        .agentes-container { display: flex; flex-direction: column; gap: 4px; min-width: 250px; }
+        .agente-row { display: flex; align-items: center; gap: 5px; transition: opacity 0.3s; }
+        
+        .input-multiplo { margin-bottom: 2px; display: block; width: 98%; }
+
+        input, select, textarea { 
+            width: 98%; padding: 4px; box-sizing: border-box; border: 1px solid #ccc; 
+            font-family: inherit; font-size: 11px; text-transform: uppercase; 
+        }
+        textarea { resize: vertical; min-height: 40px; }
+        
+        .condutor-radio { width: auto; cursor: pointer; }
+        .obrigatorio { border-left: 4px solid #dc3545; }
+        .campo-numerico { background-color: #fff9e6; font-weight: bold; }
+
+        .section-title { background-color: #55606b; color: white; padding: 10px; margin-top: 30px; border-radius: 5px 5px 0 0; font-weight: bold; }
+        
+        #tabelaAtivos th { background-color: #ffc107; color: #212529; }
+        #relatorioFinal th { background-color: #6a7c8b; color: white; }
+        
+        .hora-fim-celula { color: #d9534f; font-weight: bold; }
+        .status-encaminhado { color: #e67e22; font-weight: bold; }
+        .status-encerrado { color: #28a745; font-weight: bold; }
+        .condutor-destaque { color: #007bff; font-weight: bold; }
+
+        .btn { padding: 8px 12px; border-radius: 5px; cursor: pointer; border: none; font-weight: bold; transition: 0.3s; margin: 2px; }
+        .btn-salvar { background-color: #007bff; color: white; }
+        .btn-devolver { background-color: #dc3545; color: white; font-size: 10px; }
+        .btn-encaminhar { background-color: #17a2b8; color: white; font-size: 10px; }
+        .btn-editar-ativo { background-color: #f1c40f; color: #111; font-size: 10px; }
+        .btn-editar-salvar { background-color: #28a745 !important; color: white !important; }
+        .btn-confirmar { background-color: #28a745; color: white; font-size: 10px; }
+        .btn-download { background-color: #28a745; color: white; }
+        .btn-home { background-color: #55606b; color: white; text-decoration: none; display: inline-block; }
+        .btn-sair { background-color: #c0392b; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; font-size: 12px; cursor: pointer; border: none; }
+        
+        /* BOTÃO DE EXCLUIR (X) */
+        .btn-excluir-x {
+            background-color: #c0392b;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 3px;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-excluir-x:hover { background-color: #a93226; transform: scale(1.1); }
+
+        input:disabled { background-color: #e9ecef; cursor: not-allowed; }
+        .editando-celula { background-color: #fff3cd !important; border: 2px solid #ffc107 !important; padding: 4px !important; }
+        
+        .edit-row-container { display: flex; align-items: center; gap: 4px; margin-bottom: 2px; }
+        .edit-agente-input { width: 100% !important; font-size: 10px !important; background-color: white; }
+
+        /* --- CORES DAS REGIÕES --- */
+        .regiao-1 { background-color: #3b364c !important; color: white; text-align: center; font-weight: bold; } 
+        .regiao-2 { background-color: #e4f001 !important; color: white; text-align: center; font-weight: bold; } 
+        .regiao-3 { background-color: #64ec02 !important; color: white; text-align: center; font-weight: bold; } 
+        .regiao-4 { background-color: #096acc !important; color: white; text-align: center; font-weight: bold; } 
+        .regiao-5 { background-color: #d30000 !important; color: black; text-align: center; font-weight: bold; } 
+        .regiao-geral { background-color: #f8f9fa !important; color: #333; text-align: center; font-weight: bold; }
+
+:root {
+        --cyan: #55f6ff;
+        --cyan-border: rgba(85, 246, 255, 0.72);
+        --red: #ff4d4d;
+        --green: #3cff78;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { min-height: 100%; background: #061018; }
+
+    body {
+        --page-text: #f5fbff;
+        --header-bg: rgba(6, 18, 27, 0.86);
+        --panel-bg: rgba(12, 28, 36, 0.58);
+        --panel-border: var(--cyan-border);
+        --table-bg: rgba(8, 24, 31, 0.64);
+        --table-head: rgba(13, 38, 48, 0.82);
+        --table-cell: rgba(8, 23, 31, 0.48);
+        --table-line: rgba(85, 246, 255, 0.20);
+        --input-bg: rgba(7, 20, 28, 0.68);
+        --input-text: #ffffff;
+        --input-border: rgba(85, 246, 255, 0.55);
+        --section-bg: rgba(8, 31, 40, 0.82);
+        --section-text: #ffffff;
+        min-height: 100vh;
+        margin: 0;
+        color: var(--page-text);
+        font-family: "Roboto Condensed", "Arial Narrow", "Segoe UI", Arial, sans-serif;
+        background: #061018;
+        overflow-x: hidden;
+        position: relative;
+        isolation: isolate;
+    }
+
+    body[data-theme="day"] {
+        --page-text: #102431;
+        --header-bg: rgba(190, 239, 242, 0.80);
+        --panel-bg: rgba(245, 252, 255, 0.72);
+        --panel-border: rgba(108, 245, 252, 0.74);
+        --table-bg: rgba(246, 252, 255, 0.74);
+        --table-head: rgba(218, 229, 235, 0.88);
+        --table-cell: rgba(250, 254, 255, 0.58);
+        --table-line: rgba(50, 130, 146, 0.22);
+        --input-bg: rgba(255, 255, 255, 0.72);
+        --input-text: #172832;
+        --input-border: rgba(45, 142, 157, 0.42);
+        --section-bg: rgba(247, 253, 255, 0.74);
+        --section-text: #111d25;
+    }
+
+    .page-background {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -3;
+        pointer-events: none;
+        user-select: none;
+        opacity: 0;
+        transition: opacity 0.25s;
+    }
+
+    body[data-theme="day"] .page-background.light,
+    body[data-theme="night"] .page-background.dark {
+        opacity: 1;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        pointer-events: none;
+        background:
+            radial-gradient(circle at 62% 36%, rgba(85, 246, 255, 0.12), transparent 36%),
+            rgba(2, 9, 15, 0.38);
+        transition: background 0.25s;
+    }
+
+    body[data-theme="day"]::before {
+        background:
+            radial-gradient(circle at 58% 35%, rgba(85, 246, 255, 0.08), transparent 36%),
+            rgba(255, 255, 255, 0.10);
+    }
+
+    .page-header {
+        min-height: 58px !important;
+        margin-bottom: 0 !important;
+        padding: 8px clamp(14px, 2vw, 22px) !important;
+        gap: 18px;
+        background: var(--header-bg) !important;
+        border-bottom: 1px solid rgba(85, 246, 255, 0.22);
+        box-shadow: 0 8px 26px rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .title-container {
+        color: var(--page-text);
+        font-size: clamp(1.35rem, 2vw, 2rem) !important;
+        font-weight: 800;
+        letter-spacing: 0;
+        text-transform: uppercase;
+        text-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.38),
+            0 0 10px rgba(85, 246, 255, 0.38),
+            0 3px 8px rgba(0, 0, 0, 0.72);
+    }
+
+    #userInfo {
+        color: rgba(232, 246, 250, 0.88) !important;
+        text-shadow: none;
+    }
+
+    #nomeUsuarioDisplay {
+        color: rgba(232, 246, 250, 0.88) !important;
+        font-weight: 700;
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .shortcut-menu {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .shortcut-link {
+        min-height: 34px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 12px;
+        border: 1px solid rgba(220, 236, 245, 0.32);
+        border-radius: 7px;
+        color: rgba(238, 248, 251, 0.92);
+        background: rgba(14, 29, 38, 0.66);
+        box-shadow: 0 0 10px rgba(85, 246, 255, 0.10);
+        font-size: 12px;
+        font-weight: 800;
+        text-decoration: none;
+        text-transform: uppercase;
+    }
+
+    .shortcut-link:hover,
+    .shortcut-link:focus-visible {
+        color: #ffffff;
+        border-color: rgba(85, 246, 255, 0.58);
+        background: rgba(20, 52, 64, 0.74);
+        outline: none;
+    }
+
+    body[data-theme="day"] #userInfo,
+    body[data-theme="day"] #nomeUsuarioDisplay {
+        color: #20424d !important;
+    }
+
+    body[data-theme="day"] .shortcut-link {
+        color: #183c46;
+        border-color: rgba(12, 82, 96, 0.24);
+        background: rgba(236, 248, 251, 0.76);
+        box-shadow: 0 8px 18px rgba(54, 82, 94, 0.10);
+    }
+
+    .theme-toggle {
+        min-height: 36px;
+        padding: 0 12px;
+        border: 1px solid rgba(85, 246, 255, 0.62);
+        border-radius: 999px;
+        color: var(--cyan);
+        background: rgba(5, 18, 25, 0.58);
+        box-shadow: 0 0 14px rgba(85, 246, 255, 0.22);
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0;
+        text-transform: uppercase;
+    }
+
+    body[data-theme="day"] .theme-toggle {
+        color: #0c5260;
+        background: rgba(255, 255, 255, 0.74);
+    }
+
+    .page-shell {
+        width: calc(100% - clamp(20px, 3vw, 48px));
+        margin: 18px auto 26px;
+        padding: 10px;
+        border: 3px solid var(--panel-border);
+        border-radius: 26px;
+        background:
+            linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.012)),
+            var(--panel-bg);
+        box-shadow:
+            0 0 22px rgba(85, 246, 255, 0.55),
+            0 0 48px rgba(85, 246, 255, 0.18),
+            0 22px 60px rgba(0, 0, 0, 0.32),
+            inset 0 1px 24px rgba(255, 255, 255, 0.10);
+        backdrop-filter: blur(8px) saturate(114%);
+        -webkit-backdrop-filter: blur(8px) saturate(114%);
+    }
+
+    table {
+        width: 100%;
+        margin: 0 0 12px;
+        border-collapse: collapse;
+        border: 1px solid var(--table-line) !important;
+        color: var(--page-text);
+        background: var(--table-bg) !important;
+        box-shadow: inset 0 0 18px rgba(85, 246, 255, 0.04);
+    }
+
+    th, td {
+        border: 1px solid var(--table-line) !important;
+        padding: 6px 7px;
+        color: var(--page-text);
+        font-size: 12px;
+        line-height: 1.18;
+        vertical-align: top;
+    }
+
+    th {
+        text-align: center;
+        font-weight: 800;
+        text-transform: uppercase;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.72);
+    }
+
+    .date-header-row,
+    .data-header,
+    #relatorioFinal th {
+        color: var(--page-text) !important;
+        background: var(--table-head) !important;
+        text-align: center;
+        font-weight: 900;
+    }
+
+    body[data-theme="night"] #tabelaAtivos th {
+        color: #ffe36a !important;
+        background: rgba(42, 35, 6, 0.76) !important;
+        border-color: rgba(255, 216, 55, 0.72) !important;
+        box-shadow: inset 0 0 10px rgba(255, 216, 55, 0.16);
+    }
+
+    #tabelaAtivos td,
+    #relatorioFinal td,
+    form td {
+        background: var(--table-cell) !important;
+    }
+
+    #tabelaAtivos td,
+    #relatorioFinal td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    #tabelaAtivos td .btn,
+    #relatorioFinal td .btn,
+    #tabelaAtivos td button,
+    #relatorioFinal td button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    input, select, textarea {
+        padding: 5px 7px;
+        border: 1px solid var(--input-border) !important;
+        border-radius: 4px;
+        color: var(--input-text) !important;
+        background: var(--input-bg) !important;
+        font-family: inherit;
+        font-size: 12px;
+        outline: none;
+        box-shadow: inset 0 0 10px rgba(85, 246, 255, 0.05);
+    }
+
+    select option,
+    select optgroup {
+        color: #102431;
+        background: #f7fbff;
+    }
+
+    body[data-theme="night"] select option,
+    body[data-theme="night"] select optgroup {
+        color: #f4fbff;
+        background: #0b1d27;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: var(--cyan) !important;
+        box-shadow: 0 0 12px rgba(85, 246, 255, 0.28);
+    }
+
+    .condutor-radio {
+        accent-color: var(--cyan);
+    }
+
+    .campo-numerico {
+        background: rgba(255, 237, 124, 0.18) !important;
+        border-color: rgba(255, 225, 85, 0.56) !important;
+        font-weight: bold;
+    }
+
+    .section-title {
+        margin-top: 14px !important;
+        padding: 10px 14px !important;
+        border: 1px solid rgba(85, 246, 255, 0.26);
+        border-radius: 8px 8px 0 0 !important;
+        color: var(--section-text) !important;
+        background: var(--section-bg) !important;
+        font-size: clamp(1rem, 1.7vw, 1.45rem);
+        font-weight: 900;
+        text-shadow: 0 0 10px rgba(85, 246, 255, 0.18);
+    }
+
+    .hora-fim-celula { color: #ff7f90; font-weight: bold; }
+    .status-encaminhado { color: #ffb36a; font-weight: bold; }
+    .status-encerrado { color: #57e46b; font-weight: bold; }
+    .condutor-destaque { color: #4fb5ff; font-weight: bold; }
+
+    .btn,
+    .shortcut-link {
+        border: 1px solid rgba(110, 220, 238, 0.48) !important;
+        border-radius: 7px !important;
+        color: #f3fbff !important;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        text-transform: uppercase;
+        background:
+            linear-gradient(180deg, rgba(30, 63, 78, 0.92), rgba(10, 26, 36, 0.92)) !important;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.22),
+            inset 0 -10px 16px rgba(0, 0, 0, 0.22),
+            0 0 10px rgba(85, 246, 255, 0.18);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.82);
+    }
+
+    .btn:hover,
+    .shortcut-link:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.08);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.28),
+            inset 0 -10px 16px rgba(0, 0, 0, 0.22),
+            0 0 14px rgba(85, 246, 255, 0.30);
+    }
+
+    .btn-salvar {
+        background: linear-gradient(180deg, #166f9f, #0a3952) !important;
+        border-color: rgba(102, 213, 242, 0.72) !important;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.24),
+            0 0 14px rgba(85, 246, 255, 0.26);
+    }
+
+    .btn-devolver,
+    .btn-excluir-x {
+        background: linear-gradient(180deg, #8f3d2d, #4c1713) !important;
+        border-color: rgba(255, 141, 102, 0.58) !important;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.20),
+            0 0 10px rgba(255, 77, 77, 0.26);
+    }
+
+    .btn-encaminhar {
+        background: linear-gradient(180deg, #258190, #0c4650) !important;
+        border-color: rgba(104, 235, 246, 0.62) !important;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.20),
+            0 0 10px rgba(85, 246, 255, 0.24);
+    }
+
+    .acao-botoes {
+        height: 100%;
+        min-height: 52px;
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        white-space: nowrap;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .acao-botoes-row {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .acao-botoes .btn-devolver,
+    .acao-botoes .btn-encaminhar,
+    .acao-botoes .btn-editar-ativo {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        min-width: 72px;
+        padding: 5px 8px;
+        font-size: 10px;
+        line-height: 1;
+    }
+
+    .btn-confirmar,
+    .btn-editar-salvar,
+    .btn-download {
+        background: linear-gradient(180deg, #208a46, #0f4f28) !important;
+        border-color: rgba(93, 255, 143, 0.62) !important;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.20),
+            0 0 10px rgba(60, 255, 120, 0.24);
+    }
+
+    .btn-home {
+        background: linear-gradient(180deg, #263f4e, #111f2b) !important;
+        border-color: rgba(120, 186, 205, 0.52) !important;
+    }
+
+    #btnNavRelatorios {
+        background: linear-gradient(180deg, #6e3f82, #321948) !important;
+        border-color: rgba(217, 108, 255, 0.58) !important;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.20),
+            0 0 10px rgba(217, 108, 255, 0.22);
+    }
+
+    .btn-sair {
+        min-height: 36px;
+        padding: 0 16px !important;
+        border: 1px solid rgba(255, 77, 77, 0.60) !important;
+        border-radius: 8px !important;
+        color: white;
+        background: rgba(135, 28, 28, 0.82) !important;
+        box-shadow: 0 0 14px rgba(255, 77, 77, 0.32);
+        font-weight: 900;
+    }
+
+    .regiao-1 { background-color: #3b364c !important; color: white; text-align: center; font-weight: bold; }
+    .regiao-2 { background-color: #e4f001 !important; color: #111; text-align: center; font-weight: bold; }
+    .regiao-3 { background-color: #64ec02 !important; color: #111; text-align: center; font-weight: bold; }
+    .regiao-4 { background-color: #096acc !important; color: white; text-align: center; font-weight: bold; }
+    .regiao-5 { background-color: #d30000 !important; color: white; text-align: center; font-weight: bold; }
+    .regiao-geral { background-color: #69727c !important; color: white; text-align: center; font-weight: bold; }
+
+    body[data-theme="night"] #tabelaAtivos td.regiao-1,
+    body[data-theme="night"] #relatorioFinal td.regiao-1,
+    body[data-theme="night"] form td.regiao-1 { background-color: #3b364c !important; color: #ffffff !important; }
+
+    body[data-theme="night"] #tabelaAtivos td.regiao-2,
+    body[data-theme="night"] #relatorioFinal td.regiao-2,
+    body[data-theme="night"] form td.regiao-2 { background-color: #e4f001 !important; color: #111111 !important; }
+
+    body[data-theme="night"] #tabelaAtivos td.regiao-3,
+    body[data-theme="night"] #relatorioFinal td.regiao-3,
+    body[data-theme="night"] form td.regiao-3 { background-color: #64ec02 !important; color: #111111 !important; }
+
+    body[data-theme="night"] #tabelaAtivos td.regiao-4,
+    body[data-theme="night"] #relatorioFinal td.regiao-4,
+    body[data-theme="night"] form td.regiao-4 { background-color: #096acc !important; color: #ffffff !important; }
+
+    body[data-theme="night"] #tabelaAtivos td.regiao-5,
+    body[data-theme="night"] #relatorioFinal td.regiao-5,
+    body[data-theme="night"] form td.regiao-5 { background-color: #d30000 !important; color: #ffffff !important; }
+
+    body[data-theme="night"] #tabelaAtivos td.regiao-geral,
+    body[data-theme="night"] #relatorioFinal td.regiao-geral,
+    body[data-theme="night"] form td.regiao-geral { background-color: #69727c !important; color: #ffffff !important; }
+
+    body[data-theme="day"] #tabelaAtivos td.regiao-1,
+    body[data-theme="day"] #relatorioFinal td.regiao-1,
+    body[data-theme="day"] form td.regiao-1 { background-color: #3b364c !important; color: #ffffff !important; }
+
+    body[data-theme="day"] #tabelaAtivos td.regiao-2,
+    body[data-theme="day"] #relatorioFinal td.regiao-2,
+    body[data-theme="day"] form td.regiao-2 { background-color: #e4f001 !important; color: #111111 !important; }
+
+    body[data-theme="day"] #tabelaAtivos td.regiao-3,
+    body[data-theme="day"] #relatorioFinal td.regiao-3,
+    body[data-theme="day"] form td.regiao-3 { background-color: #64ec02 !important; color: #111111 !important; }
+
+    body[data-theme="day"] #tabelaAtivos td.regiao-4,
+    body[data-theme="day"] #relatorioFinal td.regiao-4,
+    body[data-theme="day"] form td.regiao-4 { background-color: #096acc !important; color: #ffffff !important; }
+
+    body[data-theme="day"] #tabelaAtivos td.regiao-5,
+    body[data-theme="day"] #relatorioFinal td.regiao-5,
+    body[data-theme="day"] form td.regiao-5 { background-color: #d30000 !important; color: #ffffff !important; }
+
+    body[data-theme="day"] #tabelaAtivos td.regiao-geral,
+    body[data-theme="day"] #relatorioFinal td.regiao-geral,
+    body[data-theme="day"] form td.regiao-geral { background-color: #f8f9fa !important; color: #333333 !important; }
+
+    @media (min-width: 1100px) {
+        body {
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .page-shell {
+            height: calc(100vh - 96px);
+            overflow: auto;
+            margin-top: 18px;
+        }
+
+        .page-shell::-webkit-scrollbar { width: 10px; height: 10px; }
+        .page-shell::-webkit-scrollbar-thumb { background: rgba(85, 246, 255, 0.34); border-radius: 999px; }
+    }
+
+    @media (max-width: 900px) {
+        .page-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .header-actions {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .page-shell {
+            width: calc(100% - 20px);
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+
+        table { min-width: 980px; }
+    }
+
+
+/* Estilos inline migrados do HTML */
+.inline-agentes-1 { font-size: 12px; display: flex; align-items: center; gap: 10px; }
+.inline-agentes-2 { font-weight: bold; color: #ecf0f1; }
+.inline-agentes-3 { background:transparent; color:white; text-align:center; border:none; }
+.inline-agentes-4 { min-width: 80px; }
+.inline-agentes-5 { min-width: 80px; }
+.inline-agentes-6 { text-align: center; }
+.inline-agentes-7 { text-align: center; margin-top: 20px; gap: 10px; display: flex; justify-content: center; padding-bottom: 20px; }
+.inline-agentes-8 { background-color: #8e44ad; }
+
+/* Layout do formulário de registro de equipe */
+#registroForm {
+    margin-bottom: 14px;
+}
+
+#registroForm table {
+    display: block;
+    min-width: 0;
+    margin: 0;
+    padding: clamp(14px, 1.8vw, 22px);
+    border: 1px solid rgba(85, 246, 255, 0.38) !important;
+    border-radius: 16px;
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02)),
+        rgba(7, 21, 30, 0.64) !important;
+    box-shadow:
+        inset 0 1px 22px rgba(255, 255, 255, 0.08),
+        0 0 18px rgba(85, 246, 255, 0.20);
+}
+
+body[data-theme="day"] #registroForm table {
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.70), rgba(255, 255, 255, 0.34)),
+        rgba(238, 249, 252, 0.78) !important;
+    border-color: rgba(20, 122, 142, 0.34) !important;
+}
+
+#registroForm thead,
+#registroForm tbody {
+    display: block;
+}
+
+#registroForm thead tr:first-child,
+#registroForm thead tr:nth-child(2) {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 10px;
+}
+
+#registroForm thead tr:nth-child(2) {
+    grid-template-columns: minmax(220px, 330px);
+    justify-content: center;
+    margin: 2px 0 12px;
+}
+
+#registroForm thead tr:first-child th,
+#registroForm thead tr:nth-child(2) td {
+    border: 0 !important;
+    background: transparent !important;
+}
+
+#registroForm thead tr:first-child th {
+    grid-column: 1 / -1;
+    padding: 0 0 2px;
+    color: var(--page-text) !important;
+    font-size: clamp(1.05rem, 1.7vw, 1.55rem);
+    letter-spacing: 0.03em;
+    text-shadow: 0 0 10px rgba(85, 246, 255, 0.28);
+}
+
+#registroForm thead tr:nth-child(2) td:first-child {
+    grid-column: auto;
+}
+
+#registroForm thead tr:nth-child(2) td:last-child {
+    display: none;
+}
+
+#registroForm #diaSemana,
+#registroForm #dataRelatorio {
+    min-height: 34px;
+    border: 1px solid rgba(85, 246, 255, 0.32) !important;
+    border-radius: 9px;
+    color: var(--input-text) !important;
+    background: rgba(6, 20, 29, 0.42) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+body[data-theme="day"] #registroForm #diaSemana,
+body[data-theme="day"] #registroForm #dataRelatorio {
+    background: rgba(255, 255, 255, 0.62) !important;
+}
+
+#registroForm #headerOriginalRow {
+    display: none;
+}
+
+#registroForm tbody tr {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 14px;
+    align-items: stretch;
+}
+
+#registroForm tbody td {
+    min-width: 0;
+    min-height: 96px;
+    padding: 0;
+    border: 0 !important;
+    background: transparent !important;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+#registroForm tbody td::before {
+    color: var(--page-text);
+    font-size: clamp(14px, 1vw, 16px);
+    font-weight: 900;
+    text-align: left;
+    text-transform: uppercase;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+
+#registroForm tbody td:nth-child(1)::before { content: "Veículo e local"; }
+#registroForm tbody td:nth-child(2)::before { content: "Agentes e condutor"; }
+#registroForm tbody td:nth-child(3)::before { content: "HT"; }
+#registroForm tbody td:nth-child(4)::before { content: "ASE"; }
+#registroForm tbody td:nth-child(5)::before { content: "Função equipe"; }
+#registroForm tbody td:nth-child(6)::before { content: "Maletas"; }
+#registroForm tbody td:nth-child(7)::before { content: "Região atual"; }
+#registroForm tbody td:nth-child(8)::before { content: "Hora início"; }
+#registroForm tbody td:nth-child(9)::before { content: "Ponto base atual"; }
+
+#registroForm tbody td:nth-child(1) { grid-column: span 2; }
+#registroForm tbody td:nth-child(2) { grid-column: span 4; }
+#registroForm tbody td:nth-child(3),
+#registroForm tbody td:nth-child(4),
+#registroForm tbody td:nth-child(6),
+#registroForm tbody td:nth-child(7),
+#registroForm tbody td:nth-child(8) { grid-column: span 2; }
+#registroForm tbody td:nth-child(5) { grid-column: span 4; }
+#registroForm tbody td:nth-child(9) { grid-column: span 6; }
+
+#registroForm input,
+#registroForm select,
+#registroForm textarea {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.15;
+}
+
+#registroForm textarea {
+    min-height: 230px;
+    resize: vertical;
+}
+
+#registroForm .agentes-container {
+    min-width: 0;
+    gap: 8px;
+}
+
+#registroForm .agente-row {
+    min-height: 46px;
+    padding: 0 8px 0 10px;
+    border: 1px solid var(--input-border);
+    border-radius: 10px;
+    background: var(--input-bg);
+}
+
+#registroForm .agente-row .agente-input {
+    min-height: 42px;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+#registroForm .condutor-radio {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+}
+
+#registroForm .input-multiplo {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+#registroForm .inline-agentes-6 {
+    margin-top: 6px;
+    padding: 10px 0 0;
+    border: 1px solid rgba(85, 246, 255, 0.26);
+    border-width: 0;
+    border-radius: 0;
+    background: transparent;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: left;
+}
+
+body[data-theme="day"] #registroForm .inline-agentes-6 {
+    background: transparent;
+}
+
+#registroForm .btn-salvar {
+    width: auto;
+    min-width: 190px;
+    min-height: 44px;
+    padding: 0 22px !important;
+    font-size: 14px;
+}
+
+#registroForm .btn-limpar-equipe {
+    width: auto;
+    min-width: 170px;
+    min-height: 44px;
+    padding: 0 20px !important;
+    border: 1px solid rgba(255, 141, 102, 0.58) !important;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #8f3d2d, #4c1713) !important;
+    color: #ffffff !important;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.20),
+        0 0 10px rgba(255, 77, 77, 0.22);
+    cursor: pointer;
+}
+
+#registroForm .btn-limpar-equipe:hover {
+    filter: brightness(1.08);
+}
+
+@media (max-width: 1180px) {
+    #registroForm tbody tr {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    #registroForm thead tr:nth-child(2) td:first-child,
+    #registroForm thead tr:nth-child(2) td:last-child,
+    #registroForm tbody td:nth-child(1),
+    #registroForm tbody td:nth-child(3),
+    #registroForm tbody td:nth-child(4),
+    #registroForm tbody td:nth-child(6),
+    #registroForm tbody td:nth-child(7),
+    #registroForm tbody td:nth-child(8) {
+        grid-column: span 3;
+    }
+
+    #registroForm thead tr:nth-child(2) td:first-child,
+    #registroForm thead tr:nth-child(2) td:last-child {
+        grid-column: auto;
+    }
+
+    #registroForm thead tr:nth-child(2) td:last-child {
+        display: none;
+    }
+
+    #registroForm tbody td:nth-child(2),
+    #registroForm tbody td:nth-child(5),
+    #registroForm tbody td:nth-child(9) {
+        grid-column: span 6;
+    }
+}
+
+@media (max-width: 700px) {
+    #registroForm table {
+        padding: 12px;
+    }
+
+    #registroForm thead tr:first-child,
+    #registroForm thead tr:nth-child(2),
+    #registroForm tbody tr {
+        grid-template-columns: 1fr;
+    }
+
+    #registroForm thead tr:nth-child(2) td:first-child,
+    #registroForm thead tr:nth-child(2) td:last-child,
+    #registroForm tbody td:nth-child(n) {
+        grid-column: 1 / -1;
+    }
+
+    #registroForm thead tr:nth-child(2) td:last-child {
+        display: none;
+    }
+}
+
+#registroForm .hora-field {
+    position: relative;
+    width: 118px !important;
+    min-width: 118px !important;
+    max-width: 118px !important;
+}
+
+#registroForm .hora-field .hora-atual {
+    width: 118px !important;
+    min-width: 118px !important;
+    max-width: 118px !important;
+    padding-left: 8px !important;
+    padding-right: 24px !important;
+    text-align: center;
+    cursor: text;
+}
+
+#registroForm .btn-clear-hora {
+    position: absolute;
+    top: 50%;
+    right: 3px;
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
+    border: 1px solid rgba(160, 175, 184, 0.55);
+    border-radius: 50%;
+    color: #6a7880;
+    background: rgba(255, 255, 255, 0.72);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+}
+
+#registroForm .btn-clear-hora:hover {
+    color: #ffffff;
+    background: #c0392b;
+    border-color: #c0392b;
+}
+
+#registroForm #veiculo {
+    width: 150px;
+}
+
+#registroForm #container-ht,
+#registroForm #container-ase,
+#registroForm tbody td:nth-child(6),
+#registroForm tbody td:nth-child(7),
+#registroForm tbody td:nth-child(8) {
+    align-items: flex-start;
+}
+
+#registroForm #container-ht .input-multiplo,
+#registroForm #container-ase .input-multiplo {
+    width: 96px;
+}
+
+#registroForm #situacao {
+    width: fit-content;
+    min-width: 245px;
+    max-width: min(100%, 340px);
+}
+
+#registroForm #maletas {
+    width: 120px;
+}
+
+#registroForm #zona {
+    width: 150px;
+}
+
+#registroForm .btn-clear-textarea {
+    width: fit-content;
+    min-height: 30px;
+    padding: 0 12px;
+    border: 1px solid rgba(255, 77, 77, 0.48);
+    border-radius: 8px;
+    color: #ffffff;
+    background: rgba(160, 35, 35, 0.82);
+    box-shadow: 0 0 10px rgba(255, 77, 77, 0.16);
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+#registroForm .btn-clear-textarea:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+}
+

@@ -1,0 +1,187 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Frota e Agentes - STTU</title>
+    <link rel="preload" as="image" href="src/imagem_fundo_branco.png" fetchpriority="high">
+    <link rel="preload" as="image" href="src/imagem_de_fundo_login_editada.jpeg">
+    <link rel="stylesheet" href="css/agentes.css?v=20260619-1">
+    <link rel="stylesheet" href="css/app-menu.css">
+</head>
+<body data-theme="day">
+<img class="page-background light" src="src/imagem_fundo_branco.png" alt="" aria-hidden="true" fetchpriority="high" decoding="sync">
+<img class="page-background dark" src="src/imagem_de_fundo_login_editada.jpeg" alt="" aria-hidden="true">
+
+<div class="page-header">
+    <div class="title-container">CONTROLE DE AGENTES E VEÍCULOS</div>
+    <div class="header-actions">
+        <nav class="app-shortcut-menu app-menu-inline" aria-label="Atalhos principais">
+        <a href="index.html" class="app-home-shortcut" aria-label="Página Inicial">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 10.8 12 3l9 7.8"></path>
+                <path d="M5.5 9.5V21h13V9.5"></path>
+                <path d="M9.5 21v-6h5v6"></path>
+            </svg>
+        </a>
+        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">☰</button>
+        <div class="app-menu-dropdown">
+            <a href="agentes.html" data-page="agentes.html" class="app-menu-link">Agentes</a>
+            <a href="auditoria.html" data-page="auditoria.html" class="app-menu-link">Auditoria</a>
+            <a href="gestao_usuarios.html" data-page="gestao_usuarios.html" class="app-menu-link">Cadastros</a>
+            <a href="estatisticas.html" data-page="estatisticas.html" class="app-menu-link">Estatísticas</a>
+            <a href="observacoes.html" data-page="observacoes.html" class="app-menu-link">Observações</a>
+            <a href="ocorrencias.html" data-page="ocorrencias.html" class="app-menu-link">Ocorrências</a>
+            <a href="admin.html" data-page="admin.html" class="app-menu-link">Permissões</a>
+            <a href="relatorio_geral.html" data-page="relatorio_geral.html" class="app-menu-link">Relatórios</a>
+        </div>
+    </nav>
+        <nav class="shortcut-menu" aria-label="Atalhos principais">
+            <a href="index.html" class="shortcut-link">Página Inicial</a>
+            <a href="ocorrencias.html" class="shortcut-link">Ocorrências</a>
+            <a href="observacoes.html" id="btnNavObservacoes" class="shortcut-link">Observações</a>
+        </nav>
+        <div id="userInfo" class="inline-agentes-1">
+            <span id="nomeUsuarioDisplay" class="inline-agentes-2">Carregando...</span>
+            <button id="btnSair" class="btn-sair">SAIR</button>
+        </div>
+    </div>
+</div>
+
+<main class="page-shell">
+    <div id="areaRegistro">
+        <form id="registroForm" autocomplete="off">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="date-header-row" colspan="9">INFORMAÇÕES GERAIS</th>
+                    </tr>
+                    <tr>
+                        <td class="date-header-row" colspan="4" id="diaSemana">---</td>
+                        <td class="date-header-row" colspan="5"><input type="text" id="dataRelatorio" readonly class="inline-agentes-3"></td>
+                    </tr>
+                    <tr id="headerOriginalRow">
+                        <th class="data-header">VEÍCULO E LOCAL</th>
+                        <th class="data-header">AGENTES E CONDUTOR (⦿)</th>
+                        <th class="data-header">HT (Nº)</th>
+                        <th class="data-header">ASE (Nº)</th>
+                        <th class="data-header">FUNÇÃO EQUIPE</th>
+                        <th class="data-header">MALETAS (Nº)</th>
+                        <th class="data-header">REGIÃO ATUAL</th>
+                        <th class="data-header">HORA INÍCIO (CICLO)</th>
+                        <th class="data-header">PONTO BASE ATUAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><select id="veiculo"><option value="">Carregando...</option></select></td>
+                        <td>
+                            <div class="agentes-container">
+                                <div class="agente-row"><input type="radio" name="condutor" value="0" class="condutor-radio"><select class="agente-input"><option value="">SELECIONE AGENTE 1</option></select></div>
+                                <div class="agente-row"><input type="radio" name="condutor" value="1" class="condutor-radio"><select class="agente-input"><option value="">SELECIONE AGENTE 2</option></select></div>
+                                <div class="agente-row"><input type="radio" name="condutor" value="2" class="condutor-radio"><select class="agente-input"><option value="">SELECIONE AGENTE 3</option></select></div>
+                                <div class="agente-row"><input type="radio" name="condutor" value="3" class="condutor-radio"><select class="agente-input"><option value="">SELECIONE AGENTE 4</option></select></div>
+                                <div class="agente-row"><input type="radio" name="condutor" value="4" class="condutor-radio"><select class="agente-input"><option value="">SELECIONE AGENTE 5</option></select></div>
+                            </div>
+                            <datalist id="listaAgentes"></datalist>
+                        </td>
+                        
+                        <td id="container-ht" class="inline-agentes-4"></td>
+                        <td id="container-ase" class="inline-agentes-5"></td>
+
+                        <td>
+                            <select id="situacao">
+                                <option value="ATENDIMENTO">ATENDIMENTO</option>
+                                <option value="DESPACHO">DESPACHO</option>
+                                <option value="INSPEÇÃO">INSPEÇÃO</option>
+                                <option value="FISCALIZAÇÃO">FISCALIZAÇÃO</option>
+                                <option value="ATENDIMENTO A OCORRENCIAS DE SINISTRO">ATENDIMENTO A OCORRENCIAS DE SINISTRO</option>
+                            </select>
+                        </td>
+                        
+                        <td><input type="text" id="maletas" class="campo-numerico" placeholder="Nº MALETA" oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
+
+                        <td>
+                            <select id="zona">
+                                <option value="">SELECIONE...</option>
+                                <option value="REGIÃO 1">REGIÃO 1</option>
+                                <option value="REGIÃO 2">REGIÃO 2</option>
+                                <option value="REGIÃO 3">REGIÃO 3</option>
+                                <option value="REGIÃO 4">REGIÃO 4</option>
+                                <option value="REGIÃO 5">REGIÃO 5</option>
+                                <option value="GERAL">GERAL</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="hora-field">
+                                <input type="text" id="horaInicio" class="hora-atual" inputmode="numeric" placeholder="HH:MM:SS" maxlength="8" title="Digite a hora ou clique para preencher com a hora atual">
+                                <button type="button" class="btn-clear-hora" data-clear-time="horaInicio" aria-label="Limpar hora início">×</button>
+                            </div>
+                        </td>
+                        <td>
+                            <textarea id="pontoBase" class="obrigatorio" placeholder="CAMPO OBRIGATÓRIO"></textarea>
+                            <button type="button" class="btn-clear-textarea" data-clear-textarea="pontoBase">LIMPAR PONTO BASE</button>
+                            <div class="inline-agentes-6">
+                                <button type="submit" class="btn btn-salvar">Registrar Equipe</button>
+                                <button type="button" id="btnLimparEquipe" class="btn btn-limpar-equipe">Limpar Geral</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+    <div class="section-title">⚠️ Veículos em Operação (Sincronizado)</div>
+    <table id="tabelaAtivos">
+        <tbody></tbody>
+    </table>
+
+    <div class="section-title">✅ Histórico de Atividades Encerradas</div>
+    <table id="relatorioFinal">
+        <thead>
+            <tr>
+                <th>VEÍCULO</th>
+                <th>AGENTE</th>
+                <th>HT</th>
+                <th>ASE</th>
+                <th>FUNÇÃO</th>
+                <th>MALETAS</th>
+                <th>REGIÃO</th>
+                <th>HORA INÍCIO</th>
+                <th>HORA FIM</th>
+                <th>TIPO REGISTRO</th>
+                <th>PONTO BASE</th>
+                <th>AÇÃO</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</main>
+
+<script src="js/theme-switch.js"></script>
+<script src="js/app-menu.js"></script>
+<script src="js/agentes-lista.js?v=20260619-1"></script>
+<script src="js/agentes.js"></script>
+
+
+<script src="js/agentes-2.js?v=20260619-7"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

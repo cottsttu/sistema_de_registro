@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso STTU</title>
+    <link rel="preload" as="image" href="src/imagem_fundo_branco.png" fetchpriority="high">
+    <link rel="preload" as="image" href="src/imagem_de_fundo_login_editada.jpeg">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/theme-switch.css">
+</head>
+<body data-theme="day">
+
+    <img class="page-background light" src="src/imagem_fundo_branco.png" alt="" aria-hidden="true" fetchpriority="high" decoding="sync">
+    <img class="page-background dark" src="src/imagem_de_fundo_login_editada.jpeg" alt="" aria-hidden="true">
+
+    <button type="button" id="themeSwitch" class="theme-switch" aria-label="Alternar tema claro e escuro" aria-pressed="false">
+        <span class="theme-icon sun" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4M4.6 4.6l2.8 2.8M16.6 16.6l2.8 2.8M19.4 4.6l-2.8 2.8M7.4 16.6l-2.8 2.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+        </span>
+        <span class="theme-icon moon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+                <path d="M20.6 14.7A8.6 8.6 0 0 1 9.3 3.4 9.2 9.2 0 1 0 20.6 14.7Z"></path>
+            </svg>
+        </span>
+    </button>
+
+    <main class="container-box" aria-label="Acesso ao sistema STTU">
+        <section id="telaLogin" class="auth-panel">
+            <img class="brand-logo" src="src/sttu-login-logo.png" alt="STTU Central de Operações de Trânsito e Transportes">
+
+            <h2>Acesso Restrito</h2>
+            <p>Identifique-se...</p>
+
+            <div class="form-stack">
+                <label class="input-shell" for="loginUser">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21a8 8 0 0 0-16 0"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <input type="text" id="loginUser" placeholder="MATRÍCULA OU USUÁRIO" class="uppercase" autocomplete="username">
+                </label>
+
+                <label class="input-shell" for="loginPass">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="11" x="3" y="11" rx="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        <path d="M12 15v2"></path>
+                    </svg>
+                    <input type="password" id="loginPass" placeholder="SENHA" autocomplete="current-password">
+                    <button class="password-toggle" type="button" aria-label="Mostrar senha" data-target="loginPass">
+                        <svg class="icon-eye" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </label>
+
+                <button class="primary-button" id="btnEntrar">Entrar no sistema</button>
+            </div>
+
+            <div id="msgErroLogin" class="error"></div>
+
+            <a class="toggle-link" id="linkIrCadastro">Criar novo usuário</a>
+        </section>
+
+        <section id="telaCadastro" class="auth-panel hidden">
+            <img class="brand-logo" src="src/sttu-login-logo.png" alt="STTU Central de Operações de Trânsito e Transportes">
+
+            <h2>Solicitar Acesso</h2>
+            <p>Informe seus dados...</p>
+
+            <div class="form-stack">
+                <label class="input-shell" for="cadNome">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21a8 8 0 0 0-16 0"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <input type="text" id="cadNome" placeholder="NOME COMPLETO" class="uppercase" autocomplete="name">
+                </label>
+
+                <label class="input-shell" for="cadMatricula">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="16" height="18" x="4" y="3" rx="2"></rect>
+                        <path d="M8 7h8"></path>
+                        <path d="M8 11h8"></path>
+                        <path d="M8 15h5"></path>
+                    </svg>
+                    <input type="text" id="cadMatricula" placeholder="MATRÍCULA" class="uppercase" autocomplete="username">
+                </label>
+
+                <label class="input-shell" for="cadSenha">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="11" x="3" y="11" rx="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        <path d="M12 15v2"></path>
+                    </svg>
+                    <input type="password" id="cadSenha" placeholder="CRIE UMA SENHA" autocomplete="new-password">
+                    <button class="password-toggle" type="button" aria-label="Mostrar senha" data-target="cadSenha">
+                        <svg class="icon-eye" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </label>
+
+                <button class="primary-button secondary-button" id="btnCadastrar">Solicitar cadastro</button>
+            </div>
+
+            <div id="msgErroCad" class="error"></div>
+
+            <a class="toggle-link" id="linkIrLogin">Voltar para o login</a>
+        </section>
+    </main>
+
+
+    <script src="js/theme-switch.js?v=20260619-2"></script>
+<script src="js/login-2.js?v=20260619-2"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+

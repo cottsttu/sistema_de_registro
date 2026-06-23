@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Estatísticas Avançadas - STTU</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="css/estatisticas.css">
+    <link rel="stylesheet" href="css/app-menu.css">
+</head>
+<body>
+    <nav class="app-shortcut-menu" aria-label="Atalhos principais">
+        <a href="index.html" class="app-home-shortcut" aria-label="Página Inicial">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 10.8 12 3l9 7.8"></path>
+                <path d="M5.5 9.5V21h13V9.5"></path>
+                <path d="M9.5 21v-6h5v6"></path>
+            </svg>
+        </a>
+        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">☰</button>
+        <div class="app-menu-dropdown">
+            <a href="agentes.html" data-page="agentes.html" class="app-menu-link">Agentes</a>
+            <a href="auditoria.html" data-page="auditoria.html" class="app-menu-link">Auditoria</a>
+            <a href="gestao_usuarios.html" data-page="gestao_usuarios.html" class="app-menu-link">Cadastros</a>
+            <a href="estatisticas.html" data-page="estatisticas.html" class="app-menu-link">Estatísticas</a>
+            <a href="observacoes.html" data-page="observacoes.html" class="app-menu-link">Observações</a>
+            <a href="ocorrencias.html" data-page="ocorrencias.html" class="app-menu-link">Ocorrências</a>
+            <a href="admin.html" data-page="admin.html" class="app-menu-link">Permissões</a>
+            <a href="relatorio_geral.html" data-page="relatorio_geral.html" class="app-menu-link">Relatórios</a>
+        </div>
+    </nav>
+<div id="loading" class="loading-overlay">
+        <div class="inline-estatisticas-1">Carregando banco de dados...</div>
+        <div class="inline-estatisticas-2">Buscando todas as ocorrências e registros.</div>
+    </div>
+
+    <div class="page-header">
+        <div class="title-container">DASHBOARD ESTATÍSTICO</div>
+        <button id="btnSair" class="btn-sair">SAIR</button>
+    </div>
+
+    <div class="container">
+        
+        <div class="filtros-container">
+            <button id="btnHoje" class="btn-atalho">📅 HOJE</button>
+            <button id="btnMes" class="btn-atalho">📅 ESTE MÊS</button>
+            
+            <div class="inline-estatisticas-3"></div>
+
+            <label>De:</label>
+            <input type="date" id="filtroInicio">
+            <label>Até:</label>
+            <input type="date" id="filtroFim">
+            <button id="btnFiltrar" class="btn-filtrar">🔍 FILTRAR</button>
+            <button id="btnVerTudo" class="btn-todos">🌎 VER TUDO</button>
+        </div>
+
+        <div class="kpi-container" id="kpiContainer"></div>
+
+        <div class="charts-grid">
+            
+            <div class="chart-box full-width">
+                <h3>Ocorrências por Categoria (Gráfico)</h3>
+                <canvas id="chartOcorrencias" class="inline-estatisticas-4"></canvas>
+            </div>
+
+            <div class="chart-box full-width">
+                <h3>Relatório Detalhado de Condutores (Período Selecionado)</h3>
+                <br>
+                <button id="btnDownloadCondutores" class="btn-pdf-condutores">⬇️ BAIXAR PDF CONDUTORES</button>
+                <div class="inline-estatisticas-5">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>NOME DO CONDUTOR</th>
+                                <th>VEÍCULOS E DATAS</th>
+                                <th class="inline-estatisticas-6">TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyCondutores"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="chart-box full-width">
+                <h3>Lista de Ocorrências (Com PDF Individual)</h3>
+                <div class="inline-estatisticas-7">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th class="inline-estatisticas-8">Nº</th>
+                                <th class="inline-estatisticas-9">DATA/HORA</th>
+                                <th>TIPO</th>
+                                <th>LOCAL</th>
+                                <th class="inline-estatisticas-10">SITUAÇÃO</th>
+                                <th class="inline-estatisticas-11">AÇÃO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyOcorrencias"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <h3>Regiões Visitadas</h3>
+                <canvas id="chartZonas"></canvas>
+            </div>
+
+            <div class="chart-box">
+                <h3>Sinistros por Região (Gravidade)</h3>
+                <canvas id="chartAcidentes"></canvas>
+            </div>
+
+            <div class="chart-box">
+                <h3>Utilização da Frota</h3>
+                <canvas id="chartViaturas"></canvas>
+            </div>
+
+            <div class="chart-box">
+                <h3>Status das Ocorrências</h3>
+                <canvas id="chartStatus"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+
+<script src="js/theme-switch.js"></script>
+<script src="js/app-menu.js"></script>
+<script src="js/estatisticas.js?v=20260619-1"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

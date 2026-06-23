@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema STTU - Início</title>
+    <script>
+        document.documentElement.classList.add("theme-booting");
+        document.documentElement.dataset.theme = localStorage.getItem("sttu-theme") === "night" ? "night" : "day";
+        document.documentElement.dataset.indexRole = localStorage.getItem("sttu-index-role") || "";
+    </script>
+    <style>
+        html.theme-booting body { visibility: hidden; }
+        html[data-index-role="admin"] body { }
+        html[data-index-role="non-admin"] #btnRelatorios,
+        html[data-index-role="non-admin"] #btnEstatisticas,
+        html[data-index-role="non-admin"] #btnAprovacao,
+        html[data-index-role="non-admin"] #btnGestao,
+        html[data-index-role="non-admin"] #btnAuditoria { display: none !important; }
+        html[data-index-role="visualizador"] #btnRelatorios,
+        html[data-index-role="visualizador"] #btnEstatisticas,
+        html[data-index-role="visualizador"] #btnAprovacao,
+        html[data-index-role="visualizador"] #btnGestao,
+        html[data-index-role="visualizador"] #btnAuditoria,
+        html[data-index-role="visualizador"] #btnObservacoes { display: none !important; }
+        html[data-index-role="ciosp"] #btnRelatorios,
+        html[data-index-role="ciosp"] #btnEstatisticas,
+        html[data-index-role="ciosp"] #btnAprovacao,
+        html[data-index-role="ciosp"] #btnGestao,
+        html[data-index-role="ciosp"] #btnAuditoria,
+        html[data-index-role="ciosp"] #btnAgentes,
+        html[data-index-role="ciosp"] #btnObservacoes { display: none !important; }
+    </style>
+    <link rel="preload" as="image" href="src/imagem_fundo_branco.png" fetchpriority="high">
+    <link rel="preload" as="image" href="src/imagem_de_fundo_login_editada.jpeg">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/theme-switch.css">
+</head>
+
+<body data-theme="day">
+<script>
+    document.body.dataset.theme = document.documentElement.dataset.theme || "day";
+</script>
+<button type="button" id="themeSwitch" class="theme-switch" aria-label="Alternar tema claro e escuro" aria-pressed="false">
+        <span class="theme-icon sun" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4M4.6 4.6l2.8 2.8M16.6 16.6l2.8 2.8M19.4 4.6l-2.8 2.8M7.4 16.6l-2.8 2.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+        </span>
+        <span class="theme-icon moon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+                <path d="M20.6 14.7A8.6 8.6 0 0 1 9.3 3.4 9.2 9.2 0 1 0 20.6 14.7Z"></path>
+            </svg>
+        </span>
+    </button>
+
+    <img class="page-background light" src="src/imagem_fundo_branco.png" alt="" aria-hidden="true" fetchpriority="high" decoding="sync">
+    <img class="page-background dark" src="src/imagem_de_fundo_login_editada.jpeg" alt="" aria-hidden="true">
+
+    <div class="dashboard-page">
+        <header class="topbar" aria-label="Usuário logado"></header>
+
+        <h1 class="hero-title">Painel de Controle</h1>
+        <p id="msgBoasVindas" class="hidden">Selecione uma opção para continuar:</p>
+
+        <main class="panel-shell" aria-label="Menu principal">
+            <div class="panel-header">
+                <img src="src/png_logo_sttu.png" alt="STTU Central de Operações de Trânsito e Transportes" class="logo-sttu">
+            </div>
+
+            <button type="button" id="mobileMenuToggle" class="mobile-menu-toggle" aria-label="Abrir opções do sistema" aria-expanded="false">
+                <span aria-hidden="true">☰</span>
+                <span>Menu</span>
+            </button>
+
+            <nav class="button-group" id="menu-botoes" aria-label="Opções do sistema">
+                <a href="agentes.html" id="btnAgentes" class="menu-card" data-tone="blue">
+                    <span class="badge-vis">VIS</span>
+                    <span class="menu-icon" aria-hidden="true">
+                        <img src="src/agentes_painel.png" alt="">
+                    </span>
+                    <span class="menu-title">Agentes</span>
+                </a>
+
+                <a href="ocorrencias.html" id="btnOcorrencias" class="menu-card" data-tone="red">
+                    <span class="badge-vis">VIS</span>
+                    <span class="menu-icon" aria-hidden="true">
+                        <img src="src/ocorrencias_painel.png" alt="">
+                    </span>
+                    <span class="menu-title">Ocorrências</span>
+                </a>
+
+                <a href="relatorio_geral.html" id="btnRelatorios" class="menu-card btn-relatorio hidden" data-tone="yellow">
+                    <span class="menu-icon" aria-hidden="true">
+                        <img src="src/relatorios_painel.png" alt="">
+                    </span>
+                    <span class="menu-title">Relatórios</span>
+                </a>
+
+                <a href="observacoes.html" id="btnObservacoes" class="menu-card" data-tone="yellow">
+                    <span class="badge-vis">VIS</span>
+                    <span class="menu-icon" aria-hidden="true">
+                        <img src="src/observações_painel.png" alt="">
+                    </span>
+                    <span class="menu-title">Observações</span>
+                </a>
+
+                <hr id="hrAdmin" class="hidden">
+
+                <a href="admin.html" id="btnAprovacao" class="menu-card hidden btn-aprovacao" data-tone="green">
+                    <span class="menu-icon" aria-hidden="true">
+                        <img src="src/cadastros_painel.png" alt="">
+                    </span>
+                    <span class="menu-title">Cadastros</span>
+                </a>
+
+                <a href="gestao_usuarios.html" id="btnGestao" class="menu-card hidden" data-tone="blue">
+                    <span class="menu-icon" aria-hidden="true">
+                        <img src="src/permissões_painel.png" alt="">
+                    </span>
+                    <span class="menu-title">Permissões</span>
+                </a>
+
+                <a href="auditoria.html" id="btnAuditoria" class="menu-card hidden" data-tone="blue">
+                    <span class="menu-icon" aria-hidden="true">
+                        <img src="src/auditoria_painel.png" alt="">
+                    </span>
+                    <span class="menu-title">Auditoria</span>
+                </a>
+
+                <a href="estatisticas.html" id="btnEstatisticas" class="menu-card btn-estatisticas hidden" data-tone="yellow">
+                    <span class="menu-icon" aria-hidden="true">
+                        <img src="src/estatisticas_painel.png" alt="">
+                    </span>
+                    <span class="menu-title">Estatísticas</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <script src="js/theme-switch.js?v=20260619-2"></script>
+<script src="js/index.js?v=20260622-2"></script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+

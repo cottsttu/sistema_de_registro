@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestão de Usuários - Admin</title>
+    <link rel="stylesheet" href="css/gestao_usuarios.css">
+    <link rel="stylesheet" href="css/app-menu.css">
+</head>
+<body>
+    <nav class="app-shortcut-menu" aria-label="Atalhos principais">
+        <a href="index.html" class="app-home-shortcut" aria-label="Página Inicial">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 10.8 12 3l9 7.8"></path>
+                <path d="M5.5 9.5V21h13V9.5"></path>
+                <path d="M9.5 21v-6h5v6"></path>
+            </svg>
+        </a>
+        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">☰</button>
+        <button type="button" id="btnSair" class="app-logout-button">SAIR</button>
+        <div class="app-menu-dropdown">
+            <a href="agentes.html" data-page="agentes.html" class="app-menu-link">Agentes</a>
+            <a href="auditoria.html" data-page="auditoria.html" class="app-menu-link">Auditoria</a>
+            <a href="gestao_usuarios.html" data-page="gestao_usuarios.html" class="app-menu-link">Cadastros</a>
+            <a href="estatisticas.html" data-page="estatisticas.html" class="app-menu-link">Estatísticas</a>
+            <a href="observacoes.html" data-page="observacoes.html" class="app-menu-link">Observações</a>
+            <a href="ocorrencias.html" data-page="ocorrencias.html" class="app-menu-link">Ocorrências</a>
+            <a href="admin.html" data-page="admin.html" class="app-menu-link">Permissões</a>
+            <a href="relatorio_geral.html" data-page="relatorio_geral.html" class="app-menu-link">Relatórios</a>
+        </div>
+    </nav>
+<main class="permissions-shell">
+    <section class="permissions-header" aria-label="Cabeçalho de permissões">
+        <div>
+            <h1>Gerenciar Permissões de Acesso</h1>
+            <p>Defina o nível de poder de cada usuário no sistema.</p>
+        </div>
+        <span class="header-badge">Administração</span>
+    </section>
+
+    <section class="overview-grid" aria-label="Visão geral de usuários">
+        <article class="overview-card">
+            <span class="overview-icon">👥</span>
+            <div>
+                <strong>Visão Geral de Usuários</strong>
+                <span id="totalUsuarios">Total: --</span>
+            </div>
+        </article>
+        <article class="overview-card">
+            <span class="overview-icon">🧭</span>
+            <div>
+                <strong>Distribuição por Cargo</strong>
+                <span id="distribuicaoCargos">Carregando...</span>
+            </div>
+        </article>
+        <article class="overview-card compact">
+            <span class="donut-chart" id="graficoPermissoes" aria-hidden="true"></span>
+            <div>
+                <strong>Permissões</strong>
+                <span id="resumoPermissoes">--</span>
+            </div>
+        </article>
+    </section>
+
+    <section class="table-panel" aria-label="Lista de permissões">
+        <table class="permissions-table">
+            <thead>
+                <tr>
+                    <th>Usuário</th>
+                    <th>Matrícula</th>
+                    <th>Cargo</th>
+                    <th>Nível de Acesso</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="listaUsuarios">
+                <tr><td colspan="6" class="empty-state">Verificando permissões...</td></tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+
+<script src="js/theme-switch.js?v=20260619-3"></script>
+<script src="js/app-menu.js?v=20260619-3"></script>
+<script src="js/gestao_usuarios.js?v=20260619-3"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

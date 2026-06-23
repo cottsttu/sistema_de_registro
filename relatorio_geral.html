@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório Geral - STTU</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="css/relatorio_geral.css?v=20260622-3">
+    <link rel="stylesheet" href="css/app-menu.css">
+</head>
+<body>
+    <nav class="app-shortcut-menu" aria-label="Atalhos principais">
+        <a href="index.html" class="app-home-shortcut" aria-label="Página Inicial">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 10.8 12 3l9 7.8"></path>
+                <path d="M5.5 9.5V21h13V9.5"></path>
+                <path d="M9.5 21v-6h5v6"></path>
+            </svg>
+        </a>
+        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">☰</button>
+        <button type="button" id="btnSair" class="app-logout-button">SAIR</button>
+        <div class="app-menu-dropdown">
+            <a href="agentes.html" data-page="agentes.html" class="app-menu-link">Agentes</a>
+            <a href="auditoria.html" data-page="auditoria.html" class="app-menu-link">Auditoria</a>
+            <a href="gestao_usuarios.html" data-page="gestao_usuarios.html" class="app-menu-link">Cadastros</a>
+            <a href="estatisticas.html" data-page="estatisticas.html" class="app-menu-link">Estatísticas</a>
+            <a href="observacoes.html" data-page="observacoes.html" class="app-menu-link">Observações</a>
+            <a href="ocorrencias.html" data-page="ocorrencias.html" class="app-menu-link">Ocorrências</a>
+            <a href="admin.html" data-page="admin.html" class="app-menu-link">Permissões</a>
+            <a href="relatorio_geral.html" data-page="relatorio_geral.html" class="app-menu-link">Relatórios</a>
+        </div>
+    </nav>
+<div class="card reports-shell">
+        <header class="reports-hero">
+            <span class="reports-hero-icon" aria-hidden="true">📂</span>
+            <h1>Central de Relatórios</h1>
+        </header>
+
+        <div id="msgAdmin" class="aviso-admin">🔓 MODO ADMINISTRADOR: Você pode clicar nas células amarelas para editar o conteúdo antes de gerar o PDF.</div>
+
+        <div class="controls">
+            <div class="input-group">
+                <label>Data inicial:</label>
+                <div class="input-row">
+                    <input type="date" id="dataInicio">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Data final:</label>
+                <div class="input-row">
+                    <input type="date" id="dataFim">
+                </div>
+            </div>
+            <div class="input-group input-group-hours">
+                <label>Intervalo diário de horas:</label>
+                <div class="input-row">
+                    <input type="time" id="horaInicio" value="00:00" title="Hora inicial aplicada em todos os dias do período">
+                    <span class="time-separator">até</span>
+                    <input type="time" id="horaFim" value="23:59">
+                </div>
+                <small class="filter-help">Ex.: 60 dias, das 06:45 até 15:32.</small>
+            </div>
+            <button class="btn btn-carregar" id="btnCarregar">1º CARREGAR DADOS</button>
+        </div>
+
+        <section class="report-cards" aria-label="Opções de relatórios">
+            <article class="report-card report-card-general">
+                <div class="report-card-title">RELATÓRIO GERAL EDITÁVEL</div>
+                <div class="report-card-body">
+                    <div class="report-card-icon" aria-hidden="true">📄</div>
+                    <p>MODO ADMINISTRADOR: Você pode clicar nas células amarelas para editar.</p>
+                    <button class="btn btn-report-main" id="btnGerarPDF">GERAR E EDITAR RELATÓRIO PDF</button>
+                </div>
+            </article>
+
+            <article class="report-card report-card-agentes">
+                <div class="report-card-title">RELATÓRIO DE AGENTES</div>
+                <div class="report-card-body">
+                    <div class="report-card-icon" aria-hidden="true">👮</div>
+                    <p>Relatório detalhado de desempenho dos agentes.</p>
+                    <button class="btn btn-report-blue" id="btnGerarPdfAgentes">GERAR RELATÓRIO AGENTES (PDF)</button>
+                    <button class="btn btn-csv" id="btnCsvAgentes">BAIXAR CSV - AGENTES</button>
+                </div>
+            </article>
+
+            <article class="report-card report-card-ocorrencias">
+                <div class="report-card-title">RELATÓRIO DE OCORRÊNCIAS</div>
+                <div class="report-card-body">
+                    <div class="report-card-icon" aria-hidden="true">📋</div>
+                    <p>Relatório de ocorrências e incidentes.</p>
+                    <button class="btn btn-report-purple" id="btnGerarPdfOcorrencias">GERAR RELATÓRIO OCORRÊNCIAS (PDF)</button>
+                    <button class="btn btn-csv" id="btnCsvOcorrencias">BAIXAR CSV - OCORRÊNCIAS</button>
+                </div>
+            </article>
+        </section>
+
+        <div id="msgLoading" class="loading">⏳ Buscando informações...</div>
+
+        <div id="areaEmail" class="inline-relatorio_geral-1">
+            <a id="btnEnviarEmail" class="btn-email" target="_blank">✉️ PREPARAR E-MAIL</a>
+        </div>
+
+        <div id="previewContainer">
+            </div>
+
+    </div>
+
+    <script src="js/theme-switch.js"></script>
+<script src="js/app-menu.js"></script>
+<script src="js/relatorio_geral.js?v=20260622-1"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,170 @@
+.app-shortcut-menu {
+    position: fixed;
+    top: 12px;
+    right: 14px;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.app-shortcut-menu.app-menu-inline {
+    position: relative;
+    top: auto;
+    right: auto;
+    z-index: 30;
+    flex: 0 0 auto;
+}
+
+.app-home-shortcut,
+.app-menu-toggle,
+.app-logout-button {
+    width: 42px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(220, 236, 245, 0.34);
+    border-radius: 8px;
+    color: rgba(238, 248, 251, 0.96);
+    background: rgba(14, 29, 38, 0.78);
+    box-shadow: 0 0 10px rgba(85, 246, 255, 0.14);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.app-home-shortcut svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.app-menu-toggle {
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.app-logout-button {
+    width: auto;
+    min-width: 64px;
+    padding: 0 14px;
+    color: #ffffff;
+    background: linear-gradient(180deg, #b83629, #8d1f16);
+    border-color: rgba(255, 141, 102, 0.55);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.app-home-shortcut:hover,
+.app-home-shortcut:focus-visible,
+.app-menu-toggle:hover,
+.app-menu-toggle:focus-visible,
+.app-logout-button:hover,
+.app-logout-button:focus-visible {
+    color: #ffffff;
+    border-color: rgba(85, 246, 255, 0.62);
+    background: rgba(20, 52, 64, 0.78);
+    outline: none;
+}
+
+.app-logout-button:hover,
+.app-logout-button:focus-visible {
+    border-color: rgba(255, 141, 102, 0.72);
+    background: linear-gradient(180deg, #c74638, #9d241a);
+}
+
+.app-menu-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 210px;
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    border: 1px solid rgba(85, 246, 255, 0.30);
+    border-radius: 10px;
+    background: rgba(8, 23, 31, 0.96);
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.34), 0 0 18px rgba(85, 246, 255, 0.14);
+}
+
+.app-shortcut-menu.open .app-menu-dropdown {
+    display: flex;
+}
+
+.app-menu-link {
+    min-height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 12px;
+    border: 1px solid rgba(220, 236, 245, 0.32);
+    border-radius: 7px;
+    color: rgba(238, 248, 251, 0.92);
+    background: rgba(14, 29, 38, 0.66);
+    box-shadow: 0 0 10px rgba(85, 246, 255, 0.10);
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.app-menu-link::before {
+    display: none;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.app-menu-link[data-page="agentes.html"]::before { content: "\1F693"; }
+.app-menu-link[data-page="auditoria.html"]::before { content: "\25CE"; }
+.app-menu-link[data-page="gestao_usuarios.html"]::before { content: "\25A3"; }
+.app-menu-link[data-page="estatisticas.html"]::before { content: "\25A5"; }
+.app-menu-link[data-page="observacoes.html"]::before { content: "\25C9"; }
+.app-menu-link[data-page="ocorrencias.html"]::before { content: "\26A0"; }
+.app-menu-link[data-page="admin.html"]::before { content: "\2699"; }
+.app-menu-link[data-page="relatorio_geral.html"]::before { content: "\25A4"; }
+
+.app-menu-link:hover,
+.app-menu-link:focus-visible {
+    color: #ffffff;
+    border-color: rgba(85, 246, 255, 0.58);
+    background: rgba(20, 52, 64, 0.74);
+    outline: none;
+}
+
+.page-header .header-actions > .shortcut-menu:not(.app-shortcut-menu) {
+    display: none !important;
+}
+
+@media (max-width: 720px) {
+    .app-shortcut-menu {
+        top: 8px;
+        right: 8px;
+    }
+
+    .app-menu-dropdown {
+        min-width: 210px;
+        max-width: calc(100vw - 16px);
+        flex-direction: column;
+        gap: 6px;
+        padding: 10px;
+    }
+
+    .app-menu-link {
+        width: 100%;
+        min-height: 34px;
+        padding: 0 12px;
+        font-size: 12px;
+    }
+
+    .app-menu-link::before {
+        display: none;
+    }
+}

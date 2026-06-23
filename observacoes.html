@@ -1,0 +1,318 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STTU - Observações</title>
+    <link rel="preload" as="image" href="src/imagem_fundo_branco.png" fetchpriority="high">
+    <link rel="preload" as="image" href="src/imagem_de_fundo_login_editada.jpeg">
+    <link rel="stylesheet" href="css/observacoes.css">
+    <link rel="stylesheet" href="css/app-menu.css">
+</head>
+<body data-theme="day">
+
+        <nav class="app-shortcut-menu" aria-label="Atalhos principais">
+        <a href="index.html" class="app-home-shortcut" aria-label="Página Inicial">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 10.8 12 3l9 7.8"></path>
+                <path d="M5.5 9.5V21h13V9.5"></path>
+                <path d="M9.5 21v-6h5v6"></path>
+            </svg>
+        </a>
+        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">☰</button>
+        <div class="app-menu-dropdown">
+            <a href="agentes.html" data-page="agentes.html" class="app-menu-link">Agentes</a>
+            <a href="auditoria.html" data-page="auditoria.html" class="app-menu-link">Auditoria</a>
+            <a href="gestao_usuarios.html" data-page="gestao_usuarios.html" class="app-menu-link">Cadastros</a>
+            <a href="estatisticas.html" data-page="estatisticas.html" class="app-menu-link">Estatísticas</a>
+            <a href="observacoes.html" data-page="observacoes.html" class="app-menu-link">Observações</a>
+            <a href="ocorrencias.html" data-page="ocorrencias.html" class="app-menu-link">Ocorrências</a>
+            <a href="admin.html" data-page="admin.html" class="app-menu-link">Permissões</a>
+            <a href="relatorio_geral.html" data-page="relatorio_geral.html" class="app-menu-link">Relatórios</a>
+        </div>
+    </nav>
+<img class="page-background light" src="src/imagem_fundo_branco.png" alt="" aria-hidden="true" fetchpriority="high" decoding="sync">
+    <img class="page-background dark" src="src/imagem_de_fundo_login_editada.jpeg" alt="" aria-hidden="true">
+<div class="container">
+        <div class="header-box">
+            <h1 class="header-title">Observações - STTU</h1>
+            <div class="inline-observacoes-1">
+                <span id="nomeUsuarioDisplay">...</span>
+                <span id="displayData" class="data-hoje">--/--/----</span>
+                <button id="btnSair" class="btn-sair-topo">SAIR</button>
+            </div>
+        </div>
+
+        <div class="registros-container" id="lista-registros">
+            <em>Carregando histórico de hoje...</em>
+        </div>
+
+        <div class="input-section">
+            <div class="config-turno">
+                <strong>SERVIÇO INICIADO NA CENTRAL TURNO:</strong>
+                <select id="turno-select">
+                    <option value="SELECIONE">SELECIONE</option>
+                    <option value="MATUTINO">MATUTINO</option>
+                    <option value="VESPERTINO">VESPERTINO</option>
+                    <option value="NOTURNO">NOTURNO</option>
+                    <option value="MADRUGADA">MADRUGADA</option>
+                </select>
+            </div>
+            
+            <div class="inline-observacoes-2">
+                <input type="text" id="agente-turno-nome" list="listaAgentes" placeholder="NOME COMPLETO DO AGENTE" autocomplete="off" class="inline-observacoes-3">
+                <datalist id="listaAgentes"></datalist>
+            </div>
+            
+            <div class="inline-observacoes-4">CLIQUE NOS NÚMEROS: VERDE = FUNCIONANDO | VERMELHO = INOPERANTE</div>
+            <div class="grid-linhas">
+                <button class="btn-linha" data-num="3232-1003">3232-1003</button>
+                <button class="btn-linha" data-num="156">156</button>
+                <button class="btn-linha" data-num="0800-281-4050">0800-281-4050</button>
+                <button class="btn-linha" data-num="3232-4979">3232-4979</button>
+                <button class="btn-linha" data-num="3232-9105">3232-9105</button>
+                <button class="btn-linha" data-num="3232-9107">3232-9107</button>
+                <button class="btn-linha" data-num="98870-3862">98870-3862</button>
+            </div>
+
+            <div class="area-operadoras">
+                <span class="titulo-operadora">OPERADORAS (PREENCHIMENTO OBRIGATÓRIO):</span>
+                <div class="inline-observacoes-5">
+                    <textarea id="texto-operadora" class="tentante-input inline-observacoes-6" placeholder="Relate a situação das operadoras (Ex: QAP, Operante...)" autocomplete="off"></textarea>
+                </div>
+            </div>
+
+            <div class="grid-equipamentos inline-observacoes-7">
+                <div class="item-conferencia">CEL. ATENDIMENTO: <input type="number" id="qtd-cel-atend" class="verificar-item input-pendente" value="0"></div>
+                <div class="item-conferencia">FONTE CELULAR: <input type="number" id="qtd-fonte-cel" class="verificar-item input-pendente" value="0"></div>
+                <div class="item-conferencia">CABO CELULAR: <input type="number" id="qtd-cabo-cel" class="verificar-item input-pendente" value="0"></div>
+                <div class="item-conferencia">CEL. WHATS INST.: <input type="number" id="qtd-zap" class="verificar-item input-pendente" value="0"></div>
+                <div class="item-conferencia">RÁDIO MÓVEL: <input type="number" id="qtd-radio-movel" class="verificar-item input-pendente" value="0"></div>
+                <div class="item-conferencia">IMPRESSORA: <input type="number" id="qtd-impressora" class="verificar-item input-pendente" value="0"></div>
+                <div class="item-conferencia">CONTROLE AR: <input type="number" id="qtd-ar" class="verificar-item input-pendente" value="0"></div>
+                <div class="item-conferencia">MALETA 4744: <input type="number" id="qtd-m4744" class="verificar-item input-pendente" value="0"></div>
+                <div class="item-conferencia">MALETA 4746: <input type="number" id="qtd-m4746" class="verificar-item input-pendente" value="0"></div>
+                <div class="item-conferencia">MALETA 4750: <input type="number" id="qtd-m4750" class="verificar-item input-pendente" value="0"></div>
+                <div class="item-conferencia">MALETA 4751: <input type="number" id="qtd-m4751" class="verificar-item input-pendente" value="0"></div>
+                <div class="item-conferencia">MALETA 4756: <input type="number" id="qtd-m4756" class="verificar-item input-pendente" value="0"></div>
+                <div class="item-conferencia">MALETA 4754: <input type="number" id="qtd-m4754" class="verificar-item input-pendente" value="0"></div>
+                <div class="item-conferencia">RÁDIO FIXO: <input type="number" id="qtd-radio-fixo" class="verificar-item input-pendente" value="0"></div>
+            </div>
+            <div class="btn-group"><button class="btn btn-registrar" id="btn-registrar-inicio">REGISTRAR INÍCIO DE TURNO</button>
+
+    </div>
+            
+            <div class="config-turno"><strong>EQUIPAMENTOS POR MALETA / OUTROS:</strong></div>
+            <div class="grid-equipamentos">
+                <div class="selecao-maleta" id="container-botoes-maleta">
+                    <span>SELECIONAR MALETA:</span>
+                    <button class="btn-maleta" data-id="4744">MALETA Nº 4744</button>
+                    <button class="btn-maleta" data-id="4745">MALETA Nº 4745</button>
+                    <button class="btn-maleta" data-id="4746">MALETA Nº 4746</button>
+                    <button class="btn-maleta" data-id="4750">MALETA Nº 4750</button>
+                    <button class="btn-maleta" data-id="4751">MALETA Nº 4751</button>
+                    <button class="btn-maleta" data-id="4754">MALETA Nº 4754</button>
+                    <button class="btn-maleta" data-id="4756">MALETA Nº 4756</button>
+                    <input type="number" id="maleta-customizada" placeholder="OUTRA..." min="0" class="inline-observacoes-8">
+                    <input type="hidden" id="maleta-selecionada" value="">
+                </div>
+                <div class="item-conferencia">ETILÔMETRO: <input type="number" id="qtd-etil" value="1"></div>
+                <div class="item-conferencia">PITEIRA: <input type="number" id="qtd-piteira" value="2"></div>
+                <div class="item-conferencia">IMPRESSORA: <input type="number" id="qtd-impressora-maleta" value="1"></div>
+                <div class="item-conferencia">CARREGADORES: <input type="number" id="qtd-carregadores" value="5"></div>
+                <div class="item-conferencia">BOBINA: <input type="number" id="qtd-bobina" value="1"></div>
+                <div class="item-conferencia">BOAT: <input type="number" id="qtd-boat" value="2"></div>
+                <div class="item-conferencia">CERTIFICADO: <input type="number" id="qtd-certificado" value="2"></div>
+                <div class="item-conferencia">TC: <input type="number" id="qtd-tc" value="2"></div>
+                <div class="item-conferencia">MANUAL: <input type="number" id="qtd-manual" value="2"></div>
+                
+                <div class="inline-observacoes-9">
+                    <label class="inline-observacoes-10">ENTREGUE PARA (OBRIGATÓRIO):</label>
+                    <input type="text" id="entregue-para" class="outras-obs inline-observacoes-11" placeholder="NOME DO AGENTE QUE RECEBEU..." autocomplete="off">
+                </div>
+
+                <div class="inline-observacoes-12"><input type="text" id="obs-extras" class="outras-obs" placeholder="Outras observações..." autocomplete="off"></div>
+            </div>
+            <div class="btn-group"><button class="btn btn-entrega" id="btn-registrar-maleta">REGISTRAR ENTREGA DE MALETA</button>
+
+    </div>
+
+            <div class="config-turno"><strong>REGISTRO DE TENTANTES:</strong></div>
+            <div class="inline-observacoes-13">
+                <textarea id="texto-tentante" class="tentante-input" placeholder="Digite aqui o registo do tentante..." autocomplete="off"></textarea>
+                <div class="btn-group"><button class="btn btn-tentante" id="btn-registrar-tentante">REGISTRAR TENTANTE</button>
+
+    </div>
+            </div>
+
+            <div class="config-turno inline-observacoes-14"><strong>AUSENTES:</strong></div>
+            <div class="inline-observacoes-15">
+                <div class="inline-observacoes-16"><select id="afast-lista-agentes" class="inline-observacoes-17"></select></div>
+                <div class="inline-observacoes-18">
+                    <input type="text" id="afast-nome" placeholder="Digite o nome..." autocomplete="off" class="inline-observacoes-19">
+                    <input type="text" id="afast-local" placeholder="Local..." autocomplete="off" class="inline-observacoes-20">
+                    <select id="afast-status" class="inline-observacoes-21"><option value="SEM ATESTADO">NÃO</option><option value="COM ATESTADO">SIM</option></select>
+                </div>
+                <div class="btn-group"><button class="btn inline-observacoes-22" id="btn-registrar-afastamento">REGISTRAR AUSENTES</button>
+
+    </div>
+            </div>
+
+            <div class="config-turno inline-observacoes-23"><strong>VEÍCULOS REMOVIDOS:</strong></div>
+            <div class="inline-observacoes-24">
+                <div class="inline-observacoes-25">
+                    <input type="text" id="rem-placa" placeholder="ABC-1234" autocomplete="off" class="inline-observacoes-26">
+                    <input type="text" id="rem-equipe" placeholder="VTR..." autocomplete="off" class="inline-observacoes-27">
+                    <input type="text" id="rem-local" placeholder="Ex: Av. Rio Branco, 14h" autocomplete="off" class="inline-observacoes-28">
+                    <input type="text" id="rem-motivo" placeholder="Ex: Estac. Calçada" autocomplete="off" class="inline-observacoes-29">
+                    <input type="text" id="rem-ait" placeholder="Nº AIT" autocomplete="off" class="inline-observacoes-30">
+                    <input type="text" id="rem-trv" placeholder="Nº TRV" autocomplete="off" class="inline-observacoes-31">
+                </div>
+                <div class="btn-group"><button class="btn btn-remocao" id="btn-registrar-remocao">REGISTRAR REMOÇÃO</button>
+
+    </div>
+            </div>
+
+            <div class="config-turno inline-observacoes-32"><strong>RELATO DO INSPETOR:</strong></div>
+            <div class="inline-observacoes-33">
+                <textarea id="texto-inspetor" class="tentante-input inline-observacoes-34" placeholder="Digite aqui o relato do inspetor..." autocomplete="off"></textarea>
+                <div class="btn-group inline-observacoes-35"><button class="btn btn-inspetor" id="btn-registrar-inspetor">REGISTRAR RELATO</button>
+
+    </div>
+            </div>
+
+            <div class="config-turno inline-observacoes-36"><strong>OBSERVAÇÕES GERAIS:</strong></div>
+            <div class="inline-observacoes-37">
+                <textarea id="texto-obs-geral" class="tentante-input" placeholder="Relate aqui as ocorrências gerais do dia..." autocomplete="off"></textarea>
+                <div class="btn-group"><button class="btn btn-geral" id="btn-registrar-obs-geral">REGISTRAR OBSERVAÇÃO</button>
+
+    </div>
+            </div>
+
+            <div class="config-turno inline-observacoes-38">
+                <strong>CONTROLE DE CONES:</strong>
+                <div class="inline-observacoes-39">
+                    <span class="inline-observacoes-40">TOTAL NO VIATURA/BASE:</span>
+                    <input type="number" id="total-cones-geral" value="0" class="inline-observacoes-41">
+                </div>
+            </div>
+            <div class="inline-observacoes-42">
+                <div class="inline-observacoes-43">
+                    
+                    <div class="inline-observacoes-44">
+                        <label class="inline-observacoes-45">EQUIPE</label>
+                        <select id="cone-equipe" class="inline-observacoes-46">
+                            <option value="">...</option>
+                            <option value="VT 01">VT 01</option>
+                            <option value="VT 02">VT 02</option>
+                            <option value="VT 03">VT 03</option>
+                            <option value="VT 04">VT 04</option>
+                            <option value="VT 05">VT 05</option>
+                            <option value="VT 06">VT 06</option>
+                            <option value="VT 07">VT 07</option>
+                            <option value="VT 08">VT 08</option>
+                            <option value="VT 09">VT 09</option>
+                            <option value="VT 10">VT 10</option>
+                            <option value="VT 11">VT 11</option>
+                            <option value="VT 12">VT 12</option>
+                            <option value="VT 13">VT 13</option>
+                            <option value="VT 14">VT 14</option>
+                            <option value="VT 15">VT 15</option>
+                            <option value="VT 16">VT 16</option>
+                            <option value="GUINCHO">GUINCHO</option>
+                            <option value="SEMAFÓRICA">SEMAFÓRICA</option>
+                        </select>
+                    </div>
+
+                    <div class="inline-observacoes-47">
+                        <label class="inline-observacoes-48">LOCAL</label>
+                        <input type="text" id="cone-local" placeholder="Local..." autocomplete="off" class="inline-observacoes-49">
+                    </div>
+
+                    <div class="inline-observacoes-50">
+                        <label class="inline-observacoes-51">COLOCADOS (-)</label>
+                        <input type="number" id="cone-colocado" placeholder="0" class="inline-observacoes-52">
+                    </div>
+
+                    <div class="inline-observacoes-53">
+                        <label class="inline-observacoes-54">RECOLHIDOS (+)</label>
+                        <input type="number" id="cone-recolhido" placeholder="0" class="inline-observacoes-55">
+                    </div>
+
+                    <div class="inline-observacoes-56">
+                        <label class="inline-observacoes-57">HORA FIM</label>
+                        <input type="time" id="cone-hora-fim" class="inline-observacoes-58">
+                    </div>
+
+                </div>
+                <input type="text" id="cone-obs" class="outras-obs inline-observacoes-59" placeholder="Observações sobre os cones..." autocomplete="off">
+                <div class="btn-group"><button class="btn btn-cones" id="btn-registrar-cones">REGISTRAR MOVIMENTAÇÃO DE CONES</button>
+
+    </div>
+            </div>
+
+            <div class="config-turno inline-observacoes-60"><strong>EQUIPE COMPLEMENTAR:</strong></div>
+            <div class="inline-observacoes-61">
+                <div class="inline-observacoes-62">
+                    <input type="text" id="comp-nome" placeholder="DIGITE O NOME" autocomplete="off" class="inline-observacoes-63">
+                    <input type="text" id="comp-funcao" placeholder="DIGITE A FUNÇÃO" autocomplete="off" class="inline-observacoes-64">
+                </div>
+                <div class="btn-group"><button class="btn inline-observacoes-65" id="btn-registrar-complementar">REGISTRAR EQUIPE</button>
+
+    </div>
+            </div>
+
+        </div> 
+    </div> 
+    
+    <div id="modalDevolucao" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">DEVOLUÇÃO DE ITENS (INFORMAR QTD EXISTENTE)</div>
+            <input type="hidden" id="id-devolucao-atual">
+            <div class="grid-equipamentos inline-observacoes-67">
+                <div class="item-conferencia">ETILÔMETRO: <input type="number" id="dev-etil" value="1"></div>
+                <div class="item-conferencia">PITEIRA: <input type="number" id="dev-piteira" value="2"></div>
+                <div class="item-conferencia">IMPRESSORA: <input type="number" id="dev-impressora" value="1"></div>
+                <div class="item-conferencia">CARREGADORES: <input type="number" id="dev-carregadores" value="5"></div>
+                <div class="item-conferencia">BOBINA: <input type="number" id="dev-bobina" value="1"></div>
+                <div class="item-conferencia">BOAT: <input type="number" id="dev-boat" value="2"></div>
+                <div class="item-conferencia">CERTIFICADO: <input type="number" id="dev-certificado" value="2"></div>
+                <div class="item-conferencia">TC: <input type="number" id="dev-tc" value="2"></div>
+                <div class="item-conferencia">MANUAL: <input type="number" id="dev-manual" value="2"></div>
+            </div>
+            <div class="inline-observacoes-68">
+                <label class="inline-observacoes-69">QUEM CONFERIU A DEVOLUÇÃO?</label>
+                <input type="text" id="dev-responsavel" placeholder="NOME DO AGENTE CONFERENTE" autocomplete="off" class="inline-observacoes-70">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancelar" onclick="fecharModal()">CANCELAR</button>
+                <button class="btn btn-baixa-falta" onclick="confirmarBaixaComFalta()">CONFIRMAR DEVOLUÇÃO</button>
+            </div>
+        </div>
+    </div>
+
+<script src="js/theme-switch.js"></script>
+<script src="js/app-menu.js"></script>
+<script src="js/observacoes.js"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
