@@ -6,7 +6,8 @@
     <title>Controle de Frota e Agentes - STTU</title>
     <link rel="preload" as="image" href="src/imagem_fundo_branco.png" fetchpriority="high">
     <link rel="preload" as="image" href="src/imagem_de_fundo_login_editada.jpeg">
-    <link rel="stylesheet" href="css/agentes.css?v=20260623-17">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/agentes.css?v=20260624-1">
     <link rel="stylesheet" href="css/app-menu.css?v=20260623-6">
 </head>
 <body data-theme="day">
@@ -24,7 +25,7 @@
                 <path d="M9.5 21v-6h5v6"></path>
             </svg>
         </a>
-        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">☰</button>
+        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">&#9776;</button>
         <div class="app-menu-dropdown">
             <a href="agentes.html" data-page="agentes.html" class="app-menu-link">Agentes</a>
             <a href="auditoria.html" data-page="auditoria.html" class="app-menu-link">Auditoria</a>
@@ -62,7 +63,7 @@
                     </tr>
                     <tr id="headerOriginalRow">
                         <th class="data-header">VEÍCULO E LOCAL</th>
-                        <th class="data-header">AGENTES E CONDUTOR (⦿)</th>
+                        <th class="data-header">AGENTES E CONDUTOR (<i class="fa-solid fa-person-military-pointing" aria-hidden="true"></i>)</th>
                         <th class="data-header">HT (Nº)</th>
                         <th class="data-header">ASE (Nº)</th>
                         <th class="data-header">FUNÇÃO EQUIPE</th>
@@ -132,12 +133,12 @@
         </form>
     </div>
 
-    <div class="section-title">⚠️ Veículos em Operação (Sincronizado)</div>
+    <div class="section-title">Veículos em Operação (Sincronizado)</div>
     <table id="tabelaAtivos">
         <tbody></tbody>
     </table>
 
-    <div class="section-title">✅ Histórico de Atividades Encerradas</div>
+    <div class="section-title">Hist&oacute;rico de Atividades Encerradas</div>
     <table id="relatorioFinal">
         <thead>
             <tr>
@@ -160,18 +161,15 @@
 </main>
 
 <script src="js/theme-switch.js"></script>
-<script src="js/app-menu.js?v=20260623-8"></script>
+<script src="js/app-menu.js?v=20260623-11"></script>
 <script src="js/agentes-lista.js?v=20260619-1"></script>
 <script src="js/agentes.js"></script>
 
 
-<script src="js/agentes-2.js?v=20260623-14"></script>
+<script src="js/agentes-2.js?v=20260624-1"></script>
 
 </body>
 </html>
-
-
-
 
 
 

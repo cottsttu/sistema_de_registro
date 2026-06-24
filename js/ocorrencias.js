@@ -236,6 +236,14 @@
         return texto;
     }
 
+    function segundosDoHorario(valor) {
+        const partes = String(valor || "").match(/\d{1,2}/g) || [];
+        const h = Number(partes[0] || 0);
+        const m = Number(partes[1] || 0);
+        const s = Number(partes[2] || 0);
+        return (h * 3600) + (m * 60) + s;
+    }
+
     function formatarHorasNoTexto(valor) {
         return String(valor || "").replace(/\b(\d{2}:\d{2})(?!:\d{2})\b/g, "$1:00");
     }
@@ -556,9 +564,48 @@
         tPendentes.innerHTML = ""; tConcluidas.innerHTML = "";
         veiculosOcupados.clear(); 
 
-        listaGlobalOcorrencias.forEach((d) => {
+        const normalizarSituacaoOrdenacao = (situacao) => String(situacao || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim()
+            .toUpperCase();
+
+        const ocorrenciaFinalizada = (ocorrencia) => {
+            const situacao = normalizarSituacaoOrdenacao(ocorrencia.situacao);
+            return situacao === 'CONCLUIDA' || situacao === 'NAO ATENDIDA';
+        };
+
+        const prioridadePendente = (situacaoOriginal) => {
+            const situacao = normalizarSituacaoOrdenacao(situacaoOriginal);
+            if (situacao === 'PARA O DESPACHO' || situacao === 'PARA DESPACHO') return 0;
+            if (situacao === 'ENCAMINHADA') return 1;
+            return 2;
+        };
+
+        const listaPendentesOrdenada = listaGlobalOcorrencias
+            .filter((ocorrencia) => !ocorrenciaFinalizada(ocorrencia))
+            .sort((a, b) => {
+                const prioridadeA = prioridadePendente(a.situacao);
+                const prioridadeB = prioridadePendente(b.situacao);
+                if (prioridadeA !== prioridadeB) return prioridadeA - prioridadeB;
+
+                const horaA = segundosDoHorario(a.horaEnvio);
+                const horaB = segundosDoHorario(b.horaEnvio);
+                if (horaA !== horaB) return horaB - horaA;
+
+                const tA = a.timestamp ? a.timestamp.seconds : 0;
+                const tB = b.timestamp ? b.timestamp.seconds : 0;
+                return tB - tA;
+            });
+
+        const listaRender = [
+            ...listaPendentesOrdenada,
+            ...listaGlobalOcorrencias.filter((ocorrencia) => ocorrenciaFinalizada(ocorrencia))
+        ];
+
+        listaRender.forEach((d) => {
             const id = d.id;
-            const statusFinalizado = d.situacao === 'CONCLUÍDA' || d.situacao === 'NÃO ATENDIDA';
+            const statusFinalizado = ocorrenciaFinalizada(d);
 
             if (statusFinalizado && d.data_filtro !== dataFiltro) {
                 return;

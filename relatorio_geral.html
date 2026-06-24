@@ -5,7 +5,7 @@
     <title>Relatório Geral - STTU</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-    <link rel="stylesheet" href="css/relatorio_geral.css?v=20260623-4">
+    <link rel="stylesheet" href="css/relatorio_geral.css?v=20260624-1">
     <link rel="stylesheet" href="css/app-menu.css?v=20260623-6">
 </head>
 <body>
@@ -20,7 +20,7 @@
                 <path d="M9.5 21v-6h5v6"></path>
             </svg>
         </a>
-        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">☰</button>
+        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">&#9776;</button>
         <button type="button" id="btnSair" class="app-logout-button">SAIR</button>
         <div class="app-menu-dropdown">
             <a href="agentes.html" data-page="agentes.html" class="app-menu-link">Agentes</a>
@@ -37,11 +37,11 @@
     </div>
 <div class="card reports-shell">
         <header class="reports-hero">
-            <span class="reports-hero-icon" aria-hidden="true">📂</span>
+            <span class="reports-hero-icon reports-icon-folder" aria-hidden="true"></span>
             <h1>Central de Relatórios</h1>
         </header>
 
-        <div id="msgAdmin" class="aviso-admin">🔓 MODO ADMINISTRADOR: Você pode clicar nas células amarelas para editar o conteúdo antes de gerar o PDF.</div>
+        <div id="msgAdmin" class="aviso-admin">MODO ADMINISTRADOR: Você pode clicar nas células amarelas para editar o conteúdo antes de gerar o PDF.</div>
 
         <div class="controls">
             <div class="input-group">
@@ -72,7 +72,7 @@
             <article class="report-card report-card-general">
                 <div class="report-card-title">RELATÓRIO GERAL EDITÁVEL</div>
                 <div class="report-card-body">
-                    <div class="report-card-icon" aria-hidden="true">📄</div>
+                    <div class="report-card-icon report-icon-document" aria-hidden="true"></div>
                     <p>MODO ADMINISTRADOR: Você pode clicar nas células amarelas para editar.</p>
                     <button class="btn btn-report-main" id="btnGerarPDF">GERAR E EDITAR RELATÓRIO PDF</button>
                 </div>
@@ -81,7 +81,7 @@
             <article class="report-card report-card-agentes">
                 <div class="report-card-title">RELATÓRIO DE AGENTES</div>
                 <div class="report-card-body">
-                    <div class="report-card-icon" aria-hidden="true">👮</div>
+                    <div class="report-card-icon report-icon-agents" aria-hidden="true"></div>
                     <p>Relatório detalhado de desempenho dos agentes.</p>
                     <button class="btn btn-report-blue" id="btnGerarPdfAgentes">GERAR RELATÓRIO AGENTES (PDF)</button>
                     <button class="btn btn-csv" id="btnCsvAgentes">BAIXAR CSV - AGENTES</button>
@@ -91,7 +91,7 @@
             <article class="report-card report-card-ocorrencias">
                 <div class="report-card-title">RELATÓRIO DE OCORRÊNCIAS</div>
                 <div class="report-card-body">
-                    <div class="report-card-icon" aria-hidden="true">📋</div>
+                    <div class="report-card-icon report-icon-clipboard" aria-hidden="true"></div>
                     <p>Relatório de ocorrências e incidentes.</p>
                     <button class="btn btn-report-purple" id="btnGerarPdfOcorrencias">GERAR RELATÓRIO OCORRÊNCIAS (PDF)</button>
                     <button class="btn btn-csv" id="btnCsvOcorrencias">BAIXAR CSV - OCORRÊNCIAS</button>
@@ -99,10 +99,10 @@
             </article>
         </section>
 
-        <div id="msgLoading" class="loading">⏳ Buscando informações...</div>
+        <div id="msgLoading" class="loading">Buscando informa&ccedil;&otilde;es...</div>
 
         <div id="areaEmail" class="inline-relatorio_geral-1">
-            <a id="btnEnviarEmail" class="btn-email" target="_blank">✉️ PREPARAR E-MAIL</a>
+            <a id="btnEnviarEmail" class="btn-email" target="_blank">PREPARAR E-MAIL</a>
         </div>
 
         <div id="previewContainer">
@@ -111,14 +111,12 @@
     </div>
 
     <script src="js/theme-switch.js"></script>
-<script src="js/app-menu.js?v=20260623-8"></script>
+<script src="js/app-menu.js?v=20260623-11"></script>
 <script src="js/pdf-emblema.js?v=20260623-1"></script>
 <script src="js/relatorio_geral.js?v=20260623-6"></script>
 
 </body>
 </html>
-
-
 
 
 

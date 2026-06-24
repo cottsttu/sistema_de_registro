@@ -64,8 +64,8 @@
     }
 
     function atualizarUsuarioMenu(userData, user) {
-        const nome = userData?.nome || user?.email || "Usuário";
-        const texto = `Olá, ${nome}`;
+        const nome = userData?.nome || user?.email || "Usu\u00e1rio";
+        const texto = `Ol\u00e1, ${nome}`;
         const displayExistente = document.getElementById('nomeUsuarioDisplay');
 
         if (displayExistente) {
@@ -125,7 +125,7 @@
 
     async function loadAllowedPages() {
         try {
-            const [{ initializeApp, getApp, getApps }, { getAuth, onAuthStateChanged, signOut }, { getFirestore, doc, getDoc, updateDoc, serverTimestamp }] = await Promise.all([
+            const [{ initializeApp, getApp, getApps }, { getAuth, onAuthStateChanged, signOut }, { getFirestore, doc, getDoc, updateDoc, serverTimestamp, onSnapshot }] = await Promise.all([
                 import("https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js"),
                 import("https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js"),
                 import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js")
@@ -147,21 +147,51 @@
             const userSnap = await getDoc(doc(db, "usuarios", user.uid));
             const userData = userSnap.exists() ? userSnap.data() : null;
             const userRef = doc(db, "usuarios", user.uid);
+            let encerrandoSessao = false;
+            let presencaInterval = null;
+            const usuarioDesativado = (dados) => {
+                const status = normalize(dados?.status);
+                const aprovado = normalize(dados?.aprovado);
+                return dados?.ativo === false || status === 'desativado' || dados?.aprovado === false || aprovado === 'false';
+            };
             const marcarOnline = () => updateDoc(userRef, {
                 online: true,
                 ultimoAcesso: serverTimestamp()
-            }).catch((error) => console.warn("Não foi possível atualizar presença:", error));
+            }).catch((error) => console.warn("N\u00e3o foi poss\u00edvel atualizar presen\u00e7a:", error));
             const marcarOffline = () => updateDoc(userRef, {
                 online: false,
                 ultimaSaida: serverTimestamp()
-            }).catch((error) => console.warn("Não foi possível encerrar presença:", error));
+            }).catch((error) => console.warn("N\u00e3o foi poss\u00edvel encerrar presen\u00e7a:", error));
 
+            const encerrarPorBloqueio = async () => {
+                if (encerrandoSessao) return;
+                encerrandoSessao = true;
+                if (presencaInterval) clearInterval(presencaInterval);
+                alert("Usu\u00e1rio n\u00e3o autorizado. Sua sess\u00e3o foi encerrada pelo administrador.");
+                await marcarOffline();
+                await signOut(auth);
+                window.location.href = "login.html";
+            };
+
+            if (usuarioDesativado(userData)) {
+                await encerrarPorBloqueio();
+                return defaultPages;
+            }
             marcarOnline();
-            setInterval(marcarOnline, 60000);
+            presencaInterval = setInterval(() => {
+                if (!encerrandoSessao) marcarOnline();
+            }, 60000);
+            onSnapshot(userRef, (snapshot) => {
+                if (!snapshot.exists() || usuarioDesativado(snapshot.data())) {
+                    encerrarPorBloqueio();
+                }
+            }, (error) => console.warn("N\u00e3o foi poss\u00edvel monitorar acesso do usu\u00e1rio:", error));
             document.getElementById('btnSair')?.addEventListener('click', async (event) => {
                 event.preventDefault();
                 event.stopImmediatePropagation();
                 if (!confirm("Deseja realmente sair?")) return;
+                encerrandoSessao = true;
+                if (presencaInterval) clearInterval(presencaInterval);
                 await marcarOffline();
                 await signOut(auth);
                 window.location.href = "login.html";

@@ -83,6 +83,35 @@ select {
     color: #102431;
     background: rgba(255, 255, 255, 0.85);
     border: 1px solid rgba(18, 52, 70, 0.2);
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.title-icon::before,
+.title-icon::after,
+.admin-icon::before,
+.admin-icon::after {
+    content: "";
+    position: absolute;
+    box-sizing: border-box;
+}
+
+.title-icon-users::before {
+    width: 11px;
+    height: 11px;
+    top: 7px;
+    left: 11px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+}
+
+.title-icon-users::after {
+    width: 20px;
+    height: 11px;
+    left: 7px;
+    bottom: 7px;
+    border: 2px solid currentColor;
+    border-radius: 13px 13px 5px 5px;
 }
 
 .admin-layout {
@@ -179,6 +208,52 @@ select {
     font-size: 17px;
 }
 
+.admin-icon {
+    width: 18px;
+    height: 18px;
+    position: relative;
+    display: inline-block;
+    color: currentColor;
+    flex: 0 0 auto;
+}
+
+.admin-icon-filter::before {
+    left: 2px;
+    top: 2px;
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 8px solid currentColor;
+}
+
+.admin-icon-filter::after {
+    left: 7px;
+    top: 9px;
+    width: 4px;
+    height: 7px;
+    background: currentColor;
+    border-radius: 1px;
+}
+
+.admin-icon-list::before {
+    left: 4px;
+    top: 3px;
+    width: 12px;
+    height: 2px;
+    background: currentColor;
+    box-shadow: 0 6px 0 currentColor, 0 12px 0 currentColor;
+}
+
+.admin-icon-list::after {
+    left: 1px;
+    top: 3px;
+    width: 2px;
+    height: 2px;
+    background: currentColor;
+    box-shadow: 0 6px 0 currentColor, 0 12px 0 currentColor;
+}
+
 .search-box {
     width: min(210px, 28vw);
     height: 32px;
@@ -204,6 +279,52 @@ select {
 .search-box span {
     color: #21384d;
     font-weight: 900;
+}
+
+.search-box .admin-icon-search {
+    width: 16px;
+    height: 16px;
+    color: #21384d;
+}
+
+.admin-icon-search::before {
+    width: 10px;
+    height: 10px;
+    left: 1px;
+    top: 1px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+}
+
+.admin-icon-search::after {
+    width: 8px;
+    height: 2px;
+    right: 0;
+    bottom: 2px;
+    background: currentColor;
+    border-radius: 2px;
+    transform: rotate(45deg);
+    transform-origin: right center;
+}
+
+.admin-icon-eye {
+    width: 20px;
+    height: 14px;
+}
+
+.admin-icon-eye::before {
+    inset: 1px 0;
+    border: 2px solid currentColor;
+    border-radius: 50% / 65%;
+}
+
+.admin-icon-eye::after {
+    width: 6px;
+    height: 6px;
+    left: 7px;
+    top: 4px;
+    border-radius: 50%;
+    background: currentColor;
 }
 
 .users-table-wrap {
@@ -467,6 +588,11 @@ select {
     background: transparent;
     cursor: pointer;
     font-size: 15px;
+    line-height: 1;
+}
+
+.password-eye i {
+    font-size: 16px;
     line-height: 1;
 }
 

@@ -87,7 +87,7 @@ body {
 
 .overview-grid {
     display: grid;
-    grid-template-columns: 1.1fr 1.2fr 0.8fr;
+    grid-template-columns: 1fr 1.1fr 0.8fr 0.9fr;
     gap: 16px;
     margin: 18px 0;
 }
@@ -116,7 +116,74 @@ body {
     justify-content: center;
     border-radius: 10px;
     background: #eef4f7;
-    font-size: 22px;
+    color: #172934;
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.overview-icon::before,
+.overview-icon::after {
+    content: "";
+    position: absolute;
+    box-sizing: border-box;
+}
+
+.overview-icon-users::before {
+    width: 15px;
+    height: 15px;
+    top: 10px;
+    left: 15px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+}
+
+.overview-icon-users::after {
+    width: 27px;
+    height: 15px;
+    left: 10px;
+    bottom: 9px;
+    border: 2px solid currentColor;
+    border-radius: 16px 16px 6px 6px;
+}
+
+.overview-icon-roles::before {
+    width: 12px;
+    height: 12px;
+    top: 8px;
+    left: 17px;
+    border: 2px solid currentColor;
+    border-radius: 3px;
+    box-shadow: -13px 18px 0 -2px #eef4f7, -13px 18px 0 0 currentColor, 13px 18px 0 -2px #eef4f7, 13px 18px 0 0 currentColor;
+}
+
+.overview-icon-roles::after {
+    width: 28px;
+    height: 18px;
+    left: 9px;
+    top: 18px;
+    border-left: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    border-top: 2px solid currentColor;
+}
+
+.overview-icon-connection::before {
+    width: 12px;
+    height: 12px;
+    left: 8px;
+    top: 17px;
+    border-radius: 50%;
+    background: #16a34a;
+    box-shadow: 18px 0 0 #dc2626;
+}
+
+.overview-icon-connection::after {
+    width: 30px;
+    height: 18px;
+    left: 8px;
+    top: 11px;
+    border-top: 2px solid currentColor;
+    border-radius: 50% 50% 0 0;
+    opacity: 0.55;
 }
 
 .overview-card strong,
@@ -180,6 +247,32 @@ body {
     font-weight: 800;
     text-transform: uppercase;
     font-size: 11px;
+}
+
+.sort-column-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 0;
+    padding: 0;
+    color: inherit;
+    background: transparent;
+    font: inherit;
+    text-transform: inherit;
+    cursor: pointer;
+}
+
+.sort-column-button::after {
+    content: "A-Z";
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: rgba(23, 41, 52, 0.12);
+    font-size: 9px;
 }
 
 .permissions-table tbody tr:nth-child(even) {

@@ -20,7 +20,7 @@
 async function iniciarIndex() {
     const { initializeApp } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js");
     const { getAuth, onAuthStateChanged, signOut } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js");
-    const { getFirestore, doc, getDoc, updateDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
+    const { getFirestore, doc, getDoc, updateDoc, serverTimestamp, onSnapshot } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
 
     const firebaseConfig = {
         apiKey: "AIzaSyCjiEzdahcQqKS9V1Py4nAIx15Zqr9nIIo",
@@ -53,6 +53,12 @@ async function iniciarIndex() {
         if (dadosUsuario.aprovado === true || aprovado === "true" || aprovado === "aprovado") return "ativo";
 
         return "pendente";
+    }
+
+    function usuarioDesativado(dadosUsuario) {
+        const status = normalizarValor(dadosUsuario?.status);
+        const aprovado = normalizarValor(dadosUsuario?.aprovado);
+        return dadosUsuario?.ativo === false || status === "desativado" || dadosUsuario?.aprovado === false || aprovado === "false";
     }
 
     async function marcarUsuarioOnline(uid) {
@@ -191,8 +197,30 @@ async function iniciarIndex() {
                 return;
             }
 
+            let encerrandoSessao = false;
+            let presencaInterval = null;
+            const encerrarPorBloqueio = async () => {
+                if (encerrandoSessao) return;
+                encerrandoSessao = true;
+                if (presencaInterval) clearInterval(presencaInterval);
+                alert("Usuário não autorizado. Sua sessão foi encerrada pelo administrador.");
+                localStorage.removeItem("sttu-index-admin-cache");
+                localStorage.removeItem("sttu-index-role");
+                await marcarUsuarioOffline(user.uid);
+                await signOut(auth);
+                window.location.href = "login.html";
+            };
+
+            onSnapshot(docRef, (snapshot) => {
+                if (!snapshot.exists() || usuarioDesativado(snapshot.data())) {
+                    encerrarPorBloqueio();
+                }
+            }, (error) => console.warn("Não foi possível monitorar acesso do usuário:", error));
+
             await marcarUsuarioOnline(user.uid);
-            const presencaInterval = setInterval(() => marcarUsuarioOnline(user.uid), 60000);
+            presencaInterval = setInterval(() => {
+                if (!encerrandoSessao) marcarUsuarioOnline(user.uid);
+            }, 60000);
             window.addEventListener("beforeunload", () => clearInterval(presencaInterval));
             mostrarUsuarioLogado(dados.nome || user.email, user.uid);
 
@@ -249,6 +277,8 @@ async function iniciarIndex() {
                     clearTimeout(tempoInatividade);
                     tempoInatividade = setTimeout(() => {
                         alert("Sessão encerrada por inatividade (15min).");
+                        encerrandoSessao = true;
+                        if (presencaInterval) clearInterval(presencaInterval);
                         marcarUsuarioOffline(user.uid).finally(() => {
                             signOut(auth).then(() => window.location.href = "login.html");
                         });

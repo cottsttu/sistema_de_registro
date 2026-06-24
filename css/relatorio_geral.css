@@ -4,11 +4,12 @@ html {
 }
 
 body {
-    min-height: 100vh;
+    height: 100vh;
     margin: 0;
     max-width: 100%;
-    padding: 88px 20px 34px;
+    padding: 78px 18px 16px;
     overflow-x: hidden;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -56,8 +57,9 @@ body {
 
 .reports-shell {
     width: min(100%, 1400px);
-    margin-bottom: 30px;
-    padding: 28px 34px 32px;
+    max-height: calc(100vh - 94px);
+    margin-bottom: 0;
+    padding: 20px 28px 22px;
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.96);
     box-shadow: 0 12px 34px rgba(15, 23, 42, 0.14);
@@ -73,18 +75,50 @@ body {
     align-items: center;
     justify-content: center;
     gap: 18px;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 }
 
 .reports-hero-icon {
-    font-size: 56px;
-    line-height: 1;
+    width: 74px;
+    height: 58px;
+    position: relative;
+    display: inline-block;
+    color: #2f3b4c;
+    flex: 0 0 auto;
+}
+
+.reports-icon-folder::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    right: 4px;
+    bottom: 4px;
+    height: 38px;
+    border: 4px solid currentColor;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #ffd982, #f4a83a);
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+}
+
+.reports-icon-folder::after {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: 3px;
+    width: 34px;
+    height: 30px;
+    border: 4px solid currentColor;
+    border-radius: 4px;
+    background:
+        linear-gradient(currentColor, currentColor) 9px 9px / 16px 3px no-repeat,
+        linear-gradient(currentColor, currentColor) 9px 17px / 20px 3px no-repeat,
+        #f6fbff;
 }
 
 h1 {
     margin: 0;
     color: #2f3b4c;
-    font-size: clamp(32px, 3.8vw, 54px);
+    font-size: clamp(28px, 3.2vw, 46px);
     line-height: 1;
     font-weight: 900;
     letter-spacing: 0;
@@ -109,9 +143,9 @@ p {
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    gap: 16px;
+    gap: 12px;
     flex-wrap: wrap;
-    margin: 0 auto 16px;
+    margin: 0 auto 12px;
 }
 
 .input-group {
@@ -134,14 +168,14 @@ label {
 
 input[type="date"],
 input[type="time"] {
-    height: 46px;
+    height: 40px;
     padding: 0 14px;
     border: 1px solid #bac2c8;
     border-radius: 4px;
     background: #fff;
     color: #111;
     font: inherit;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 input[type="date"] {
@@ -166,13 +200,13 @@ input[type="time"] {
 }
 
 .btn {
-    min-height: 44px;
+    min-height: 40px;
     padding: 9px 18px;
     border: 0;
     border-radius: 4px;
     color: #fff;
     font-weight: 900;
-    font-size: 16px;
+    font-size: 15px;
     cursor: pointer;
     transition: transform 0.15s ease, filter 0.15s ease;
 }
@@ -216,15 +250,15 @@ input[type="time"] {
 .report-cards {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
+    gap: 14px;
     width: min(100%, 1240px);
-    margin: 16px auto 20px;
+    margin: 12px auto 12px;
     justify-content: center;
 }
 
 .report-card {
     overflow: hidden;
-    min-height: 270px;
+    min-height: 224px;
     border: 3px solid;
     border-radius: 8px;
     background: #fff;
@@ -245,8 +279,8 @@ input[type="time"] {
 }
 
 .report-card-title {
-    padding: 11px 10px;
-    font-size: clamp(20px, 1.75vw, 26px);
+    padding: 9px 10px;
+    font-size: clamp(18px, 1.5vw, 23px);
     font-weight: 950;
     line-height: 1.1;
 }
@@ -268,26 +302,106 @@ input[type="time"] {
 
 .report-card-body {
     flex: 1;
-    padding: 17px 16px;
+    padding: 12px 14px;
     display: flex;
     flex-direction: column;
     align-items: stretch;
     justify-content: center;
-    gap: 16px;
+    gap: 11px;
 }
 
 .report-card-icon {
     min-height: 58px;
-    font-size: 48px;
-    line-height: 1;
+    width: 72px;
+    height: 62px;
+    margin: 0 auto;
+    position: relative;
+    display: block;
+    color: #172934;
+}
+
+.report-card-icon::before,
+.report-card-icon::after {
+    content: "";
+    position: absolute;
+    box-sizing: border-box;
+}
+
+.report-icon-document::before {
+    left: 19px;
+    top: 2px;
+    width: 35px;
+    height: 52px;
+    border: 4px solid currentColor;
+    border-radius: 3px;
+    background:
+        linear-gradient(currentColor, currentColor) 8px 16px / 16px 3px no-repeat,
+        linear-gradient(currentColor, currentColor) 8px 27px / 19px 3px no-repeat,
+        linear-gradient(currentColor, currentColor) 8px 38px / 13px 3px no-repeat,
+        #ffffff;
+}
+
+.report-icon-document::after {
+    right: 12px;
+    bottom: 13px;
+    width: 20px;
+    height: 12px;
+    border-radius: 2px;
+    background: #e3338a;
+}
+
+.report-icon-agents::before {
+    left: 21px;
+    top: 5px;
+    width: 30px;
+    height: 30px;
+    border: 4px solid currentColor;
+    border-radius: 50%;
+    background: #f2c4a5;
+}
+
+.report-icon-agents::after {
+    left: 10px;
+    bottom: 4px;
+    width: 52px;
+    height: 25px;
+    border: 4px solid currentColor;
+    border-radius: 28px 28px 8px 8px;
+    background:
+        radial-gradient(circle at 12px 2px, #f2c4a5 0 7px, transparent 8px),
+        radial-gradient(circle at 40px 2px, #f2c4a5 0 7px, transparent 8px),
+        #78bde8;
+}
+
+.report-icon-clipboard::before {
+    left: 17px;
+    top: 8px;
+    width: 38px;
+    height: 48px;
+    border: 4px solid currentColor;
+    border-radius: 4px;
+    background:
+        linear-gradient(currentColor, currentColor) 11px 17px / 14px 3px no-repeat,
+        linear-gradient(currentColor, currentColor) 11px 29px / 17px 3px no-repeat,
+        #f6fbff;
+}
+
+.report-icon-clipboard::after {
+    left: 26px;
+    top: 1px;
+    width: 20px;
+    height: 13px;
+    border: 4px solid currentColor;
+    border-radius: 8px 8px 3px 3px;
+    background: #ffd982;
 }
 
 .report-card-body p {
-    min-height: 50px;
+    min-height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(16px, 1.25vw, 21px);
+    font-size: clamp(14px, 1.05vw, 18px);
     line-height: 1.22;
 }
 

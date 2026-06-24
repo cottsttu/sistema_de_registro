@@ -609,9 +609,7 @@
         veiculosEmUso.clear(); 
         agentesEmUso.clear(); 
 
-        const listaRender = telaCompactaAgentes()
-            ? [...listaAtivosCache].sort(compararHorarioDecrescente)
-            : listaAtivosCache;
+        const listaRender = [...listaAtivosCache].sort(compararHorarioDecrescente);
 
         listaRender.forEach((data) => {
             adicionarLinha(tabelaAtivos, data, true);
@@ -652,11 +650,7 @@
         relatorioFinalTbody.innerHTML = "";
         
         // Ordena por timestamp
-        const listaRender = telaCompactaAgentes() ? [...listaHistoricoGlobal].sort(compararHorarioDecrescente) : [...listaHistoricoGlobal].sort((a, b) => {
-            const tA = a.timestamp ? a.timestamp.seconds : 0;
-            const tB = b.timestamp ? b.timestamp.seconds : 0;
-            return tA - tB;
-        });
+        const listaRender = [...listaHistoricoGlobal].sort(compararHorarioDecrescente);
 
         listaRender.forEach((data) => {
             adicionarAoRelatorioVisual(data, data.horaFim, data.tipo);

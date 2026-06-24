@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Painel Admin - STTU</title>
-    <link rel="stylesheet" href="css/admin.css?v=20260623-1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css?v=20260624-1">
     <link rel="stylesheet" href="css/app-menu.css?v=20260623-6">
 </head>
 <body>
@@ -18,7 +19,7 @@
                 <path d="M9.5 21v-6h5v6"></path>
             </svg>
         </a>
-        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">☰</button>
+        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">&#9776;</button>
         <button type="button" id="btnSair" class="app-logout-button">SAIR</button>
         <div class="app-menu-dropdown">
             <a href="agentes.html" data-page="agentes.html" class="app-menu-link">Agentes</a>
@@ -35,7 +36,7 @@
     </div>
 <main class="admin-shell">
     <header class="admin-title">
-        <span class="title-icon" aria-hidden="true">⚙</span>
+        <span class="title-icon title-icon-users" aria-hidden="true"></span>
         <h1>Gerenciar Usuários</h1>
     </header>
 
@@ -44,11 +45,11 @@
             <div class="users-toolbar">
                 <button type="button" class="toolbar-btn add" id="btnNovoUsuario">+ Novo Usuário</button>
                 <div class="toolbar-actions">
-                    <button type="button" class="icon-tool" id="btnFiltrarUsuarios" title="Filtrar usuários">▾</button>
-                    <button type="button" class="icon-tool" id="btnOrdenarUsuarios" title="Ordenar usuários">☷</button>
+                    <button type="button" class="icon-tool" id="btnFiltrarUsuarios" title="Filtrar usuarios"><span class="admin-icon admin-icon-filter" aria-hidden="true"></span></button>
+                    <button type="button" class="icon-tool" id="btnOrdenarUsuarios" title="Ordenar usuarios"><span class="admin-icon admin-icon-list" aria-hidden="true"></span></button>
                     <label class="search-box">
                         <input type="search" id="buscaUsuarios" placeholder="Busca...">
-                        <span aria-hidden="true">⌕</span>
+                        <span class="admin-icon admin-icon-search" aria-hidden="true"></span>
                     </label>
                 </div>
             </div>
@@ -92,7 +93,7 @@
                 <label>Nova Senha:</label>
                 <div class="password-field">
                     <input type="password" id="senhaUser" placeholder="" minlength="6">
-                    <button type="button" id="btnToggleSenhaAdmin" class="password-eye" aria-label="Exibir senha">👁</button>
+                    <button type="button" id="btnToggleSenhaAdmin" class="password-eye" aria-label="Exibir senha"><i class="fa-regular fa-eye" aria-hidden="true"></i></button>
                 </div>
                 <small class="field-help">Deixe em branco para manter a senha atual.</small>
             </div>
@@ -108,9 +109,9 @@
                 </select>
             </div>
 
-            <button class="btn btn-salvar" id="btnSalvar">💾 SALVAR ALTERAÇÕES</button>
+            <button class="btn btn-salvar" id="btnSalvar">SALVAR ALTERAÇÕES</button>
             <button class="btn btn-limpar" id="btnLimparEditor" type="button">LIMPAR CAMPOS</button>
-            <button class="btn btn-excluir" id="btnExcluir">🗑️ EXCLUIR USUÁRIO</button>
+            <button class="btn btn-excluir" id="btnExcluir">EXCLUIR USUÁRIO</button>
 
             <div class="card-contador">
                 <h3>Controle Global de Ocorrências</h3>
@@ -146,7 +147,7 @@
                 <div class="agents-list-toolbar">
                     <label class="search-box agents-search">
                         <input type="search" id="buscaAgentesAdmin" placeholder="Buscar agente...">
-                        <span aria-hidden="true">⌕</span>
+                        <span class="admin-icon admin-icon-search" aria-hidden="true"></span>
                     </label>
                     <span id="totalAgentesAdmin" class="agents-total">Total: --</span>
                 </div>
@@ -186,17 +187,13 @@
 </main>
 
 <script src="js/theme-switch.js?v=20260619-3"></script>
-<script src="js/app-menu.js?v=20260623-8"></script>
+<script src="js/app-menu.js?v=20260623-11"></script>
 <script src="js/agentes-lista.js?v=20260619-1"></script>
 <script src="js/admin.js?v=20260619-20"></script>
 
 
 </body>
 </html>
-
-
-
-
 
 
 

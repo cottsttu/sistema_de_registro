@@ -2,93 +2,100 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Gestão de Usuários - Admin</title>
-    <link rel="stylesheet" href="css/gestao_usuarios.css?v=20260623-3">
+    <title>Gest&atilde;o de Usu&aacute;rios - Admin</title>
+    <link rel="stylesheet" href="css/gestao_usuarios.css?v=20260624-1">
     <link rel="stylesheet" href="css/app-menu.css?v=20260623-6">
 </head>
 <body>
     <div class="page-header">
-        <div class="title-container">GERENCIAR PERMISSÕES DE ACESSO</div>
+        <div class="title-container">GERENCIAR PERMISS&Otilde;ES DE ACESSO</div>
         <div class="header-actions">
     <nav class="app-shortcut-menu app-menu-inline" aria-label="Atalhos principais">
-        <a href="index.html" class="app-home-shortcut" aria-label="Página Inicial">
+        <a href="index.html" class="app-home-shortcut" aria-label="P&aacute;gina Inicial">
             <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M3 10.8 12 3l9 7.8"></path>
                 <path d="M5.5 9.5V21h13V9.5"></path>
                 <path d="M9.5 21v-6h5v6"></path>
             </svg>
         </a>
-        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">☰</button>
+        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">&#9776;</button>
         <button type="button" id="btnSair" class="app-logout-button">SAIR</button>
         <div class="app-menu-dropdown">
             <a href="agentes.html" data-page="agentes.html" class="app-menu-link">Agentes</a>
             <a href="auditoria.html" data-page="auditoria.html" class="app-menu-link">Auditoria</a>
             <a href="gestao_usuarios.html" data-page="gestao_usuarios.html" class="app-menu-link">Cadastros</a>
-            <a href="estatisticas.html" data-page="estatisticas.html" class="app-menu-link">Estatísticas</a>
-            <a href="observacoes.html" data-page="observacoes.html" class="app-menu-link">Observações</a>
-            <a href="ocorrencias.html" data-page="ocorrencias.html" class="app-menu-link">Ocorrências</a>
-            <a href="admin.html" data-page="admin.html" class="app-menu-link">Permissões</a>
-            <a href="relatorio_geral.html" data-page="relatorio_geral.html" class="app-menu-link">Relatórios</a>
+            <a href="estatisticas.html" data-page="estatisticas.html" class="app-menu-link">Estat&iacute;sticas</a>
+            <a href="observacoes.html" data-page="observacoes.html" class="app-menu-link">Observa&ccedil;&otilde;es</a>
+            <a href="ocorrencias.html" data-page="ocorrencias.html" class="app-menu-link">Ocorr&ecirc;ncias</a>
+            <a href="admin.html" data-page="admin.html" class="app-menu-link">Permiss&otilde;es</a>
+            <a href="relatorio_geral.html" data-page="relatorio_geral.html" class="app-menu-link">Relat&oacute;rios</a>
         </div>
     </nav>
         </div>
     </div>
 <main class="permissions-shell">
-    <section class="permissions-header" aria-label="Cabeçalho de permissões">
+    <section class="permissions-header" aria-label="Cabe&ccedil;alho de permiss&otilde;es">
         <div>
-            <h1>Gerenciar Permissões de Acesso</h1>
-            <p>Defina o nível de poder de cada usuário no sistema.</p>
+            <h1>Gerenciar Permiss&otilde;es de Acesso</h1>
+            <p>Defina o n&iacute;vel de poder de cada usu&aacute;rio no sistema.</p>
         </div>
-        <span class="header-badge">Administração</span>
+        <span class="header-badge">Administra&ccedil;&atilde;o</span>
     </section>
 
-    <section class="overview-grid" aria-label="Visão geral de usuários">
+    <section class="overview-grid" aria-label="Vis&atilde;o geral de usu&aacute;rios">
         <article class="overview-card">
-            <span class="overview-icon">👥</span>
+            <span class="overview-icon overview-icon-users" aria-hidden="true"></span>
             <div>
-                <strong>Visão Geral de Usuários</strong>
+                <strong>Vis&atilde;o Geral de Usu&aacute;rios</strong>
                 <span id="totalUsuarios">Total: --</span>
             </div>
         </article>
         <article class="overview-card">
-            <span class="overview-icon">🧭</span>
+            <span class="overview-icon overview-icon-roles" aria-hidden="true"></span>
             <div>
-                <strong>Distribuição por Cargo</strong>
+                <strong>Distribui&ccedil;&atilde;o por Cargo</strong>
                 <span id="distribuicaoCargos">Carregando...</span>
             </div>
         </article>
         <article class="overview-card compact">
             <span class="donut-chart" id="graficoPermissoes" aria-hidden="true"></span>
             <div>
-                <strong>Permissões</strong>
+                <strong>Permiss&otilde;es</strong>
                 <span id="resumoPermissoes">--</span>
+            </div>
+        </article>
+        <article class="overview-card">
+            <span class="overview-icon overview-icon-connection" aria-hidden="true"></span>
+            <div>
+                <strong>Conex&otilde;es</strong>
+                <span id="resumoConexoes">Online: -- | Offline: --</span>
             </div>
         </article>
     </section>
 
-    <section class="table-panel" aria-label="Lista de permissões">
+    <section class="table-panel" aria-label="Lista de permiss&otilde;es">
         <table class="permissions-table">
             <thead>
                 <tr>
-                    <th>Usuário</th>
-                    <th>Matrícula</th>
+                    <th><button type="button" id="ordenarUsuariosNome" class="sort-column-button" title="Ordenar por nome">Usu&aacute;rio</button></th>
+                    <th>Matr&iacute;cula</th>
                     <th>Cargo</th>
-                    <th>Nível de Acesso</th>
+                    <th>N&iacute;vel de Acesso</th>
                     <th>Acesso</th>
-                    <th>Conexão</th>
-                    <th>Ações</th>
+                    <th>Conex&atilde;o</th>
+                    <th>A&ccedil;&otilde;es</th>
                 </tr>
             </thead>
             <tbody id="listaUsuarios">
-                <tr><td colspan="7" class="empty-state">Verificando permissões...</td></tr>
+                <tr><td colspan="7" class="empty-state">Verificando permiss&otilde;es...</td></tr>
             </tbody>
         </table>
     </section>
 </main>
 
 <script src="js/theme-switch.js?v=20260619-3"></script>
-<script src="js/app-menu.js?v=20260623-8"></script>
-<script src="js/gestao_usuarios.js?v=20260623-4"></script>
+<script src="js/app-menu.js?v=20260623-11"></script>
+<script src="js/gestao_usuarios.js?v=20260624-2"></script>
 
 </body>
 </html>
