@@ -17,6 +17,18 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    async function marcarOffline(uid = auth.currentUser?.uid) {
+        if (!uid) return;
+        try {
+            await updateDoc(doc(db, "usuarios", uid), {
+                online: false,
+                ultimaSaida: serverTimestamp()
+            });
+        } catch (error) {
+            console.warn("Não foi possível marcar usuário offline:", error);
+        }
+    }
+
     const listarAgentesCondutoresUrl = "https://us-central1-sttu-registros.cloudfunctions.net/listarAgentesCondutoresHttp";
     let agentesDB = [...(window.STTU_AGENTES_PADRAO || [])];
     let agentesDatalistDisponiveis = [];
@@ -50,12 +62,12 @@
             .slice(0, mostrarTodos ? 300 : 30);
     }
 
-    function atualizarDatalistAgentes(valor = "", mostrarTodos = false) {
+    function atualizarDatalistAgentes(valor = "", mostrarTodos = true) {
         const dataList = document.getElementById('listaAgentes');
         if (!dataList) return;
 
         dataList.innerHTML = '';
-        filtrarAgentesDisponiveis(valor, mostrarTodos).forEach((agente) => {
+        filtrarAgentesDisponiveis(valor, true).forEach((agente) => {
                 const optData = document.createElement('option');
                 optData.value = agente;
                 dataList.appendChild(optData);
@@ -65,79 +77,7 @@
     function prepararCampoAgenteComSeta(campo) {
         if (!campo || campo.dataset.agentPickerReady === "true") return;
         campo.dataset.agentPickerReady = "true";
-        campo.removeAttribute('list');
-
-        const wrapper = document.createElement('span');
-        wrapper.className = 'agent-picker';
-        campo.parentNode.insertBefore(wrapper, campo);
-        wrapper.appendChild(campo);
-
-        const botao = document.createElement('button');
-        botao.type = 'button';
-        botao.className = 'agent-picker-arrow';
-        botao.setAttribute('aria-label', 'Abrir lista de agentes');
-        botao.textContent = '▾';
-        wrapper.appendChild(botao);
-
-        const lista = document.createElement('div');
-        lista.className = 'agent-picker-list';
-        wrapper.appendChild(lista);
-
-        const fecharLista = () => {
-            lista.classList.remove('open');
-            lista.innerHTML = "";
-        };
-
-        const abrirLista = (mostrarTodos = false) => {
-            const opcoes = filtrarAgentesDisponiveis(campo.value, mostrarTodos);
-            lista.innerHTML = "";
-            opcoes.forEach((agente) => {
-                const item = document.createElement('button');
-                item.type = 'button';
-                item.className = 'agent-picker-option';
-                item.textContent = agente;
-                item.addEventListener('mousedown', (event) => {
-                    event.preventDefault();
-                    campo.value = agente;
-                    campo.dispatchEvent(new Event('input', { bubbles: true }));
-                    campo.dispatchEvent(new Event('change', { bubbles: true }));
-                    fecharLista();
-                });
-                lista.appendChild(item);
-            });
-            lista.classList.toggle('open', opcoes.length > 0);
-        };
-
-        botao.addEventListener('click', (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            atualizarDatalistAgentes("", true);
-            campo.focus();
-            abrirLista(true);
-        });
-
-        campo.addEventListener('focus', () => {
-            if (normalizarBuscaAgente(campo.value).length < 1) {
-                campo.removeAttribute('list');
-                atualizarDatalistAgentes("");
-                fecharLista();
-            }
-        });
-
-        campo.addEventListener('blur', () => {
-            setTimeout(() => {
-                if (normalizarBuscaAgente(campo.value).length < 1) campo.removeAttribute('list');
-                fecharLista();
-            }, 160);
-        });
-
-        campo.addEventListener('input', () => {
-            if (normalizarBuscaAgente(campo.value).length >= 1) {
-                abrirLista(false);
-            } else {
-                fecharLista();
-            }
-        });
+        campo.setAttribute('list', 'listaAgentes');
     }
 
     function preencherListasAgentes(lista = agentesDB) {
@@ -145,7 +85,7 @@
         selectAfast.innerHTML = '<option value="">-- SELECIONE NA LISTA --</option>';
         
         agentesDatalistDisponiveis = normalizarListaAgentes(lista);
-        atualizarDatalistAgentes(document.activeElement?.getAttribute?.('list') === 'listaAgentes' ? document.activeElement.value : "");
+        atualizarDatalistAgentes();
 
         agentesDatalistDisponiveis.forEach(agente => {
             const optSelect = document.createElement('option');
@@ -227,16 +167,12 @@
                 const fim = this.selectionEnd;
                 this.value = this.value.toUpperCase();
                 this.setSelectionRange(inicio, fim);
-                this.removeAttribute('list');
-                atualizarDatalistAgentes(this.value);
+                this.setAttribute('list', 'listaAgentes');
+                atualizarDatalistAgentes();
             });
             campo.addEventListener('focus', function() {
-                if (normalizarBuscaAgente(this.value).length >= 1) {
-                    atualizarDatalistAgentes(this.value);
-                } else {
-                    this.removeAttribute('list');
-                    atualizarDatalistAgentes("");
-                }
+                this.setAttribute('list', 'listaAgentes');
+                atualizarDatalistAgentes();
             });
         });
     }
@@ -305,7 +241,9 @@
                             clearTimeout(tempoInatividade);
                             tempoInatividade = setTimeout(() => {
                                 alert("⚠️ Sessão encerrada por inatividade (15min).");
-                                signOut(auth).then(() => window.location.href = "login.html");
+                                marcarOffline(user.uid).finally(() => {
+                                    signOut(auth).then(() => window.location.href = "login.html");
+                                });
                             }, LIMITE_TEMPO);
                         };
                         resetarTimer();
@@ -327,7 +265,11 @@
 
     const btnSair = document.getElementById('btnSair');
     if(btnSair) {
-        btnSair.onclick = () => { signOut(auth).then(() => { window.location.href = "login.html"; }); }
+        btnSair.onclick = () => {
+            marcarOffline().finally(() => {
+                signOut(auth).then(() => { window.location.href = "login.html"; });
+            });
+        }
     }
 
     function getDataHojeISO() {

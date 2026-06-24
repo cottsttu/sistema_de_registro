@@ -125,7 +125,7 @@
 
     async function loadAllowedPages() {
         try {
-            const [{ initializeApp, getApp, getApps }, { getAuth, onAuthStateChanged }, { getFirestore, doc, getDoc }] = await Promise.all([
+            const [{ initializeApp, getApp, getApps }, { getAuth, onAuthStateChanged, signOut }, { getFirestore, doc, getDoc, updateDoc, serverTimestamp }] = await Promise.all([
                 import("https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js"),
                 import("https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js"),
                 import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js")
@@ -146,6 +146,26 @@
 
             const userSnap = await getDoc(doc(db, "usuarios", user.uid));
             const userData = userSnap.exists() ? userSnap.data() : null;
+            const userRef = doc(db, "usuarios", user.uid);
+            const marcarOnline = () => updateDoc(userRef, {
+                online: true,
+                ultimoAcesso: serverTimestamp()
+            }).catch((error) => console.warn("Não foi possível atualizar presença:", error));
+            const marcarOffline = () => updateDoc(userRef, {
+                online: false,
+                ultimaSaida: serverTimestamp()
+            }).catch((error) => console.warn("Não foi possível encerrar presença:", error));
+
+            marcarOnline();
+            setInterval(marcarOnline, 60000);
+            document.getElementById('btnSair')?.addEventListener('click', async (event) => {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                if (!confirm("Deseja realmente sair?")) return;
+                await marcarOffline();
+                await signOut(auth);
+                window.location.href = "login.html";
+            }, { capture: true });
             atualizarUsuarioMenu(userData, user);
             return getAllowedPages(userData);
         } catch (error) {

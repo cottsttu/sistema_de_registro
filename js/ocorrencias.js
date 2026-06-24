@@ -20,6 +20,18 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    async function marcarOffline(uid = auth.currentUser?.uid) {
+        if (!uid) return;
+        try {
+            await updateDoc(doc(db, "usuarios", uid), {
+                online: false,
+                ultimaSaida: serverTimestamp()
+            });
+        } catch (error) {
+            console.warn("Não foi possível marcar usuário offline:", error);
+        }
+    }
+
     let veiculosOcupados = new Set();
     let nomeUsuarioLogado = "ANÔNIMO"; 
     let usuarioEhAdmin = false; 
@@ -152,7 +164,9 @@
                             clearTimeout(tempoInatividade);
                             tempoInatividade = setTimeout(() => {
                                 alert("⚠️ Sessão encerrada por inatividade (15min).");
-                                signOut(auth).then(() => window.location.href = "login.html");
+                                marcarOffline(user.uid).finally(() => {
+                                    signOut(auth).then(() => window.location.href = "login.html");
+                                });
                             }, LIMITE_TEMPO);
                         };
                         window.onload = resetarTimer; document.onmousemove = resetarTimer; document.onkeypress = resetarTimer; document.onclick = resetarTimer; document.onscroll = resetarTimer;
@@ -168,7 +182,7 @@
 
     const btnSair = document.getElementById('btnSair');
     if(btnSair) {
-        btnSair.onclick = () => signOut(auth).then(() => window.location.href = "login.html");
+        btnSair.onclick = () => marcarOffline().finally(() => signOut(auth).then(() => window.location.href = "login.html"));
     }
 
     const menuToggle = document.getElementById('menuToggle');

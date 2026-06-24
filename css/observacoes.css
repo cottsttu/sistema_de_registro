@@ -753,3 +753,82 @@ body[data-theme="night"] .agent-picker-option:focus-visible {
     background: rgba(216, 246, 255, 0.10);
 }
 
+/* Remocao dos efeitos neon da pagina */
+body,
+body[data-theme="day"],
+body[data-theme="night"] {
+    --panel-border: rgba(44, 62, 80, 0.34);
+    --section-border: rgba(44, 62, 80, 0.24);
+    --field-border: rgba(120, 136, 148, 0.45);
+    --button-border: rgba(44, 62, 80, 0.34);
+}
+
+.container,
+.header-box,
+.registros-container,
+.input-section,
+.grid-equipamentos,
+.area-operadoras,
+.inline-observacoes-2,
+.inline-observacoes-15,
+.inline-observacoes-24,
+.inline-observacoes-33,
+.inline-observacoes-37,
+.inline-observacoes-42,
+.inline-observacoes-61,
+.footer-menu,
+.modal-content,
+.agent-picker-list {
+    box-shadow: none !important;
+}
+
+.header-title,
+.title-container,
+.btn,
+.btn-nav,
+.btn-linha,
+.btn-maleta,
+.btn-sair-topo,
+#nomeUsuarioDisplay {
+    text-shadow: none !important;
+}
+
+input,
+select,
+textarea,
+.outras-obs,
+.tentante-input,
+.inline-observacoes-3,
+.inline-observacoes-11,
+.inline-observacoes-17,
+.inline-observacoes-19,
+.inline-observacoes-20,
+.inline-observacoes-21,
+.inline-observacoes-26,
+.inline-observacoes-27,
+.inline-observacoes-28,
+.inline-observacoes-29,
+.inline-observacoes-30,
+.inline-observacoes-31,
+.inline-observacoes-46,
+.inline-observacoes-49,
+.inline-observacoes-58,
+.inline-observacoes-63,
+.inline-observacoes-64,
+.inline-observacoes-70 {
+    box-shadow: none !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: rgba(44, 62, 80, 0.55) !important;
+    box-shadow: none !important;
+}
+
+body[data-theme="night"] input:focus,
+body[data-theme="night"] select:focus,
+body[data-theme="night"] textarea:focus {
+    border-color: rgba(216, 226, 232, 0.42) !important;
+}
+

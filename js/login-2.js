@@ -27,7 +27,7 @@ async function iniciarLogin() {
 
     const { initializeApp } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js");
     const { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js");
-    const { getFirestore, doc, setDoc, getDoc } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
+    const { getFirestore, doc, setDoc, getDoc, updateDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
 
     const firebaseConfig = {
         apiKey: "AIzaSyCjiEzdahcQqKS9V1Py4nAIx15Zqr9nIIo",
@@ -95,6 +95,10 @@ async function iniciarLogin() {
                     return;
                 }
 
+                await updateDoc(doc(db, "usuarios", userCredential.user.uid), {
+                    online: true,
+                    ultimoAcesso: serverTimestamp()
+                }).catch((error) => console.warn("Não foi possível atualizar presença:", error));
                 window.location.href = "index.html";
             })
             .catch((error) => {
@@ -141,7 +145,8 @@ async function iniciarLogin() {
                 nivel_acesso: "total",
                 status: "pendente",
                 ativo: false,
-                aprovado: false
+                aprovado: false,
+                online: false
             });
 
             await signOut(auth);

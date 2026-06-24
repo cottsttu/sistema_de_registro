@@ -20,7 +20,7 @@
 async function iniciarIndex() {
     const { initializeApp } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js");
     const { getAuth, onAuthStateChanged, signOut } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js");
-    const { getFirestore, doc, getDoc } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
+    const { getFirestore, doc, getDoc, updateDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
 
     const firebaseConfig = {
         apiKey: "AIzaSyCjiEzdahcQqKS9V1Py4nAIx15Zqr9nIIo",
@@ -55,7 +55,31 @@ async function iniciarIndex() {
         return "pendente";
     }
 
-    function mostrarUsuarioLogado(nomeUsuario) {
+    async function marcarUsuarioOnline(uid) {
+        if (!uid) return;
+        try {
+            await updateDoc(doc(db, "usuarios", uid), {
+                online: true,
+                ultimoAcesso: serverTimestamp()
+            });
+        } catch (error) {
+            console.warn("Não foi possível atualizar presença:", error);
+        }
+    }
+
+    async function marcarUsuarioOffline(uid) {
+        if (!uid) return;
+        try {
+            await updateDoc(doc(db, "usuarios", uid), {
+                online: false,
+                ultimaSaida: serverTimestamp()
+            });
+        } catch (error) {
+            console.warn("Não foi possível encerrar presença:", error);
+        }
+    }
+
+    function mostrarUsuarioLogado(nomeUsuario, uid) {
         const topbar = document.querySelector(".topbar");
         topbar.innerHTML = `
             <div class="user-info">
@@ -68,7 +92,9 @@ async function iniciarIndex() {
             if (confirm("Deseja realmente sair?")) {
                 localStorage.removeItem("sttu-index-admin-cache");
                 localStorage.removeItem("sttu-index-role");
-                signOut(auth).then(() => window.location.href = "login.html");
+                marcarUsuarioOffline(uid).finally(() => {
+                    signOut(auth).then(() => window.location.href = "login.html");
+                });
             }
         };
     }
@@ -165,7 +191,10 @@ async function iniciarIndex() {
                 return;
             }
 
-            mostrarUsuarioLogado(dados.nome || user.email);
+            await marcarUsuarioOnline(user.uid);
+            const presencaInterval = setInterval(() => marcarUsuarioOnline(user.uid), 60000);
+            window.addEventListener("beforeunload", () => clearInterval(presencaInterval));
+            mostrarUsuarioLogado(dados.nome || user.email, user.uid);
 
             if (isAdmin) {
                 localStorage.setItem("sttu-index-admin-cache", "true");
@@ -220,7 +249,9 @@ async function iniciarIndex() {
                     clearTimeout(tempoInatividade);
                     tempoInatividade = setTimeout(() => {
                         alert("Sessão encerrada por inatividade (15min).");
-                        signOut(auth).then(() => window.location.href = "login.html");
+                        marcarUsuarioOffline(user.uid).finally(() => {
+                            signOut(auth).then(() => window.location.href = "login.html");
+                        });
                     }, limiteTempo);
                 };
 

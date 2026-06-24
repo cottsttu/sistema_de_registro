@@ -16,6 +16,18 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    async function marcarOffline(uid = auth.currentUser?.uid) {
+        if (!uid) return;
+        try {
+            await updateDoc(doc(db, "usuarios", uid), {
+                online: false,
+                ultimaSaida: serverTimestamp()
+            });
+        } catch (error) {
+            console.warn("Não foi possível marcar usuário offline:", error);
+        }
+    }
+
     let veiculosEmUso = new Set();
     let agentesEmUso = new Set();
     let nomeUsuarioLogado = "ANÔNIMO"; 
@@ -97,7 +109,9 @@
                             clearTimeout(tempoInatividade);
                             tempoInatividade = setTimeout(() => {
                                 alert("⚠️ Sessão encerrada por inatividade (15min).");
-                                signOut(auth).then(() => window.location.href = "login.html");
+                                marcarOffline(user.uid).finally(() => {
+                                    signOut(auth).then(() => window.location.href = "login.html");
+                                });
                             }, LIMITE_TEMPO);
                         };
                         window.onload = resetarTimer; document.onmousemove = resetarTimer; document.onkeypress = resetarTimer; document.onclick = resetarTimer; document.onscroll = resetarTimer;
@@ -118,7 +132,9 @@
     const btnSair = document.getElementById('btnSair');
     if(btnSair) {
         btnSair.onclick = () => {
-            signOut(auth).then(() => { window.location.href = "login.html"; });
+            marcarOffline().finally(() => {
+                signOut(auth).then(() => { window.location.href = "login.html"; });
+            });
         }
     }
 
@@ -167,6 +183,145 @@
         if (numeros.length <= 2) return numeros;
         if (numeros.length <= 4) return `${numeros.slice(0, 2)}:${numeros.slice(2)}`;
         return `${numeros.slice(0, 2)}:${numeros.slice(2, 4)}:${numeros.slice(4)}`;
+    }
+
+    function abrirDetalhesRegistroAgente(dados, titulo = "Detalhes do registro") {
+        let modal = document.getElementById('modalDetalhesAgente');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'modalDetalhesAgente';
+            modal.className = 'modal-detalhes-agente';
+            modal.innerHTML = `
+                <div class="modal-detalhes-card" role="dialog" aria-modal="true" aria-labelledby="modalDetalhesAgenteTitulo">
+                    <div class="modal-detalhes-header">
+                        <h2 id="modalDetalhesAgenteTitulo"></h2>
+                        <button type="button" class="modal-detalhes-fechar" aria-label="Fechar detalhes">×</button>
+                    </div>
+                    <div class="modal-detalhes-body"></div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.querySelector('.modal-detalhes-fechar').addEventListener('click', () => modal.classList.remove('open'));
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) modal.classList.remove('open');
+            });
+        }
+
+        const campos = [
+            ["Veículo e Local", dados.veiculo],
+            ["Agentes e Condutor", dados.agente],
+            ["HT", dados.ht],
+            ["ASE", dados.ase],
+            ["Função", dados.situacao],
+            ["Maletas", dados.maletas],
+            ["Região", dados.zona],
+            ["Hora Início", formatarHoraComSegundos(dados.horaInicio)],
+            ["Hora Fim", formatarHoraComSegundos(dados.horaFim)],
+            ["Tipo Registro", dados.tipo],
+            ["Ponto Base", dados.pontoBase],
+            ["Data", dados.dataRelatorio]
+        ].filter(([, valor]) => String(valor || "").trim());
+
+        modal.querySelector('#modalDetalhesAgenteTitulo').textContent = titulo;
+        modal.querySelector('.modal-detalhes-body').innerHTML = campos.map(([label, valor]) => `
+            <div class="modal-detalhes-item">
+                <strong>${label}</strong>
+                <span>${String(valor || "-").replace(/\n/g, '<br>')}</span>
+            </div>
+        `).join("");
+        modal.classList.add('open');
+    }
+
+    function criarBotaoVisualizarRegistro(dados, titulo) {
+        const btnVisualizar = document.createElement('button');
+        btnVisualizar.type = 'button';
+        btnVisualizar.className = 'btn btn-visualizar-registro';
+        btnVisualizar.innerText = 'VISUALIZAR';
+        btnVisualizar.setAttribute('aria-label', 'Visualizar detalhes do registro');
+        btnVisualizar.onclick = () => abrirDetalhesRegistroAgente(dados, titulo);
+        return btnVisualizar;
+    }
+
+    function criarCampoEditorHistorico(nome, label, valor, multiline = false) {
+        const labelEl = document.createElement('label');
+        if (multiline) labelEl.className = 'campo-editor-largo';
+        labelEl.innerHTML = `<span>${label}</span>`;
+        const campo = document.createElement(multiline ? 'textarea' : 'input');
+        campo.name = nome;
+        campo.value = valor || "";
+        labelEl.appendChild(campo);
+        return labelEl;
+    }
+
+    function abrirEditorHistoricoAgente(id, dados) {
+        if (!usuarioEhAdmin || !id) return;
+
+        let modal = document.getElementById('modalEditorHistoricoAgente');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'modalEditorHistoricoAgente';
+            modal.className = 'modal-detalhes-agente';
+            modal.innerHTML = `
+                <div class="modal-detalhes-card" role="dialog" aria-modal="true" aria-labelledby="modalEditorHistoricoTitulo">
+                    <div class="modal-detalhes-header">
+                        <h2 id="modalEditorHistoricoTitulo">Editar Histórico</h2>
+                        <button type="button" class="modal-detalhes-fechar" aria-label="Fechar editor">×</button>
+                    </div>
+                    <form class="historico-editor-form"></form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.querySelector('.modal-detalhes-fechar').addEventListener('click', () => modal.classList.remove('open'));
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) modal.classList.remove('open');
+            });
+        }
+
+        const form = modal.querySelector('.historico-editor-form');
+        form.innerHTML = "";
+        [
+            ['veiculo', 'Veículo', dados.veiculo],
+            ['ht', 'HT', dados.ht],
+            ['ase', 'ASE', dados.ase],
+            ['situacao', 'Função', dados.situacao],
+            ['maletas', 'Maletas', dados.maletas],
+            ['zona', 'Região', dados.zona],
+            ['horaInicio', 'Hora Início', formatarHoraComSegundos(dados.horaInicio)],
+            ['horaFim', 'Hora Fim', formatarHoraComSegundos(dados.horaFim)],
+            ['tipo', 'Tipo Registro', dados.tipo]
+        ].forEach(([nome, label, valor]) => form.appendChild(criarCampoEditorHistorico(nome, label, valor)));
+        form.appendChild(criarCampoEditorHistorico('agente', 'Agente / Condutor', dados.agente, true));
+        form.appendChild(criarCampoEditorHistorico('pontoBase', 'Ponto Base', dados.pontoBase, true));
+
+        const actions = document.createElement('div');
+        actions.className = 'historico-editor-actions';
+        actions.innerHTML = `
+            <button type="button" class="btn-cancelar-editor-historico">CANCELAR</button>
+            <button type="submit" class="btn-salvar-editor-historico">SALVAR ALTERAÇÕES</button>
+        `;
+        form.appendChild(actions);
+
+        actions.querySelector('.btn-cancelar-editor-historico').onclick = () => modal.classList.remove('open');
+        form.onsubmit = async (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const atualizacao = {};
+            for (const [chave, valor] of formData.entries()) {
+                atualizacao[chave] = String(valor || "").trim().toUpperCase();
+            }
+
+            try {
+                await updateDoc(doc(db, "historico_agentes", id), atualizacao);
+                registrarLogAuditoria("EDIÇÃO HISTÓRICO AGENTES", `Registro ID ${id} editado por ${nomeUsuarioLogado}.`);
+                modal.classList.remove('open');
+                alert("Registro atualizado.");
+            } catch (e) {
+                alert("Erro ao editar registro: " + e.message);
+            }
+        };
+
+        modal.classList.add('open');
+        form.querySelector('input, textarea')?.focus();
     }
 
     function limparFormularioEquipe() {
@@ -229,12 +384,12 @@
             .slice(0, mostrarTodos ? 300 : 30);
     }
 
-    function atualizarDatalistAgentes(valor = "", mostrarTodos = false) {
+    function atualizarDatalistAgentes(valor = "", mostrarTodos = true) {
         const dl = document.getElementById('listaAgentes');
         if (!dl) return;
 
         dl.innerHTML = "";
-        filtrarAgentesDisponiveis(valor, mostrarTodos).forEach((agente) => {
+        filtrarAgentesDisponiveis(valor, true).forEach((agente) => {
                 const opt = document.createElement('option');
                 opt.value = agente;
                 dl.appendChild(opt);
@@ -244,79 +399,7 @@
     function prepararCampoAgenteComSeta(campo) {
         if (!campo || campo.dataset.agentPickerReady === "true") return;
         campo.dataset.agentPickerReady = "true";
-        campo.removeAttribute('list');
-
-        const wrapper = document.createElement('span');
-        wrapper.className = 'agent-picker';
-        campo.parentNode.insertBefore(wrapper, campo);
-        wrapper.appendChild(campo);
-
-        const botao = document.createElement('button');
-        botao.type = 'button';
-        botao.className = 'agent-picker-arrow';
-        botao.setAttribute('aria-label', 'Abrir lista de agentes');
-        botao.textContent = '▾';
-        wrapper.appendChild(botao);
-
-        const lista = document.createElement('div');
-        lista.className = 'agent-picker-list';
-        wrapper.appendChild(lista);
-
-        const fecharLista = () => {
-            lista.classList.remove('open');
-            lista.innerHTML = "";
-        };
-
-        const abrirLista = (mostrarTodos = false) => {
-            const opcoes = filtrarAgentesDisponiveis(campo.value, mostrarTodos);
-            lista.innerHTML = "";
-            opcoes.forEach((agente) => {
-                const item = document.createElement('button');
-                item.type = 'button';
-                item.className = 'agent-picker-option';
-                item.textContent = agente;
-                item.addEventListener('mousedown', (event) => {
-                    event.preventDefault();
-                    campo.value = agente;
-                    campo.dispatchEvent(new Event('input', { bubbles: true }));
-                    campo.dispatchEvent(new Event('change', { bubbles: true }));
-                    fecharLista();
-                });
-                lista.appendChild(item);
-            });
-            lista.classList.toggle('open', opcoes.length > 0);
-        };
-
-        botao.addEventListener('click', (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            atualizarDatalistAgentes("", true);
-            campo.focus();
-            abrirLista(true);
-        });
-
-        campo.addEventListener('focus', () => {
-            if (normalizarBuscaAgente(campo.value).length < 1) {
-                campo.removeAttribute('list');
-                atualizarDatalistAgentes("");
-                fecharLista();
-            }
-        });
-
-        campo.addEventListener('blur', () => {
-            setTimeout(() => {
-                if (normalizarBuscaAgente(campo.value).length < 1) campo.removeAttribute('list');
-                fecharLista();
-            }, 160);
-        });
-
-        campo.addEventListener('input', () => {
-            if (normalizarBuscaAgente(campo.value).length >= 1) {
-                abrirLista(false);
-            } else {
-                fecharLista();
-            }
-        });
+        campo.setAttribute('list', 'listaAgentes');
     }
 
     function carregarAgentes(agentesSelecionadosNoForm = []) {
@@ -331,7 +414,7 @@
         
         const agentesOrdenados = agentesFiltrados.sort();
         agentesDatalistDisponiveis = agentesOrdenados;
-        atualizarDatalistAgentes(document.activeElement?.classList?.contains('agente-input') ? document.activeElement.value : "");
+        atualizarDatalistAgentes();
 
         camposAgentes.forEach((campo, index) => {
             prepararCampoAgenteComSeta(campo);
@@ -481,6 +564,34 @@
         select.appendChild(gO);
     }
 
+    function telaCompactaAgentes() {
+        return window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+    }
+
+    function segundosDoHorario(valor) {
+        const partes = String(valor || "").match(/\d{1,2}/g) || [];
+        const h = Number(partes[0] || 0);
+        const m = Number(partes[1] || 0);
+        const s = Number(partes[2] || 0);
+        return (h * 3600) + (m * 60) + s;
+    }
+
+    function timestampSegundos(dados) {
+        return dados?.timestamp?.seconds || dados?.timestamp?.toMillis?.() / 1000 || 0;
+    }
+
+    function compararHorarioDecrescente(a, b) {
+        const horaA = segundosDoHorario(a.horaInicio || a.horaFim);
+        const horaB = segundosDoHorario(b.horaInicio || b.horaFim);
+        if (horaA !== horaB) return horaB - horaA;
+
+        const fimA = segundosDoHorario(a.horaFim);
+        const fimB = segundosDoHorario(b.horaFim);
+        if (fimA !== fimB) return fimB - fimA;
+
+        return timestampSegundos(b) - timestampSegundos(a);
+    }
+
     // --- FIREBASE OPS ---
     const qAtivos = query(collection(db, "ativos_agentes"), orderBy("timestamp", "asc"));
     onSnapshot(qAtivos, (snapshot) => {
@@ -498,7 +609,11 @@
         veiculosEmUso.clear(); 
         agentesEmUso.clear(); 
 
-        listaAtivosCache.forEach((data) => {
+        const listaRender = telaCompactaAgentes()
+            ? [...listaAtivosCache].sort(compararHorarioDecrescente)
+            : listaAtivosCache;
+
+        listaRender.forEach((data) => {
             adicionarLinha(tabelaAtivos, data, true);
             veiculosEmUso.add(data.veiculo);
             
@@ -537,13 +652,13 @@
         relatorioFinalTbody.innerHTML = "";
         
         // Ordena por timestamp
-        listaHistoricoGlobal.sort((a, b) => {
+        const listaRender = telaCompactaAgentes() ? [...listaHistoricoGlobal].sort(compararHorarioDecrescente) : [...listaHistoricoGlobal].sort((a, b) => {
             const tA = a.timestamp ? a.timestamp.seconds : 0;
             const tB = b.timestamp ? b.timestamp.seconds : 0;
             return tA - tB;
         });
 
-        listaHistoricoGlobal.forEach((data) => {
+        listaRender.forEach((data) => {
             adicionarAoRelatorioVisual(data, data.horaFim, data.tipo);
         });
     }
@@ -598,14 +713,33 @@
             cell.innerHTML = conteudo;
         });
 
+        const cellDataMobile = row.insertCell();
+        cellDataMobile.className = 'historico-data-mobile';
+        cellDataMobile.innerText = dadosDisplay.dataRelatorio || dataHoje || "-";
+
         // --- COLUNA DE AÇÃO (EXCLUIR) ---
         const cellAcao = row.insertCell();
+        cellAcao.className = 'acao-botoes';
+        cellAcao.appendChild(criarBotaoVisualizarRegistro(dadosDisplay, "Histórico de Atividade"));
         
         if (usuarioEhAdmin) {
+            const btnEditar = document.createElement('button');
+            btnEditar.type = 'button';
+            btnEditar.className = 'btn btn-editar-historico';
+            btnEditar.innerText = 'EDITAR';
+            btnEditar.title = "Editar registro do histórico";
+            btnEditar.setAttribute('aria-label', 'Editar registro do histórico');
+            btnEditar.onclick = function() {
+                abrirEditorHistoricoAgente(dados.id, dadosDisplay);
+            };
+            cellAcao.appendChild(btnEditar);
+
             const btnExcluir = document.createElement('button');
+            btnExcluir.type = 'button';
             btnExcluir.innerHTML = '&#10006;'; // X Symbol
             btnExcluir.className = 'btn-excluir-x';
             btnExcluir.title = "Excluir registro permanentemente";
+            btnExcluir.setAttribute('aria-label', 'Excluir registro permanentemente');
             btnExcluir.onclick = function() {
                 excluirItemHistorico(dados.id);
             };
@@ -649,6 +783,7 @@
         if (ativo) {
             const actionCell = row.insertCell();
             actionCell.className = 'acao-botoes';
+            actionCell.appendChild(criarBotaoVisualizarRegistro(dados, "Veículo em Operação"));
             
             // --- AQUI VEM O BLOQUEIO: Só cria botões se NÃO for visualizador
             if (!isVisualizador) {
@@ -1054,6 +1189,11 @@
         atualizarDataEHora();
         gerarListaVeiculos();
         carregarAgentes();
+        const consultaCompacta = window.matchMedia ? window.matchMedia("(max-width: 900px)") : null;
+        consultaCompacta?.addEventListener?.("change", () => {
+            renderizarTabelaAtivos();
+            renderizarTabelaHistorico();
+        });
         const tabelaAtivosEl = document.getElementById('tabelaAtivos');
         if (tabelaAtivosEl.tHead) {
             tabelaAtivosEl.tHead.remove();
@@ -1105,20 +1245,17 @@
                 this.value = this.value.toUpperCase();
                 this.setSelectionRange(inicio, fim);
                 atualizarOpcoesDisponiveis();
-                this.removeAttribute('list');
-                atualizarDatalistAgentes(this.value);
+                this.setAttribute('list', 'listaAgentes');
+                atualizarDatalistAgentes();
             };
             i.onfocus = function() {
-                if (normalizarBuscaAgente(this.value).length >= 1) {
-                    atualizarDatalistAgentes(this.value);
-                } else {
-                    this.removeAttribute('list');
-                    atualizarDatalistAgentes("");
-                }
+                this.setAttribute('list', 'listaAgentes');
+                atualizarDatalistAgentes();
             };
             i.onchange = function() {
                 atualizarOpcoesDisponiveis();
-                atualizarDatalistAgentes(this.value);
+                this.setAttribute('list', 'listaAgentes');
+                atualizarDatalistAgentes();
             };
         });
         

@@ -1,6 +1,6 @@
 ﻿async function iniciarGestaoUsuarios() {
-    const {initializeApp} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js");
-    const {getFirestore, collection, getDocs, doc, updateDoc, getDoc} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
+    const {initializeApp, getApp, getApps} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js");
+    const {getFirestore, collection, getDocs, doc, updateDoc, getDoc, serverTimestamp, onSnapshot} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
     const {getAuth, onAuthStateChanged, signOut} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js");const firebaseConfig = {
         apiKey: "AIzaSyCjiEzdahcQqKS9V1Py4nAIx15Zqr9nIIo",
         authDomain: "sttu-registros.firebaseapp.com",
@@ -11,13 +11,16 @@
         measurementId: "G-C7PSE7YFRG"
     };
 
-    const app = initializeApp(firebaseConfig);
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    let unsubscribeUsuarios = null;
 
     document.getElementById('btnSair')?.addEventListener('click', () => {
         if (confirm("Deseja realmente sair?")) {
-            signOut(auth).then(() => window.location.href = "login.html");
+            marcarUsuarioOffline(auth.currentUser?.uid).finally(() => {
+                signOut(auth).then(() => window.location.href = "login.html");
+            });
         }
     });
 
@@ -33,16 +36,25 @@
                 return;
             }
 
-            // 2. Carrega lista
-            carregarUsuarios();
+            iniciarMonitorUsuarios();
         } else {
             window.location.href = "login.html";
         }
     });
 
-    async function carregarUsuarios() {
+    function iniciarMonitorUsuarios() {
+        if (unsubscribeUsuarios) return;
+        unsubscribeUsuarios = onSnapshot(collection(db, "usuarios"), (snapshot) => {
+            carregarUsuarios(snapshot);
+        }, (error) => {
+            console.error("Erro ao monitorar usuários:", error);
+            alert("Erro ao monitorar usuários: " + error.message);
+        });
+    }
+
+    async function carregarUsuarios(snapshotUsuarios = null) {
         const tbody = document.getElementById('listaUsuarios');
-        const querySnapshot = await getDocs(collection(db, "usuarios"));
+        const querySnapshot = snapshotUsuarios || await getDocs(collection(db, "usuarios"));
         const usuarios = [];
 
         querySnapshot.forEach((docUser) => {
@@ -56,7 +68,7 @@
         tbody.innerHTML = "";
 
         if (!usuarios.length) {
-            tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Nenhum usuário encontrado.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Nenhum usuário encontrado.</td></tr>`;
             return;
         }
 
@@ -70,6 +82,7 @@
             const nome = dados.nome || "---";
             const matricula = dados.matricula || "---";
             const avatarSrc = obterAvatarCargo(cargo);
+            const conexao = obterConexaoUsuario(dados);
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -107,6 +120,15 @@
                         </span>
                     </div>
                     <span id="msg_${id}" class="salvo">Salvo!</span>
+                </td>
+                <td>
+                    <div class="connection-cell">
+                        <span class="connection-pill ${conexao.online ? 'online' : 'offline'}">
+                            ${conexao.online ? '● Online' : '● Offline'}
+                        </span>
+                        <span class="last-access">Último acesso: ${conexao.ultimoAcesso}</span>
+                        <span class="last-access">Última saída: ${conexao.ultimaSaida}</span>
+                    </div>
                 </td>
                 <td>
                     <div class="actions-cell">
@@ -169,6 +191,66 @@
         if (dadosUsuario.aprovado === true || aprovado === "true" || aprovado === "aprovado") return "ativo";
 
         return "pendente";
+    }
+
+    function obterData(valor) {
+        if (!valor) return null;
+
+        let data = null;
+        if (typeof valor?.toDate === "function") {
+            data = valor.toDate();
+        } else if (typeof valor?.seconds === "number") {
+            data = new Date(valor.seconds * 1000);
+        } else if (typeof valor === "number") {
+            data = new Date(valor);
+        } else if (typeof valor === "string") {
+            data = new Date(valor);
+        }
+
+        if (!data || Number.isNaN(data.getTime())) return null;
+        return data;
+    }
+
+    function formatarDataHora(valor) {
+        const data = obterData(valor);
+        if (!data) return "---";
+
+        return data.toLocaleString("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    }
+
+    function obterConexaoUsuario(dadosUsuario) {
+        const ultimoValor = dadosUsuario?.ultimoAcesso || dadosUsuario?.lastLogin || dadosUsuario?.lastSeen;
+        const saidaValor = dadosUsuario?.ultimaSaida || dadosUsuario?.lastLogout;
+        const ultimoAcessoData = obterData(ultimoValor);
+        const acessoRecente = ultimoAcessoData
+            ? (Date.now() - ultimoAcessoData.getTime()) <= (2 * 60 * 1000)
+            : false;
+        const onlineMarcado = dadosUsuario?.online === true;
+        const offlineMarcado = dadosUsuario?.online === false;
+
+        return {
+            online: onlineMarcado && (acessoRecente || !ultimoAcessoData) && !offlineMarcado,
+            ultimoAcesso: formatarDataHora(ultimoValor),
+            ultimaSaida: formatarDataHora(saidaValor)
+        };
+    }
+
+    async function marcarUsuarioOffline(uid) {
+        if (!uid) return;
+        try {
+            await updateDoc(doc(db, "usuarios", uid), {
+                online: false,
+                ultimaSaida: serverTimestamp()
+            });
+        } catch (error) {
+            console.warn("Não foi possível marcar usuário offline:", error);
+        }
     }
 
     window.salvarPermissao = async (id) => {

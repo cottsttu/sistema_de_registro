@@ -41,7 +41,7 @@ body {
 }
 
 .permissions-shell {
-    width: min(100%, 1180px);
+    width: min(100%, 1360px);
     margin: 0 auto;
     padding: 22px;
     border-radius: 8px;
@@ -160,7 +160,7 @@ body {
 
 .permissions-table {
     width: 100%;
-    min-width: 920px;
+    min-width: 1180px;
     border-collapse: collapse;
     background: #ffffff;
 }
@@ -282,6 +282,43 @@ body {
 .status-pill.desativado {
     color: #991b1b;
     background: #fee2e2;
+}
+
+.connection-cell {
+    display: grid;
+    gap: 5px;
+    min-width: 150px;
+}
+
+.connection-pill {
+    width: max-content;
+    min-height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.connection-pill.online {
+    color: #087227;
+    background: #dcfce7;
+}
+
+.connection-pill.offline {
+    color: #991b1b;
+    background: #fee2e2;
+}
+
+.last-access {
+    color: #526671;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
 .access-control {

@@ -1,6 +1,6 @@
 ﻿async function iniciarEstatisticas() {
     const {initializeApp} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js");
-    const {getFirestore, collection, getDocs, query, doc, getDoc} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
+    const {getFirestore, collection, getDocs, query, doc, getDoc, updateDoc, serverTimestamp} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
     const {getAuth, onAuthStateChanged, signOut} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js");const firebaseConfig = {
         apiKey: "AIzaSyCjiEzdahcQqKS9V1Py4nAIx15Zqr9nIIo",
         authDomain: "sttu-registros.firebaseapp.com",
@@ -12,8 +12,20 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+    async function marcarOffline(uid = auth.currentUser?.uid) {
+        if (!uid) return;
+        try {
+            await updateDoc(doc(db, "usuarios", uid), {
+                online: false,
+                ultimaSaida: serverTimestamp()
+            });
+        } catch (error) {
+            console.warn("Não foi possível marcar usuário offline:", error);
+        }
+    }
 
     // VARIÁVEIS GLOBAIS
     let RAW_OCORRENCIAS = [];
@@ -133,7 +145,9 @@
                         clearTimeout(tempoInatividade);
                         tempoInatividade = setTimeout(() => {
                             alert("Sessão encerrada por inatividade (15min).");
-                            signOut(auth).then(() => window.location.href = "login.html");
+                            marcarOffline(user.uid).finally(() => {
+                                signOut(auth).then(() => window.location.href = "login.html");
+                            });
                         }, 15 * 60 * 1000);
                     };
                     window.onload = resetarTimer; document.onmousemove = resetarTimer; document.onclick = resetarTimer;
@@ -151,7 +165,7 @@
         }
     });
 
-    document.getElementById('btnSair').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
+    document.getElementById('btnSair').onclick = () => marcarOffline().finally(() => signOut(auth).then(() => window.location.href = "login.html"));
 
     async function carregarDadosDoBanco() {
         try {
