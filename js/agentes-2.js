@@ -185,6 +185,28 @@
         return `${numeros.slice(0, 2)}:${numeros.slice(2, 4)}:${numeros.slice(4)}`;
     }
 
+    function moverCursorParaFim(elemento) {
+        const range = document.createRange();
+        const selection = window.getSelection();
+        range.selectNodeContents(elemento);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+    function aplicarMascaraHorarioCelula(celula) {
+        if (!celula || celula.dataset.horaMask === "true") return;
+        celula.dataset.horaMask = "true";
+        celula.setAttribute('inputmode', 'numeric');
+        celula.addEventListener('input', () => {
+            const formatado = formatarHoraCompleta(celula.innerText);
+            if (celula.innerText !== formatado) {
+                celula.innerText = formatado;
+                moverCursorParaFim(celula);
+            }
+        });
+    }
+
     function abrirDetalhesRegistroAgente(dados, titulo = "Detalhes do registro") {
         let modal = document.getElementById('modalDetalhesAgente');
         if (!modal) {
@@ -249,6 +271,14 @@
         const campo = document.createElement(multiline ? 'textarea' : 'input');
         campo.name = nome;
         campo.value = valor || "";
+        if (nome === 'horaInicio' || nome === 'horaFim') {
+            campo.inputMode = 'numeric';
+            campo.maxLength = 8;
+            campo.placeholder = 'HH:MM:SS';
+            campo.addEventListener('input', () => {
+                campo.value = formatarHoraCompleta(campo.value);
+            });
+        }
         labelEl.appendChild(campo);
         return labelEl;
     }
@@ -307,7 +337,10 @@
             const formData = new FormData(form);
             const atualizacao = {};
             for (const [chave, valor] of formData.entries()) {
-                atualizacao[chave] = String(valor || "").trim().toUpperCase();
+                const texto = String(valor || "").trim().toUpperCase();
+                atualizacao[chave] = (chave === 'horaInicio' || chave === 'horaFim')
+                    ? formatarHoraComSegundos(texto)
+                    : texto;
             }
 
             try {
@@ -378,22 +411,67 @@
 
     function filtrarAgentesDisponiveis(valor = "", mostrarTodos = false) {
         const termo = normalizarBuscaAgente(valor);
-        if (!mostrarTodos && termo.length < 1) return [];
+        if (!mostrarTodos && termo.length < 2) return [];
         return agentesDatalistDisponiveis
-            .filter((agente) => mostrarTodos || normalizarBuscaAgente(agente).startsWith(termo))
+            .filter((agente) => mostrarTodos || normalizarBuscaAgente(agente).includes(termo))
             .slice(0, mostrarTodos ? 300 : 30);
     }
 
-    function atualizarDatalistAgentes(valor = "", mostrarTodos = true) {
+    function atualizarDatalistAgentes(valor = "", mostrarTodos = false) {
         const dl = document.getElementById('listaAgentes');
         if (!dl) return;
 
         dl.innerHTML = "";
-        filtrarAgentesDisponiveis(valor, true).forEach((agente) => {
+        filtrarAgentesDisponiveis(valor, mostrarTodos).forEach((agente) => {
                 const opt = document.createElement('option');
                 opt.value = agente;
                 dl.appendChild(opt);
             });
+    }
+
+    function fecharListasAgentes() {
+        document.querySelectorAll('.agent-picker-list.open').forEach((lista) => {
+            lista.classList.remove('open');
+        });
+    }
+
+    function renderizarListaAgente(campo, mostrarTodos = false) {
+        const picker = campo?.closest('.agent-picker');
+        const lista = picker?.querySelector('.agent-picker-list');
+        if (!lista) return;
+
+        lista.innerHTML = "";
+        if (campo.disabled) {
+            lista.classList.remove('open');
+            return;
+        }
+
+        const opcoes = filtrarAgentesDisponiveis(campo.value, mostrarTodos);
+        if (!opcoes.length) {
+            lista.classList.remove('open');
+            return;
+        }
+
+        opcoes.forEach((agente) => {
+            const opcao = document.createElement('button');
+            opcao.type = 'button';
+            opcao.className = 'agent-picker-option';
+            opcao.textContent = agente;
+            opcao.addEventListener('mousedown', (event) => event.preventDefault());
+            opcao.addEventListener('click', () => {
+                campo.value = agente;
+                lista.classList.remove('open');
+                campo.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+            lista.appendChild(opcao);
+        });
+        lista.classList.add('open');
+    }
+
+    function atualizarPickersAgentes(valor = "", mostrarTodos = false) {
+        document.querySelectorAll('.agent-picker .agente-input:focus, .agent-picker .edit-agente-input:focus').forEach((campo) => {
+            renderizarListaAgente(campo, mostrarTodos);
+        });
     }
 
     function prepararCampoAgenteComSeta(campo) {
@@ -717,17 +795,6 @@
         cellAcao.appendChild(criarBotaoVisualizarRegistro(dadosDisplay, "Histórico de Atividade"));
         
         if (usuarioEhAdmin) {
-            const btnEditar = document.createElement('button');
-            btnEditar.type = 'button';
-            btnEditar.className = 'btn btn-editar-historico';
-            btnEditar.innerText = 'EDITAR';
-            btnEditar.title = "Editar registro do histórico";
-            btnEditar.setAttribute('aria-label', 'Editar registro do histórico');
-            btnEditar.onclick = function() {
-                abrirEditorHistoricoAgente(dados.id, dadosDisplay);
-            };
-            cellAcao.appendChild(btnEditar);
-
             const btnExcluir = document.createElement('button');
             btnExcluir.type = 'button';
             btnExcluir.innerHTML = '&#10006;'; // X Symbol
@@ -738,6 +805,17 @@
                 excluirItemHistorico(dados.id);
             };
             cellAcao.appendChild(btnExcluir);
+
+            const btnEditar = document.createElement('button');
+            btnEditar.type = 'button';
+            btnEditar.className = 'btn btn-editar-historico';
+            btnEditar.innerText = 'EDITAR';
+            btnEditar.title = "Editar registro do histórico";
+            btnEditar.setAttribute('aria-label', 'Editar registro do histórico');
+            btnEditar.onclick = function() {
+                abrirEditorHistoricoAgente(dados.id, dadosDisplay);
+            };
+            cellAcao.appendChild(btnEditar);
         }
     }
 
@@ -802,13 +880,15 @@
                     
                     // --- LÓGICA DE EDIÇÃO/ENCAMINHAR ---
                     btnEncaminhar.onclick = async function() {
-                        const editaveis = ['situacao', 'maletas', 'pontoBase', 'ht', 'ase'];
+                        const editaveis = ['situacao', 'maletas', 'pontoBase', 'ht', 'ase', 'horaInicio'];
                         
                         if (btnEncaminhar.innerHTML === 'ENCAMINHAR') {
                             editaveis.forEach(key => { 
                                 cellsMap[key].contentEditable = "true"; 
                                 cellsMap[key].classList.add('editando-celula'); 
                             });
+                            cellsMap.horaInicio.innerText = getHoraAtualComSegundos();
+                            aplicarMascaraHorarioCelula(cellsMap.horaInicio);
                             
                             // LÓGICA DO DROPDOWN DA ZONA
                             const zonaAtual = cellsMap['zona'].innerText.trim();
@@ -871,7 +951,7 @@
                                 alert("Selecione quem é o CONDUTOR (⦿) da equipe antes de salvar."); return; 
                             }
 
-                            const horaCorte = getHoraAtualComSegundos();
+                            const horaCorte = formatarHoraComSegundos(cellsMap.horaInicio.innerText.trim() || getHoraAtualComSegundos());
 
                             // Histórico do estado anterior
                             const histEnc = {...dados};
@@ -955,6 +1035,7 @@
                                 cellsMap[key].contentEditable = "true";
                                 cellsMap[key].classList.add('editando-celula');
                             });
+                            aplicarMascaraHorarioCelula(cellsMap.horaInicio);
 
                             const zonaAtual = cellsMap.zona.innerText.trim();
                             cellsMap.zona.className = 'editando-celula';
@@ -981,6 +1062,18 @@
                                     <input type="text" class="edit-agente-input" list="listaAgentes" value="${escapeHtml(nome)}">
                                 `;
                                 cellsMap.agente.appendChild(div);
+                                const campoEditAgente = div.querySelector('.edit-agente-input');
+                                prepararCampoAgenteComSeta(campoEditAgente);
+                                campoEditAgente.addEventListener('input', function() {
+                                    const inicio = this.selectionStart;
+                                    const fim = this.selectionEnd;
+                                    this.value = this.value.toUpperCase();
+                                    this.setSelectionRange(inicio, fim);
+                                    atualizarDatalistAgentes(this.value);
+                                });
+                                campoEditAgente.addEventListener('focus', function() {
+                                    atualizarDatalistAgentes(this.value, true);
+                                });
                             }
 
                             btnEditar.dataset.mode = 'salvar';
@@ -1239,17 +1332,14 @@
                 this.value = this.value.toUpperCase();
                 this.setSelectionRange(inicio, fim);
                 atualizarOpcoesDisponiveis();
-                this.setAttribute('list', 'listaAgentes');
-                atualizarDatalistAgentes();
+                atualizarDatalistAgentes(this.value);
             };
             i.onfocus = function() {
-                this.setAttribute('list', 'listaAgentes');
-                atualizarDatalistAgentes();
+                atualizarDatalistAgentes(this.value, true);
             };
             i.onchange = function() {
                 atualizarOpcoesDisponiveis();
-                this.setAttribute('list', 'listaAgentes');
-                atualizarDatalistAgentes();
+                atualizarDatalistAgentes(this.value);
             };
         });
         

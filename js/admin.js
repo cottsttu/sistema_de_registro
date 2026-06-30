@@ -273,19 +273,25 @@
         const senha = document.getElementById('senhaUser').value;
         const cargo = document.getElementById('cargoUser').value;
 
-        if (!uid || !nome || !mat) return alert("Selecione um usuário na lista primeiro.");
+        const criandoNovoUsuario = !uid;
+
+        if (!nome || !mat) return alert("Informe nome completo e usuário/matrícula.");
+        if (criandoNovoUsuario && !senha) return alert("Informe uma senha inicial para criar o novo usuário.");
         if (senha && senha.length < 6) return alert("A nova senha precisa ter no mínimo 6 caracteres.");
 
         try {
-            const alterouLoginOuSenha = mat !== matriculaSelecionadaOriginal || senha.length > 0;
+            const alterouLoginOuSenha = criandoNovoUsuario || mat !== matriculaSelecionadaOriginal || senha.length > 0;
             if (alterouLoginOuSenha) {
-                await atualizarCredenciaisUsuario({
+                const resultadoCredenciais = await atualizarCredenciaisUsuario({
                     uid,
                     nome,
                     matricula: mat,
                     cargo,
                     senha: senha || null
                 });
+                if (criandoNovoUsuario && resultadoCredenciais?.uid) {
+                    document.getElementById('uidUser').value = resultadoCredenciais.uid;
+                }
             } else {
                 await updateDoc(doc(db, "usuarios", uid), { nome, matricula: mat, cargo });
             }

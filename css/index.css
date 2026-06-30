@@ -195,8 +195,8 @@
         }
 
         .logo-sttu {
-            width: clamp(220px, 24vw, 390px);
-            max-height: clamp(96px, 14vw, 178px);
+            width: clamp(240px, 26vw, 430px);
+            max-height: clamp(104px, 15vw, 196px);
             object-fit: contain;
             height: auto;
             filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.46));
@@ -360,6 +360,10 @@
 
         .menu-card[data-tone="blue"] .menu-icon {
             color: var(--blue);
+        }
+
+        .menu-card[data-tone="black"] .menu-icon {
+            color: #000;
         }
 
         .menu-card[data-tone="red"] .menu-icon {
@@ -1050,8 +1054,8 @@ body[data-theme="night"] .panel-shell {
 }
 
 .logo-sttu {
-    width: clamp(130px, 14vw, 190px) !important;
-    max-height: 92px !important;
+    width: clamp(148px, 16vw, 220px) !important;
+    max-height: 106px !important;
 }
 
 .button-group {
@@ -1062,20 +1066,20 @@ body[data-theme="night"] .panel-shell {
 .menu-card,
 body[data-theme="day"] .menu-card,
 body[data-theme="night"] .menu-card {
-    min-height: 188px !important;
-    gap: 18px !important;
-    padding: 22px 18px !important;
+    min-height: 132px !important;
+    gap: 10px !important;
+    padding: 12px 10px !important;
     border-radius: 8px !important;
 }
 
 .menu-icon {
-    width: 86px !important;
-    height: 86px !important;
+    width: 62px !important;
+    height: 62px !important;
     aspect-ratio: auto !important;
 }
 
 .menu-title {
-    font-size: 1.45rem !important;
+    font-size: 1.12rem !important;
 }
 
 body[data-theme="night"] .menu-card {
@@ -1196,8 +1200,8 @@ body[data-theme="night"] .menu-icon img {
     }
 
     .logo-sttu {
-        width: clamp(104px, 22vw, 164px) !important;
-        max-height: 52px !important;
+        width: clamp(112px, 24vw, 176px) !important;
+        max-height: 58px !important;
     }
 
     .mobile-menu-toggle {
@@ -1304,8 +1308,8 @@ body[data-theme="night"] .menu-icon img {
     }
 
     .logo-sttu {
-        width: clamp(88px, 28vw, 126px) !important;
-        max-height: 42px !important;
+        width: clamp(94px, 30vw, 136px) !important;
+        max-height: 46px !important;
     }
 
     .button-group,
@@ -1401,5 +1405,11 @@ body[data-theme="night"] .menu-icon img {
         padding: 0 5px !important;
         font-size: 0.5rem !important;
     }
+}
+
+#btnSmartwall.menu-card[data-tone="black"] .menu-icon,
+#btnSmartwall.menu-card[data-tone="black"] .menu-icon img {
+    color: #000 !important;
+    filter: brightness(0) !important;
 }
 

@@ -16,6 +16,28 @@
     flex: 0 0 auto;
 }
 
+.page-header .brand-block,
+.header .brand-block {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.page-header .brand-mark,
+.header .brand-mark {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(64, 153, 255, 0.18));
+}
+
+.page-header .brand-block .title-container,
+.header .brand-block h2 {
+    margin: 0;
+}
+
 .app-home-shortcut,
 .app-menu-toggle,
 .app-logout-button {
@@ -195,6 +217,7 @@ body[data-theme="night"] .page-header #nomeUsuarioDisplay {
 .app-menu-link[data-page="ocorrencias.html"]::before { content: "\26A0"; }
 .app-menu-link[data-page="admin.html"]::before { content: "\2699"; }
 .app-menu-link[data-page="relatorio_geral.html"]::before { content: "\25A4"; }
+.app-menu-link[data-page="smartwall.html"]::before { content: "\25C9"; }
 
 .app-menu-link:hover,
 .app-menu-link:focus-visible {

@@ -46,7 +46,7 @@
         return await new Promise(async (resolve, reject) => {
             const timeoutId = setTimeout(() => reject(new Error("Tempo excedido ao carregar emblema.")), 1500);
             try {
-                const resposta = await fetch(url, { cache: "force-cache" });
+                const resposta = await fetch(url, { cache: "reload" });
                 if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
                 const blob = await resposta.blob();
                 const reader = new FileReader();
@@ -66,10 +66,10 @@
         });
     }
 
-    async function adicionarEmblemaPdf(doc, x = 14, y = 8, largura = 22, altura = 22) {
+    async function adicionarEmblemaPdf(doc, x = 14, y = 8, largura = 32, altura = 32) {
         try {
-            const emblema = await carregarImagemPdf("src/emblemasttu.jpeg");
-            doc.addImage(emblema, "JPEG", x, y, largura, altura);
+            const emblema = await carregarImagemPdf("src/emblemasttu_relatorios.png");
+            doc.addImage(emblema, "PNG", x, y, largura, altura);
         } catch (error) {
             console.error("Erro ao inserir o emblema no PDF:", error);
         }
@@ -461,7 +461,7 @@
 
     const qPendentes = query(
         collection(db, "ocorrencias_sttu"), 
-        where("situacao", "in", ["ENCAMINHADA", "NÃO ATENDIDA", "PARA O DESPACHO", "PARA O PRÓXIMO TURNO"])
+        where("situacao", "in", ["EM ANDAMENTO", "ENCAMINHADA", "NÃO ATENDIDA", "PARA O DESPACHO", "PARA O PRÓXIMO TURNO"])
     );
 
     onSnapshot(qHoje, (snapshot) => {
@@ -489,7 +489,7 @@
             ? equipes.some((equipe) => String(equipe || "").trim())
             : Boolean(String(equipes || "").trim());
 
-        if (["CONCLUÍDA", "NÃO ATENDIDA", "PARA O PRÓXIMO TURNO"].includes(situacaoAtual)) {
+        if (["EM ANDAMENTO", "CONCLUÍDA", "NÃO ATENDIDA", "PARA O PRÓXIMO TURNO"].includes(situacaoAtual)) {
             return situacaoAtual;
         }
 
@@ -578,7 +578,7 @@
         const prioridadePendente = (situacaoOriginal) => {
             const situacao = normalizarSituacaoOrdenacao(situacaoOriginal);
             if (situacao === 'PARA O DESPACHO' || situacao === 'PARA DESPACHO') return 0;
-            if (situacao === 'ENCAMINHADA') return 1;
+            if (situacao === 'EM ANDAMENTO' || situacao === 'ENCAMINHADA') return 1;
             return 2;
         };
 
@@ -611,7 +611,7 @@
                 return;
             }
             
-            if (d.situacao === 'ENCAMINHADA' && d.equipe) {
+            if ((d.situacao === 'EM ANDAMENTO' || d.situacao === 'ENCAMINHADA') && d.equipe) {
                 const vtrs = d.equipe.split(', '); 
                 vtrs.forEach(v => veiculosOcupados.add(v.trim()));
             }
@@ -630,7 +630,7 @@
                 
                 if(idx === 9) { 
                     if (txt === 'CONCLUÍDA') cell.className = 'status-concluida';
-                    else if (txt === 'ENCAMINHADA') cell.className = 'status-encaminhada';
+                    else if (txt === 'EM ANDAMENTO' || txt === 'ENCAMINHADA') cell.className = 'status-encaminhada';
                     else if (txt === 'PARA O DESPACHO') cell.className = 'status-despacho'; 
                     else cell.className = 'status-pendente';
                 }
@@ -927,12 +927,44 @@
         fecharModal();
     };
 
-    window.concluirOcorrencia = async (id, dadosAntigos) => {
+    let conclusaoPendente = null;
+
+    window.concluirOcorrencia = (id, dadosAntigos) => {
         if (isVisualizador) return;
-        let res = prompt("RESULTADO FINAL / MOTIVO QTC (OBRIGATÓRIO PARA CONCLUIR):", dadosAntigos.resultadoFinal || "");
-        if (res === null) return;
-        if (res.trim() === "") { alert("⚠️ ERRO: É OBRIGATÓRIO escrever o Resultado Final."); return; }
-        
+        conclusaoPendente = {id, dadosAntigos};
+        const inputId = document.getElementById('concluirId');
+        const textarea = document.getElementById('concluirResultado');
+        const modal = document.getElementById('modalConcluirOcorrencia');
+
+        if (inputId) inputId.value = id;
+        if (textarea) {
+            textarea.value = dadosAntigos.resultadoFinal || "";
+            setTimeout(() => textarea.focus(), 50);
+        }
+        if (modal) modal.style.display = 'flex';
+    };
+
+    window.fecharModalConcluir = () => {
+        const modal = document.getElementById('modalConcluirOcorrencia');
+        const textarea = document.getElementById('concluirResultado');
+        if (modal) modal.style.display = 'none';
+        if (textarea) textarea.value = "";
+        conclusaoPendente = null;
+    };
+
+    window.confirmarConclusaoOcorrencia = async () => {
+        if (isVisualizador || !conclusaoPendente) return;
+
+        const {id, dadosAntigos} = conclusaoPendente;
+        const textarea = document.getElementById('concluirResultado');
+        const res = textarea?.value || "";
+
+        if (res.trim() === "") {
+            alert("⚠️ ERRO: É OBRIGATÓRIO escrever o Resultado Final.");
+            textarea?.focus();
+            return;
+        }
+
         const hF = getHoraAtual();
         await updateDoc(doc(db, "ocorrencias_sttu", id), { 
             situacao: 'CONCLUÍDA', 
@@ -943,8 +975,9 @@
 
         registrarLogAuditoria("CONCLUIR OCORRÊNCIA", `Registro nº ${dadosAntigos.numRegistro} finalizado por ${nomeUsuarioLogado}. Resultado: ${res}`);
 
+        fecharModalConcluir();
         alert("✅ Ocorrência concluída com sucesso!");
-    }
+    };
 
     window.excluirOcorrencia = async (id, numRegistro) => {
         if (!usuarioEhAdmin) {

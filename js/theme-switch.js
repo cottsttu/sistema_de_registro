@@ -11,6 +11,8 @@
             button.setAttribute("aria-pressed", normalizedTheme === "night" ? "true" : "false");
             button.setAttribute("title", normalizedTheme === "night" ? "Modo noite" : "Modo dia");
         }
+
+        window.dispatchEvent(new CustomEvent("sttu-theme-change", { detail: { theme: normalizedTheme } }));
     };
 
     const initThemeSwitch = () => {
@@ -27,7 +29,9 @@
         });
     };
 
-    if (document.readyState === "loading") {
+    if (document.body) {
+        initThemeSwitch();
+    } else if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", initThemeSwitch);
     } else {
         initThemeSwitch();

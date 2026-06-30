@@ -1,15 +1,15 @@
 ﻿:root {
             --bg: #07111a;
-            --panel: rgba(10, 22, 31, 0.34);
-            --panel-border: rgba(220, 246, 255, 0.26);
+            --panel: rgba(10, 22, 31, 0.58);
+            --panel-border: rgba(245, 179, 30, 0.72);
             --text: #ffffff;
-            --muted: rgba(255, 255, 255, 0.75);
-            --field: rgba(223, 233, 238, 0.20);
-            --field-border: rgba(225, 240, 248, 0.72);
-            --cyan: #6ee7f1;
-            --lime: #d6ef5d;
-            --red: #d90000;
-            --red-dark: #b90000;
+            --muted: rgba(255, 255, 255, 0.68);
+            --field: rgba(7, 18, 29, 0.36);
+            --field-border: rgba(246, 177, 28, 0.86);
+            --cyan: #f5b31e;
+            --lime: #f5b31e;
+            --red: #f5b31e;
+            --red-dark: #d99307;
             --danger: #ffd8d8;
         }
 
@@ -24,13 +24,13 @@
         }
 
         body {
-            --panel: rgba(255, 255, 255, 0.055);
-            --panel-border: rgba(255, 255, 255, 0.24);
-            --text: #1d2b38;
-            --muted: rgba(29, 43, 56, 0.82);
-            --placeholder: rgba(29, 43, 56, 0.58);
-            --field: rgba(244, 249, 251, 0.70);
-            --field-border: rgba(210, 221, 227, 0.86);
+            --panel: rgba(255, 255, 255, 0.86);
+            --panel-border: rgba(255, 255, 255, 0.72);
+            --text: #14315d;
+            --muted: rgba(20, 49, 93, 0.56);
+            --placeholder: rgba(20, 49, 93, 0.44);
+            --field: rgba(255, 255, 255, 0.50);
+            --field-border: rgba(245, 179, 30, 0.72);
             width: 100%;
             height: 100vh;
             height: 100dvh;
@@ -48,13 +48,13 @@
         }
 
         body[data-theme="night"] {
-            --panel: rgba(10, 22, 31, 0.34);
-            --panel-border: rgba(220, 246, 255, 0.26);
+            --panel: rgba(8, 20, 32, 0.86);
+            --panel-border: rgba(245, 179, 30, 0.70);
             --text: #ffffff;
-            --muted: rgba(255, 255, 255, 0.75);
-            --placeholder: rgba(255, 255, 255, 0.62);
-            --field: rgba(223, 233, 238, 0.20);
-            --field-border: rgba(225, 240, 248, 0.72);
+            --muted: rgba(255, 255, 255, 0.64);
+            --placeholder: rgba(255, 255, 255, 0.44);
+            --field: rgba(2, 12, 23, 0.34);
+            --field-border: rgba(245, 179, 30, 0.78);
         }
 
         .page-background {
@@ -166,30 +166,30 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: clamp(20px, 3.4vw, 30px);
+            padding: clamp(18px, 3.2vw, 26px) clamp(20px, 3.6vw, 34px);
             border: 1px solid var(--panel-border);
-            border-radius: clamp(20px, 3.4vw, 30px);
+            border-radius: 22px;
             background:
-                linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.012)),
-                radial-gradient(circle at 28% 26%, rgba(255, 255, 255, 0.035), transparent 36%),
+                linear-gradient(150deg, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0.10)),
                 var(--panel);
             box-shadow:
-                0 24px 55px rgba(68, 84, 94, 0.14),
-                inset 0 1px 14px rgba(255, 255, 255, 0.16),
-                inset 0 -18px 30px rgba(255, 255, 255, 0.025);
-            backdrop-filter: blur(4px) saturate(104%);
-            -webkit-backdrop-filter: blur(4px) saturate(104%);
+                0 18px 34px rgba(20, 49, 93, 0.16),
+                inset 0 1px 18px rgba(255, 255, 255, 0.46);
+            backdrop-filter: blur(9px) saturate(108%);
+            -webkit-backdrop-filter: blur(9px) saturate(108%);
             text-align: center;
+            overflow: hidden;
         }
 
         body[data-theme="night"] .container-box {
+            background:
+                linear-gradient(145deg, rgba(20, 43, 63, 0.88), rgba(3, 13, 24, 0.78)),
+                var(--panel);
             box-shadow:
-                0 24px 55px rgba(0, 0, 0, 0.46),
-                0 0 20px rgba(116, 235, 244, 0.08),
-                inset 0 1px 18px rgba(255, 255, 255, 0.12),
-                inset 0 -20px 34px rgba(7, 20, 29, 0.24);
-            backdrop-filter: blur(8px) saturate(112%);
-            -webkit-backdrop-filter: blur(8px) saturate(112%);
+                0 18px 42px rgba(0, 0, 0, 0.58),
+                0 0 24px rgba(245, 179, 30, 0.22),
+                inset 0 1px 18px rgba(255, 255, 255, 0.10),
+                inset 0 -18px 32px rgba(1, 8, 17, 0.38);
         }
 
         .auth-panel {
@@ -199,63 +199,171 @@
             align-items: center;
         }
 
+        .auth-panel::before {
+            order: 1;
+            content: "SECRETARIA MUNICIPAL\a DE MOBILIDADE URBANA\a NATAL - RN\a CENTRAL DE OPERAÇÕES\a DE TRÂNSITO E TRANSPORTES";
+            white-space: pre;
+            margin-top: 4px;
+            color: var(--text);
+            font-size: 0.78rem;
+            line-height: 1.12;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .auth-panel::after {
+            order: 2;
+            content: "";
+            width: 100%;
+            height: 1px;
+            margin: 12px 0 12px;
+            background: linear-gradient(90deg, transparent, rgba(245, 179, 30, 0.90), transparent);
+        }
+
+        body[data-theme="night"] .auth-panel::before {
+            color: #f5b31e;
+        }
+
         .brand-logo {
-            width: min(60%, 238px);
+            order: 0;
+            width: min(50%, 156px);
             height: auto;
-            margin-bottom: clamp(14px, 2.6vw, 20px);
-            filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.36));
+            margin-bottom: 0;
+            filter: drop-shadow(0 7px 10px rgba(0, 0, 0, 0.22));
         }
 
         h2 {
+            order: 3;
             margin: 0;
             color: var(--text);
-            font-size: clamp(1.75rem, 4.4vw, 2.4rem);
+            font-size: clamp(1.75rem, 4.4vw, 2.08rem);
             line-height: 1.05;
             font-weight: 800;
         }
 
         p {
-            margin: 8px 0 clamp(20px, 3.2vw, 30px);
+            order: 4;
+            margin: 5px 0 14px;
             color: var(--muted);
-            font-size: clamp(1.05rem, 2.8vw, 1.45rem);
+            font-size: 0.96rem;
             line-height: 1.2;
         }
 
         .form-stack {
+            order: 5;
             width: 100%;
             display: grid;
-            gap: clamp(14px, 3vw, 20px);
+            gap: 12px;
         }
 
         .input-shell {
             width: 100%;
-            min-height: clamp(52px, 7.6vw, 64px);
+            min-height: 44px;
             display: flex;
             align-items: center;
             gap: clamp(10px, 2vw, 15px);
-            padding: 0 clamp(17px, 3.2vw, 24px);
-            border: 2px solid var(--field-border);
+            padding: 0 14px;
+            border: 1px solid var(--field-border);
             border-radius: 999px;
             background: var(--field);
             box-shadow:
-                inset 0 1px 10px rgba(255, 255, 255, 0.10),
-                0 0 18px rgba(110, 231, 241, 0.20);
+                inset 0 1px 7px rgba(255, 255, 255, 0.10),
+                0 6px 14px rgba(20, 49, 93, 0.06);
             transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
         }
 
         .input-shell:focus-within {
             border-color: var(--cyan);
-            background: rgba(236, 245, 249, 0.27);
+            background: rgba(255, 255, 255, 0.62);
             box-shadow:
-                inset 0 1px 12px rgba(255, 255, 255, 0.14),
-                0 0 22px rgba(110, 231, 241, 0.46);
+                inset 0 1px 10px rgba(255, 255, 255, 0.22),
+                0 0 0 3px rgba(245, 179, 30, 0.18);
+        }
+
+        body[data-theme="night"] .input-shell {
+            transition: none;
+        }
+
+        body[data-theme="night"] .input-shell:focus-within {
+            border-color: var(--field-border);
+            background: var(--field);
+            box-shadow:
+                inset 0 1px 7px rgba(255, 255, 255, 0.10),
+                0 6px 14px rgba(20, 49, 93, 0.06);
         }
 
         .input-shell svg {
-            width: clamp(21px, 3.4vw, 27px);
-            height: clamp(21px, 3.4vw, 27px);
+            width: 20px;
+            height: 20px;
             flex: 0 0 auto;
-            color: var(--placeholder);
+            color: #f5b31e;
+        }
+
+        .first-access-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgba(4, 12, 18, 0.72);
+        }
+
+        .first-access-modal.open {
+            display: flex;
+        }
+
+        .first-access-card {
+            width: min(100%, 430px);
+            padding: 26px;
+            border: 1px solid var(--panel-border);
+            border-radius: 18px;
+            background: rgba(248, 252, 254, 0.96);
+            box-shadow: 0 24px 58px rgba(0, 0, 0, 0.34);
+            color: #1d2b38;
+            text-align: left;
+        }
+
+        body[data-theme="night"] .first-access-card {
+            background: rgba(12, 25, 34, 0.96);
+            color: #ffffff;
+        }
+
+        .first-access-card h2 {
+            font-size: 1.7rem;
+        }
+
+        .first-access-card p {
+            margin: 8px 0 18px;
+            font-size: 1rem;
+        }
+
+        .first-access-field {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 14px;
+            font-weight: 800;
+        }
+
+        .first-access-field input {
+            width: 100%;
+            height: 46px;
+            padding: 0 14px;
+            border: 1px solid rgba(29, 43, 56, 0.28);
+            border-radius: 10px;
+            color: inherit;
+            background: rgba(255, 255, 255, 0.72);
+            font-size: 1rem;
+        }
+
+        body[data-theme="night"] .first-access-field input {
+            border-color: rgba(220, 246, 255, 0.24);
+            background: rgba(255, 255, 255, 0.09);
+        }
+
+        .first-access-error {
+            margin: 4px 0 12px;
         }
 
         input {
@@ -267,7 +375,7 @@
             color: var(--text);
             background: transparent;
             font: inherit;
-            font-size: clamp(0.9rem, 2.7vw, 1.22rem);
+            font-size: 0.88rem;
             line-height: 1;
         }
 
@@ -281,8 +389,8 @@
         }
 
         .password-toggle {
-            width: clamp(30px, 6vw, 36px);
-            height: clamp(30px, 6vw, 36px);
+            width: 26px;
+            height: 26px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -304,38 +412,60 @@
 
         .primary-button {
             width: 100%;
-            min-height: clamp(54px, 8.2vw, 64px);
+            min-height: 46px;
             border: 0;
             border-radius: 999px;
             cursor: pointer;
-            color: #ffffff;
-            background: linear-gradient(180deg, #ef0909 0%, var(--red) 52%, var(--red-dark) 100%);
-            box-shadow: 0 15px 24px rgba(184, 0, 0, 0.38);
-            font-size: clamp(0.95rem, 2.7vw, 1.28rem);
+            color: #071522;
+            background: linear-gradient(180deg, #ffc740 0%, var(--red) 52%, var(--red-dark) 100%);
+            box-shadow: 0 10px 18px rgba(217, 147, 7, 0.30);
+            font-size: 0.96rem;
             font-weight: 900;
             letter-spacing: 0;
             text-transform: uppercase;
             transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
         }
 
+        .primary-button::after {
+            content: "›";
+            display: inline-block;
+            margin-left: 12px;
+            font-size: 1.25em;
+            line-height: 0;
+            transform: translateY(1px);
+        }
+
         .primary-button:hover,
         .primary-button:focus-visible {
             transform: translateY(-1px);
             filter: brightness(1.06);
-            box-shadow: 0 18px 28px rgba(184, 0, 0, 0.48);
+            box-shadow: 0 13px 22px rgba(217, 147, 7, 0.40);
             outline: none;
         }
 
         .secondary-button {
-            background: linear-gradient(180deg, #1089d3 0%, #006eab 100%);
-            box-shadow: 0 15px 24px rgba(0, 82, 130, 0.36);
+            background: linear-gradient(180deg, #ffc740 0%, #f5b31e 52%, #d99307 100%);
+            box-shadow: 0 10px 18px rgba(217, 147, 7, 0.30);
+        }
+
+        .first-access-card .primary-button {
+            min-height: clamp(54px, 8.2vw, 64px);
+            color: #ffffff;
+            background: linear-gradient(180deg, #ef0909 0%, #d90000 52%, #b90000 100%);
+            box-shadow: 0 15px 24px rgba(184, 0, 0, 0.38);
+            font-size: clamp(0.95rem, 2.7vw, 1.28rem);
+        }
+
+        .first-access-card .primary-button::after {
+            content: none;
         }
 
         .toggle-link {
-            margin-top: clamp(18px, 3.6vw, 28px);
+            order: 7;
+            margin-top: 12px;
             display: inline-block;
             color: var(--lime);
-            font-size: clamp(0.92rem, 2.5vw, 1.18rem);
+            font-size: 0.86rem;
             line-height: 1.2;
             text-decoration: underline;
             text-underline-offset: 4px;
@@ -343,7 +473,7 @@
         }
 
         body[data-theme="day"] .toggle-link {
-            color: #b6c900;
+            color: #14315d;
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.55);
         }
 
@@ -361,6 +491,7 @@
         .error {
             width: 100%;
             display: none;
+            order: 6;
             margin-top: 16px;
             padding: 11px 14px;
             border: 1px solid rgba(255, 216, 216, 0.56);
@@ -377,27 +508,27 @@
 
         @media (min-width: 769px) {
             .brand-logo {
-                width: min(56%, 210px);
+                width: min(50%, 156px);
             }
 
             h2 {
-                font-size: 1.85rem;
+                font-size: 1.95rem;
             }
 
             p {
-                font-size: 1.04rem;
+                font-size: 0.96rem;
             }
 
             input {
-                font-size: 0.94rem;
+                font-size: 0.88rem;
             }
 
             .primary-button {
-                font-size: 1rem;
+                font-size: 0.96rem;
             }
 
             .toggle-link {
-                font-size: 0.94rem;
+                font-size: 0.86rem;
             }
 
             .error {
@@ -413,28 +544,28 @@
 
             .container-box {
                 min-height: auto;
-                padding: 24px 18px;
-                border-radius: 24px;
+                padding: 18px 20px;
+                border-radius: 20px;
             }
 
             .brand-logo {
-                width: min(66%, 210px);
+                width: min(50%, 122px);
             }
 
             h2 {
-                font-size: clamp(1.65rem, 7.2vw, 2.05rem);
+                font-size: clamp(1.32rem, 6.2vw, 1.62rem);
             }
 
             p {
-                font-size: clamp(0.98rem, 4.8vw, 1.18rem);
+                font-size: clamp(0.76rem, 3.6vw, 0.84rem);
             }
 
             input {
-                font-size: clamp(0.78rem, 3.7vw, 0.94rem);
+                font-size: clamp(0.68rem, 3.2vw, 0.78rem);
             }
 
             input::placeholder {
-                font-size: clamp(0.72rem, 3.5vw, 0.88rem);
+                font-size: clamp(0.66rem, 3.1vw, 0.75rem);
             }
         }
 
@@ -445,33 +576,33 @@
 
             .container-box {
                 min-height: auto;
-                padding-block: clamp(18px, 3.4vh, 26px);
+                padding-block: clamp(14px, 3vh, 20px);
             }
 
             .brand-logo {
-                width: min(52%, 196px);
-                margin-bottom: 10px;
+                width: min(42%, 108px);
+                margin-bottom: 0;
             }
 
             h2 {
-                font-size: clamp(1.55rem, 4.4vh, 2.05rem);
+                font-size: clamp(1.25rem, 4vh, 1.52rem);
             }
 
             p {
-                margin: 5px 0 15px;
-                font-size: clamp(0.95rem, 3.2vh, 1.15rem);
+                margin: 4px 0 12px;
+                font-size: clamp(0.72rem, 2.6vh, 0.82rem);
             }
 
             .form-stack {
-                gap: 12px;
+                gap: 9px;
             }
 
             .input-shell {
-                min-height: 48px;
+                min-height: 34px;
             }
 
             .primary-button {
-                min-height: 50px;
+                min-height: 36px;
             }
 
             .toggle-link {
@@ -481,7 +612,7 @@
 
         @media (max-width: 360px) {
             .container-box {
-                padding: 24px 15px;
+                padding: 18px 15px;
             }
 
             .input-shell {
@@ -492,7 +623,7 @@
             input,
             .primary-button,
             .toggle-link {
-                font-size: 0.96rem;
+                font-size: 0.72rem;
             }
 
             input::placeholder {

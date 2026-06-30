@@ -7,15 +7,18 @@
     <link rel="preload" as="image" href="src/imagem_fundo_branco.png" fetchpriority="high">
     <link rel="preload" as="image" href="src/imagem_de_fundo_login_editada.jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="css/agentes.css?v=20260624-1">
-    <link rel="stylesheet" href="css/app-menu.css?v=20260623-6">
+    <link rel="stylesheet" href="css/agentes.css?v=20260626-1">
+    <link rel="stylesheet" href="css/app-menu.css?v=20260626-1">
 </head>
 <body data-theme="day">
 <img class="page-background light" src="src/imagem_fundo_branco.png" alt="" aria-hidden="true" fetchpriority="high" decoding="sync">
 <img class="page-background dark" src="src/imagem_de_fundo_login_editada.jpeg" alt="" aria-hidden="true">
 
 <div class="page-header">
-    <div class="title-container">CONTROLE DE AGENTES E VEÍCULOS</div>
+    <div class="brand-block">
+        <img src="src/emblemasttu_transparente.png" alt="STTU" class="brand-mark">
+        <div class="title-container">CONTROLE DE AGENTES E VEÍCULOS</div>
+    </div>
     <div class="header-actions">
         <nav class="app-shortcut-menu app-menu-inline" aria-label="Atalhos principais">
         <a href="index.html" class="app-home-shortcut" aria-label="Página Inicial">
@@ -52,84 +55,138 @@
 <main class="page-shell">
     <div id="areaRegistro">
         <form id="registroForm" autocomplete="off">
-            <table>
-                <thead>
-                    <tr>
-                        <th class="date-header-row" colspan="9">INFORMAÇÕES GERAIS</th>
-                    </tr>
-                    <tr>
-                        <td class="date-header-row" colspan="4" id="diaSemana">---</td>
-                        <td class="date-header-row" colspan="5"><input type="text" id="dataRelatorio" readonly class="inline-agentes-3"></td>
-                    </tr>
-                    <tr id="headerOriginalRow">
-                        <th class="data-header">VEÍCULO E LOCAL</th>
-                        <th class="data-header">AGENTES E CONDUTOR (<i class="fa-solid fa-person-military-pointing" aria-hidden="true"></i>)</th>
-                        <th class="data-header">HT (Nº)</th>
-                        <th class="data-header">ASE (Nº)</th>
-                        <th class="data-header">FUNÇÃO EQUIPE</th>
-                        <th class="data-header">MALETAS (Nº)</th>
-                        <th class="data-header">REGIÃO ATUAL</th>
-                        <th class="data-header">HORA INÍCIO (CICLO)</th>
-                        <th class="data-header">PONTO BASE ATUAL</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><select id="veiculo"><option value="">Carregando...</option></select></td>
-                        <td>
-                            <div class="agentes-container">
-                                <div class="agente-row"><input type="radio" name="condutor" value="0" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 1" autocomplete="off"></div>
-                                <div class="agente-row"><input type="radio" name="condutor" value="1" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 2" autocomplete="off"></div>
-                                <div class="agente-row"><input type="radio" name="condutor" value="2" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 3" autocomplete="off"></div>
-                                <div class="agente-row"><input type="radio" name="condutor" value="3" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 4" autocomplete="off"></div>
-                                <div class="agente-row"><input type="radio" name="condutor" value="4" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 5" autocomplete="off"></div>
-                            </div>
-                            <datalist id="listaAgentes"></datalist>
-                        </td>
-                        
-                        <td id="container-ht" class="inline-agentes-4"></td>
-                        <td id="container-ase" class="inline-agentes-5"></td>
+            <div class="registro-panel">
+                <h2>INFORMAÇÕES GERAIS</h2>
+                <div class="registro-date">
+                    <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+                    <span id="diaSemana">---</span>
+                    <input type="text" id="dataRelatorio" readonly class="inline-agentes-3" tabindex="-1" aria-hidden="true">
+                </div>
 
-                        <td>
-                            <select id="situacao">
-                                <option value="ATENDIMENTO">ATENDIMENTO</option>
-                                <option value="DESPACHO">DESPACHO</option>
-                                <option value="INSPEÇÃO">INSPEÇÃO</option>
-                                <option value="FISCALIZAÇÃO">FISCALIZAÇÃO</option>
-                                <option value="ATENDIMENTO A OCORRENCIAS DE SINISTRO">ATENDIMENTO A OCORRENCIAS DE SINISTRO</option>
-                            </select>
-                        </td>
-                        
-                        <td><input type="text" id="maletas" class="campo-numerico" placeholder="Nº MALETA" oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
+                <div id="headerOriginalRow" class="registro-headers-clone" aria-hidden="true">
+                    <span class="data-header">VEÍCULO E LOCAL</span>
+                    <span class="data-header">AGENTES E CONDUTOR (<i class="fa-solid fa-person-military-pointing" aria-hidden="true"></i>)</span>
+                    <span class="data-header">HT (Nº)</span>
+                    <span class="data-header">ASE (Nº)</span>
+                    <span class="data-header">FUNÇÃO EQUIPE</span>
+                    <span class="data-header">MALETAS (Nº)</span>
+                    <span class="data-header">REGIÃO ATUAL</span>
+                    <span class="data-header">HORA INÍCIO</span>
+                    <span class="data-header">PONTO BASE ATUAL</span>
+                </div>
 
-                        <td>
-                            <select id="zona">
-                                <option value="">SELECIONE...</option>
-                                <option value="REGIÃO 1">REGIÃO 1</option>
-                                <option value="REGIÃO 2">REGIÃO 2</option>
-                                <option value="REGIÃO 3">REGIÃO 3</option>
-                                <option value="REGIÃO 4">REGIÃO 4</option>
-                                <option value="REGIÃO 5">REGIÃO 5</option>
-                                <option value="GERAL">GERAL</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div class="hora-field">
-                                <input type="text" id="horaInicio" class="hora-atual" inputmode="numeric" placeholder="HH:MM:SS" maxlength="8" title="Digite a hora ou clique para preencher com a hora atual">
-                                <button type="button" class="btn-clear-hora" data-clear-time="horaInicio" aria-label="Limpar hora início">×</button>
-                            </div>
-                        </td>
-                        <td>
-                            <textarea id="pontoBase" class="obrigatorio" placeholder="CAMPO OBRIGATÓRIO"></textarea>
-                            <button type="button" class="btn-clear-textarea" data-clear-textarea="pontoBase">LIMPAR PONTO BASE</button>
-                            <div class="inline-agentes-6">
-                                <button type="submit" class="btn btn-salvar">Registrar Equipe</button>
-                                <button type="button" id="btnLimparEquipe" class="btn btn-limpar-equipe">Limpar Geral</button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                <div class="registro-section registro-section-main">
+                    <div class="registro-field field-veiculo">
+                        <label for="veiculo">VEÍCULO E LOCAL</label>
+                        <select id="veiculo"><option value="">Carregando...</option></select>
+                    </div>
+
+                    <div class="registro-field field-agentes">
+                        <span class="registro-label">AGENTES E CONDUTOR</span>
+                        <div class="agentes-container">
+                            <div class="agente-row"><input type="radio" name="condutor" value="0" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 1" autocomplete="off"></div>
+                            <div class="agente-row"><input type="radio" name="condutor" value="1" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 2" autocomplete="off"></div>
+                            <div class="agente-row"><input type="radio" name="condutor" value="2" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 3" autocomplete="off"></div>
+                            <div class="agente-row"><input type="radio" name="condutor" value="3" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 4" autocomplete="off"></div>
+                            <div class="agente-row"><input type="radio" name="condutor" value="4" class="condutor-radio"><input type="text" class="agente-input" list="listaAgentes" placeholder="SELECIONE AGENTE 5" autocomplete="off"></div>
+                        </div>
+                        <datalist id="listaAgentes"></datalist>
+                    </div>
+
+                    <div class="registro-field field-ht">
+                        <span class="registro-label">HT</span>
+                        <div id="container-ht" class="inline-agentes-4"></div>
+                    </div>
+
+                    <div class="registro-field field-ase">
+                        <span class="registro-label">ASE</span>
+                        <div id="container-ase" class="inline-agentes-5"></div>
+                    </div>
+                </div>
+
+                <div class="registro-section registro-section-extra">
+                    <div class="registro-field">
+                        <label for="situacao">FUNÇÃO EQUIPE</label>
+                        <select id="situacao">
+                            <option value="ATENDIMENTO">ATENDIMENTO</option>
+                            <option value="DESPACHO">DESPACHO</option>
+                            <option value="INSPEÇÃO">INSPEÇÃO</option>
+                            <option value="FISCALIZAÇÃO">FISCALIZAÇÃO</option>
+                            <option value="ATENDIMENTO A OCORRENCIAS DE SINISTRO">ATENDIMENTO A OCORRENCIAS DE SINISTRO</option>
+                        </select>
+                    </div>
+
+                    <div class="registro-field">
+                        <label for="maletas">MALETAS</label>
+                        <input type="text" id="maletas" class="campo-numerico" placeholder="Nº MALETA" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    </div>
+
+                    <div class="registro-field">
+                        <label for="zona">REGIÃO ATUAL</label>
+                        <select id="zona">
+                            <option value="">SELECIONE...</option>
+                            <option value="REGIÃO 1">REGIÃO 1</option>
+                            <option value="REGIÃO 2">REGIÃO 2</option>
+                            <option value="REGIÃO 3">REGIÃO 3</option>
+                            <option value="REGIÃO 4">REGIÃO 4</option>
+                            <option value="REGIÃO 5">REGIÃO 5</option>
+                            <option value="GERAL">GERAL</option>
+                        </select>
+                    </div>
+
+                    <div class="registro-field">
+                        <label for="horaInicio">HORA INÍCIO</label>
+                        <div class="hora-field">
+                            <input type="text" id="horaInicio" class="hora-atual" inputmode="numeric" placeholder="HH:MM:SS" maxlength="8" title="Digite a hora ou clique para preencher com a hora atual">
+                            <button type="button" class="btn-clear-hora" data-clear-time="horaInicio" aria-label="Limpar hora início"><i class="fa-regular fa-clock" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="registro-section registro-section-base">
+                    <div class="registro-field">
+                        <label for="pontoBase">PONTO BASE ATUAL</label>
+                        <textarea id="pontoBase" class="obrigatorio" placeholder="CAMPO OBRIGATÓRIO"></textarea>
+                        <button type="button" class="btn-clear-textarea" data-clear-textarea="pontoBase">
+                            <span class="btn-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M3 6h18"></path>
+                                    <path d="M8 6V4h8v2"></path>
+                                    <path d="M19 6l-1 15H6L5 6"></path>
+                                    <path d="M10 11v6"></path>
+                                    <path d="M14 11v6"></path>
+                                </svg>
+                            </span>
+                            LIMPAR PONTO BASE
+                        </button>
+                    </div>
+                </div>
+
+                <div class="registro-actions">
+                    <button type="submit" class="btn btn-salvar">
+                        <span class="btn-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <path d="M17 21v-8H7v8"></path>
+                                <path d="M7 3v5h8"></path>
+                            </svg>
+                        </span>
+                        Registrar Equipe
+                    </button>
+                    <button type="button" id="btnLimparEquipe" class="btn btn-limpar-equipe">
+                        <span class="btn-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M3 6h18"></path>
+                                <path d="M8 6V4h8v2"></path>
+                                <path d="M19 6l-1 15H6L5 6"></path>
+                                <path d="M10 11v6"></path>
+                                <path d="M14 11v6"></path>
+                            </svg>
+                        </span>
+                        Limpar Geral
+                    </button>
+                </div>
+            </div>
         </form>
     </div>
 
@@ -161,24 +218,15 @@
 </main>
 
 <script src="js/theme-switch.js"></script>
-<script src="js/app-menu.js?v=20260623-11"></script>
+<script src="js/app-menu.js?v=20260626-1"></script>
 <script src="js/agentes-lista.js?v=20260619-1"></script>
 <script src="js/agentes.js"></script>
 
 
-<script src="js/agentes-2.js?v=20260624-1"></script>
+<script src="js/agentes-2.js?v=20260626-1"></script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
 
 
 

@@ -68,7 +68,6 @@ async function iniciarGestaoUsuarios() {
             querySnapshot.forEach((docUser) => {
                 const dados = docUser.data();
                 const id = docUser.id;
-                if (dados.cargo === 'admin') return;
                 usuarios.push({ id, ...dados });
             });
         } else if (Array.isArray(querySnapshot)) {
@@ -201,6 +200,7 @@ async function iniciarGestaoUsuarios() {
         const cargoNormalizado = String(cargo || "agente").toLowerCase();
         const mapa = {
             agente: "src/agente_avatar.png",
+            admin: "src/admin_avatar.png",
             ciosp: "src/ciosp_avatar.png",
             cir: "src/cir_avatar.png",
             visualizador: "src/visualizador_avatar.png"

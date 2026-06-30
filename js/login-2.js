@@ -26,7 +26,7 @@ async function iniciarLogin() {
     }
 
     const { initializeApp } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js");
-    const { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js");
+    const { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updatePassword } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js");
     const { getFirestore, doc, setDoc, getDoc, updateDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
 
     const firebaseConfig = {
@@ -42,6 +42,7 @@ async function iniciarLogin() {
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    let primeiroAcessoPendente = null;
 
     function normalizarValor(valor) {
         return String(valor || "").trim().toLowerCase();
@@ -61,6 +62,73 @@ async function iniciarLogin() {
 
         return "pendente";
     }
+
+    async function concluirLogin(user) {
+        await updateDoc(doc(db, "usuarios", user.uid), {
+            online: true,
+            ultimoAcesso: serverTimestamp()
+        }).catch((error) => console.warn("NÃ£o foi possÃ­vel atualizar presenÃ§a:", error));
+        window.location.href = "index.html";
+    }
+
+    function abrirModalPrimeiroAcesso(user) {
+        primeiroAcessoPendente = user;
+        const modal = document.getElementById("modalPrimeiroAcesso");
+        const msg = document.getElementById("msgPrimeiroAcesso");
+        const novaSenha = document.getElementById("novaSenhaPrimeiroAcesso");
+        const confirmaSenha = document.getElementById("confirmaSenhaPrimeiroAcesso");
+
+        if (msg) msg.style.display = "none";
+        if (novaSenha) novaSenha.value = "";
+        if (confirmaSenha) confirmaSenha.value = "";
+        modal?.classList.add("open");
+        modal?.setAttribute("aria-hidden", "false");
+        setTimeout(() => novaSenha?.focus(), 50);
+    }
+
+    document.getElementById("btnSalvarPrimeiraSenha")?.addEventListener("click", async () => {
+        const msg = document.getElementById("msgPrimeiroAcesso");
+        const botao = document.getElementById("btnSalvarPrimeiraSenha");
+        const novaSenha = document.getElementById("novaSenhaPrimeiroAcesso").value;
+        const confirmaSenha = document.getElementById("confirmaSenhaPrimeiroAcesso").value;
+
+        if (msg) msg.style.display = "none";
+
+        if (!primeiroAcessoPendente) return;
+        if (!novaSenha || !confirmaSenha) {
+            msg.innerText = "Preencha os dois campos de senha.";
+            msg.style.display = "block";
+            return;
+        }
+        if (novaSenha.length < 6) {
+            msg.innerText = "A nova senha precisa ter no mínimo 6 caracteres.";
+            msg.style.display = "block";
+            return;
+        }
+        if (novaSenha !== confirmaSenha) {
+            msg.innerText = "As senhas não conferem.";
+            msg.style.display = "block";
+            return;
+        }
+
+        botao.disabled = true;
+        try {
+            await updatePassword(primeiroAcessoPendente, novaSenha);
+            await updateDoc(doc(db, "usuarios", primeiroAcessoPendente.uid), {
+                trocarSenhaNoPrimeiroAcesso: false,
+                senhaAlteradaNoPrimeiroAcessoEm: serverTimestamp()
+            });
+
+            document.getElementById("modalPrimeiroAcesso")?.classList.remove("open");
+            await concluirLogin(primeiroAcessoPendente);
+        } catch (error) {
+            console.error(error);
+            msg.innerText = "Erro ao alterar senha: " + (error.code || error.message);
+            msg.style.display = "block";
+        } finally {
+            botao.disabled = false;
+        }
+    });
 
     document.getElementById("btnEntrar").onclick = () => {
         const entrada = document.getElementById("loginUser").value.trim();
@@ -95,11 +163,12 @@ async function iniciarLogin() {
                     return;
                 }
 
-                await updateDoc(doc(db, "usuarios", userCredential.user.uid), {
-                    online: true,
-                    ultimoAcesso: serverTimestamp()
-                }).catch((error) => console.warn("Não foi possível atualizar presença:", error));
-                window.location.href = "index.html";
+                if (dadosUsuario?.trocarSenhaNoPrimeiroAcesso === true) {
+                    abrirModalPrimeiroAcesso(userCredential.user);
+                    return;
+                }
+
+                await concluirLogin(userCredential.user);
             })
             .catch((error) => {
                 botaoEntrar.disabled = false;

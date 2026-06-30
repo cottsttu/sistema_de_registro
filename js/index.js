@@ -108,6 +108,7 @@ async function iniciarIndex() {
     const cardsPorPagina = {
         "agentes.html": "btnAgentes",
         "ocorrencias.html": "btnOcorrencias",
+        "smartwall.html": "btnSmartwall",
         "relatorio_geral.html": "btnRelatorios",
         "observacoes.html": "btnObservacoes",
         "admin.html": "btnAprovacao",
@@ -128,7 +129,7 @@ async function iniciarIndex() {
         }
 
         if (cargo === "visualizador" || nivel === "leitura") {
-            return new Set(["agentes.html", "ocorrencias.html"]);
+            return new Set(["agentes.html", "ocorrencias.html", "smartwall.html"]);
         }
 
         return new Set(["agentes.html", "ocorrencias.html", "observacoes.html"]);
@@ -244,10 +245,6 @@ async function iniciarIndex() {
                 document.documentElement.dataset.indexRole = "visualizador";
                 document.querySelectorAll(".badge-vis").forEach(el => el.style.display = "inline-block");
                 document.getElementById("msgBoasVindas").innerText = "Modo de Visualização (Smartwall).";
-
-                const btnOcorrencias = document.getElementById("btnOcorrencias");
-                btnOcorrencias.href = "smartwall.html";
-                btnOcorrencias.querySelector(".menu-title").innerText = "Smartwall";
             }
 
             if (cargo === "ciosp") {

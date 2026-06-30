@@ -6,91 +6,188 @@
     <title>Smartwall - Ocorrências STTU</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="css/smartwall.css">
-    <link rel="stylesheet" href="css/app-menu.css">
+    <link rel="stylesheet" href="css/theme-switch.css">
+    <link rel="stylesheet" href="css/smartwall.css?v=20260630-8">
+    <link rel="stylesheet" href="css/app-menu.css?v=20260626-1">
 </head>
 <body>
-    <nav class="app-shortcut-menu" aria-label="Atalhos principais">
-        <a href="index.html" class="app-home-shortcut" aria-label="Página Inicial">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M3 10.8 12 3l9 7.8"></path>
-                <path d="M5.5 9.5V21h13V9.5"></path>
-                <path d="M9.5 21v-6h5v6"></path>
-            </svg>
-        </a>
-        <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">&#9776;</button>
-        <div class="app-menu-dropdown">
-            <a href="agentes.html" data-page="agentes.html" class="app-menu-link">Agentes</a>
-            <a href="auditoria.html" data-page="auditoria.html" class="app-menu-link">Auditoria</a>
-            <a href="gestao_usuarios.html" data-page="gestao_usuarios.html" class="app-menu-link">Cadastros</a>
-            <a href="estatisticas.html" data-page="estatisticas.html" class="app-menu-link">Estatísticas</a>
-            <a href="observacoes.html" data-page="observacoes.html" class="app-menu-link">Observações</a>
-            <a href="ocorrencias.html" data-page="ocorrencias.html" class="app-menu-link">Ocorrências</a>
-            <a href="admin.html" data-page="admin.html" class="app-menu-link">Permissões</a>
-            <a href="relatorio_geral.html" data-page="relatorio_geral.html" class="app-menu-link">Relatórios</a>
-        </div>
-    </nav>
-<div class="header">
-        <h1>C.C.O - SMARTWALL STTU</h1>
-        <div>
-            <a href="index.html" class="btn-voltar">VOLTAR</a>
-            <span class="clock" id="relogio">00:00:00</span>
-        </div>
-    </div>
-
-    <div class="kpi-container">
-        <div class="kpi-card border-blue">
-            <h3>Total (Hoje)</h3>
-            <div class="value value-blue" id="kpiTotal">0</div>
-        </div>
-        <div class="kpi-card border-orange">
-            <h3>Em Andamento</h3>
-            <div class="value value-orange" id="kpiAndamento">0</div>
-        </div>
-        <div class="kpi-card border-green">
-            <h3>Concluídas (Hoje)</h3>
-            <div class="value value-green" id="kpiConcluidas">0</div>
-        </div>
-        <div class="kpi-card border-red has-tooltip" id="kpiVtrsCard" data-tooltip="Nenhuma VTR empenhada no momento.">
-            <h3>VTRs Empenhadas</h3>
-            <div class="value value-red" id="kpiVtrs">0</div>
-        </div>
-    </div>
-
-    <div class="main-content">
-        <div class="charts-section">
-            <div class="chart-box">
-                <h2>Ocorrências por Região (Ativas)</h2>
-                <div class="canvas-container">
-                    <canvas id="chartRegioes"></canvas>
+    <div class="smartwall-shell">
+        <header class="smart-header">
+            <div class="brand-block">
+                <img src="src/emblemasttu_transparente.png" alt="STTU" class="brand-mark">
+                <div>
+                    <h1 class="brand-title">Dashboard - COTT STTU</h1>
+                    <p class="brand-subtitle">Centro de Controle Operacional &bull; Trânsito e Transportes</p>
                 </div>
             </div>
-            <div class="chart-box">
-                <h2>Natureza das Ocorrências (Hoje)</h2>
-                <div class="canvas-container">
-                    <canvas id="chartTipos"></canvas>
+
+            <div class="header-actions">
+                <button class="theme-switch smart-theme-switch" id="themeSwitch" type="button" aria-label="Alternar modo claro ou escuro">
+                    <span class="theme-icon sun" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 1v3"></path><path d="M12 20v3"></path><path d="M4.22 4.22l2.12 2.12"></path><path d="M17.66 17.66l2.12 2.12"></path><path d="M1 12h3"></path><path d="M20 12h3"></path><path d="M4.22 19.78l2.12-2.12"></path><path d="M17.66 6.34l2.12-2.12"></path></svg>
+                    </span>
+                    <span class="theme-icon moon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M21 14.8A8.6 8.6 0 0 1 9.2 3a7 7 0 1 0 11.8 11.8z"/></svg>
+                    </span>
+                </button>
+
+                <div class="operator-chip">
+                    <span class="operator-avatar" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"></path><circle cx="12" cy="8" r="4"></circle></svg>
+                    </span>
+                    <div>
+                        <div class="operator-name" id="smartUserName">Olá, Visualizador</div>
+                        <div class="operator-label">Operador de Monitoramento</div>
+                    </div>
+                </div>
+
+                <div class="clock-panel">
+                    <span class="clock-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+                    </span>
+                    <div>
+                        <div class="clock" id="relogio">00:00:00</div>
+                        <div class="clock-date" id="dataAtual">--</div>
+                    </div>
+                </div>
+
+                <nav class="app-shortcut-menu app-menu-inline smart-controls" aria-label="Atalhos principais">
+                    <a href="index.html" class="app-home-shortcut" aria-label="Página Inicial">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M3 10.8 12 3l9 7.8"></path>
+                            <path d="M5.5 9.5V21h13V9.5"></path>
+                            <path d="M9.5 21v-6h5v6"></path>
+                        </svg>
+                    </a>
+                    <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">&#9776;</button>
+                    <div class="app-menu-dropdown">
+                        <a href="agentes.html" data-page="agentes.html" class="app-menu-link">Agentes</a>
+                        <a href="auditoria.html" data-page="auditoria.html" class="app-menu-link">Auditoria</a>
+                        <a href="gestao_usuarios.html" data-page="gestao_usuarios.html" class="app-menu-link">Cadastros</a>
+                        <a href="estatisticas.html" data-page="estatisticas.html" class="app-menu-link">Estatísticas</a>
+                        <a href="observacoes.html" data-page="observacoes.html" class="app-menu-link">Observações</a>
+                        <a href="ocorrencias.html" data-page="ocorrencias.html" class="app-menu-link">Ocorrências</a>
+                        <a href="admin.html" data-page="admin.html" class="app-menu-link">Permissões</a>
+                        <a href="relatorio_geral.html" data-page="relatorio_geral.html" class="app-menu-link">Relatórios</a>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <section class="kpi-container" aria-label="Resumo operacional">
+            <div class="kpi-card border-blue">
+                <div class="stat-icon" aria-hidden="true">
+                    <img src="src/total_png.png" alt="">
+                </div>
+                <div>
+                    <h3>Total (Hoje)</h3>
+                    <div class="value value-blue" id="kpiTotal">0</div>
+                    <p>Ocorrências registradas</p>
                 </div>
             </div>
-        </div>
-
-        <div class="active-list-section">
-            <h2>Últimas Ativas (Passe o mouse)</h2>
-            <div class="list-container" id="listaAtivas">
+            <div class="kpi-card border-red">
+                <div class="stat-icon" aria-hidden="true">
+                    <img src="src/despacho_png.png" alt="">
                 </div>
-        </div>
+                <div>
+                    <h3>Para Despacho</h3>
+                    <div class="value value-red" id="kpiDespacho">0</div>
+                    <p>Ocorrências para despacho</p>
+                </div>
+            </div>
+            <div class="kpi-card border-orange">
+                <div class="stat-icon" aria-hidden="true">
+                    <img src="src/andamento_png.png" alt="">
+                </div>
+                <div>
+                    <h3>Em Andamento</h3>
+                    <div class="value value-orange" id="kpiAndamento">0</div>
+                    <p>Ocorrências ativas</p>
+                </div>
+            </div>
+            <div class="kpi-card border-green">
+                <div class="stat-icon" aria-hidden="true">
+                    <img src="src/concluido_png.png" alt="">
+                </div>
+                <div>
+                    <h3>Concluídas (Hoje)</h3>
+                    <div class="value value-green" id="kpiConcluidas">0</div>
+                    <p>Ocorrências finalizadas</p>
+                </div>
+            </div>
+            <div class="kpi-card border-red" id="kpiVtrsCard">
+                <div class="stat-icon" aria-hidden="true">
+                    <img src="src/veiculos_png.png" alt="">
+                </div>
+                <div>
+                    <h3>Veículos em Campo</h3>
+                    <div class="value value-red" id="kpiVtrs">0</div>
+                    <p>Viaturas em atendimento</p>
+                </div>
+            </div>
+        </section>
+
+        <main class="main-content">
+            <section class="chart-box panel-card region-panel">
+                <div class="region-visual">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12A9 9 0 1 1 12 3v9z"></path><path d="M12 3a9 9 0 0 1 9 9h-9z"></path></svg>
+                            Histórico total de MT / VT por região
+                        </h2>
+                    </div>
+                    <div class="canvas-container region-chart-wrap">
+                        <canvas id="chartRegioes"></canvas>
+                    </div>
+                </div>
+                <div class="region-ranking-panel" id="regionRankingPanel"></div>
+            </section>
+
+            <section class="chart-box panel-card type-panel">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10"></path><path d="M10 20V4"></path><path d="M16 20v-7"></path><path d="M22 20H2"></path></svg>
+                        Natureza das Ocorrências (Hoje)
+                    </h2>
+                </div>
+                <div class="type-content">
+                    <div class="type-total-card">
+                        <span>Total Hoje:</span>
+                        <strong id="typeTotalHoje">0</strong>
+                    </div>
+                    <div class="canvas-container type-chart-wrap">
+                        <canvas id="chartTipos"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="active-list-section panel-card">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg>
+                        Ocorrências Abertas
+                    </h2>
+                    <div class="active-live-summary" id="activeLiveSummary">
+                        <img src="src/live_png.png" alt="Ao vivo">
+                        <span>Em atendimento</span>
+                        <strong>0</strong>
+                    </div>
+                </div>
+                <div class="list-container" id="listaAtivas"></div>
+            </section>
+        </main>
     </div>
 
     <script src="js/theme-switch.js"></script>
-<script src="js/app-menu.js?v=20260623-11"></script>
-<script src="js/smartwall.js"></script>
-
-
-
-
-
-
-
-
-
-
-
+    <script src="js/app-menu.js?v=20260626-1"></script>
+    <script src="js/smartwall.js?v=20260630-1"></script>
+    <div class="smart-modal" id="smartRegistroModal" aria-hidden="true">
+        <div class="smart-modal-backdrop" data-close-smart-modal></div>
+        <section class="smart-modal-card" role="dialog" aria-modal="true" aria-labelledby="smartModalTitle">
+            <button type="button" class="smart-modal-close" data-close-smart-modal aria-label="Fechar">×</button>
+            <h2 id="smartModalTitle">Detalhes da ocorrência</h2>
+            <div class="smart-modal-content" id="smartModalContent"></div>
+        </section>
+    </div>
+</body>
+</html>

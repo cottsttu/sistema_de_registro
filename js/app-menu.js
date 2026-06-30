@@ -20,7 +20,8 @@
         'auditoria.html',
         'estatisticas.html',
         'gestao_usuarios.html',
-        'relatorio_geral.html'
+        'relatorio_geral.html',
+        'smartwall.html'
     ]);
 
     const defaultPages = new Set([
@@ -29,9 +30,22 @@
         'observacoes.html'
     ]);
 
+    const pageLabels = {
+        'agentes.html': 'Agentes',
+        'ocorrencias.html': 'Ocorrências',
+        'relatorio_geral.html': 'Relatórios',
+        'observacoes.html': 'Observações',
+        'gestao_usuarios.html': 'Cadastros',
+        'admin.html': 'Permissões',
+        'auditoria.html': 'Auditoria',
+        'estatisticas.html': 'Estatísticas',
+        'smartwall.html': 'Smartwall'
+    };
+
     const menuOrder = [
         'agentes.html',
         'ocorrencias.html',
+        'smartwall.html',
         'relatorio_geral.html',
         'observacoes.html',
         'gestao_usuarios.html',
@@ -57,7 +71,7 @@
         }
 
         if (cargo === 'visualizador' || nivel === 'leitura') {
-            return new Set(['agentes.html', 'ocorrencias.html']);
+            return new Set(['agentes.html', 'ocorrencias.html', 'smartwall.html']);
         }
 
         return new Set(defaultPages);
@@ -93,6 +107,19 @@
 
     function filterMenu(allowedPages) {
         const currentFile = getCurrentFile();
+        const dropdown = menu.querySelector('.app-menu-dropdown');
+
+        if (dropdown) {
+            allowedPages.forEach((page) => {
+                if (page === currentFile || dropdown.querySelector(`[data-page="${page}"]`)) return;
+                const link = document.createElement('a');
+                link.href = page;
+                link.dataset.page = page;
+                link.className = 'app-menu-link';
+                link.textContent = pageLabels[page] || page;
+                dropdown.appendChild(link);
+            });
+        }
 
         menu.querySelectorAll('[data-page]').forEach((link) => {
             const page = normalize(link.getAttribute('data-page'));
@@ -101,7 +128,6 @@
             }
         });
 
-        const dropdown = menu.querySelector('.app-menu-dropdown');
         if (dropdown) {
             const orderedLinks = [...dropdown.querySelectorAll('.app-menu-link')].sort((a, b) => {
                 const pageA = normalize(a.getAttribute('data-page'));

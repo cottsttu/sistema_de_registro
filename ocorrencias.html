@@ -8,11 +8,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <link rel="stylesheet" href="css/ocorrencias.css?v=20260622-3">
-    <link rel="stylesheet" href="css/app-menu.css?v=20260623-6">
+    <link rel="stylesheet" href="css/app-menu.css?v=20260626-1">
 </head>
 <body data-theme="day">
 <div class="page-header">
-    <div class="title-container">SISTEMA DE GESTÃO DE OCORRÊNCIAS</div>
+    <div class="brand-block">
+        <img src="src/emblemasttu_transparente.png" alt="STTU" class="brand-mark">
+        <div class="title-container">SISTEMA DE GESTÃO DE OCORRÊNCIAS</div>
+    </div>
     <div class="header-actions">
         <nav class="app-shortcut-menu app-menu-inline" aria-label="Atalhos principais">
         <a href="index.html" class="app-home-shortcut" aria-label="Página Inicial">
@@ -43,117 +46,193 @@
 
 <div id="areaRegistro" class="inline-ocorrencias-3">
     <form id="registroForm" autocomplete="off">
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th class="data-header col-reg">Nº REG.</th>
-                        <th class="data-header">SOLICITANTE</th>
-                        <th class="data-header">CONTATO</th>
-                        <th class="data-header">OCORRÊNCIA</th>
-                        <th class="data-header">LOCAL</th>
-                        <th class="data-header">DETALHE</th>
-                        <th class="data-header">REGIÃO</th>
-                        <th class="data-header">EQUIPE(S)</th>
-                        <th class="data-header">H. ENVIO</th>
-                        <th class="data-header">SITUAÇÃO</th>
-                        <th class="data-header">H. FINAL</th>
-                        <th class="data-header">RESULTADO FINAL</th>
-                        <th class="data-header col-hist">HISTÓRICO</th>
-                        <th class="data-header">AÇÃO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <input type="text" id="numRegistro" class="auto-number inline-ocorrencias-4" value="GERADO AO SALVAR" readonly>
-                        </td>
-                        <td>
-                            <input type="text" id="solicitante" class="campo-obrigatorio" placeholder="NOME" required>
-                            <input type="text" id="sobrenome" class="campo-obrigatorio inline-ocorrencias-5" placeholder="SOBRENOME" required>
-                        </td>
-                        <td><input type="tel" id="contato" class="campo-obrigatorio" placeholder="(  )" autocomplete="tel" maxlength="15" required></td>
-                        <td>
-                            <select id="ocorrencia" class="campo-obrigatorio" required onchange="verificarRegrasObrigatoriedade()">
-                                <option value="">SELECIONE...</option>
-                                <option value="ESTACIONAMENTO IRREGULAR">ESTACIONAMENTO IRREGULAR</option>
-                                <option value="SINISTRO SEM VÍTIMA">SINISTRO SEM VÍTIMA</option>
-                                <option value="SINISTRO SEM VÍTIMA / VEÍCULO OFICIAL">SINISTRO SEM VÍTIMA / VEÍCULO OFICIAL</option>
-                                <option value="FISCALIZAÇÃO EM TRANSPORTE">FISCALIZAÇÃO EM TRANSPORTE</option>
-                                <option value="SINISTRO COM VÍTIMA">SINISTRO COM VÍTIMA</option>
-                                <option value="SINISTRO COM VÍTIMA E/OU CRIME">SINISTRO COM VÍTIMA E/OU CRIME</option>
-                                <option value="INTERVENÇÃO VIÁRIA">INTERVENÇÃO VIÁRIA</option>
-                                <option value="INTERVENÇÃO EM VIA">INTERVENÇÃO EM VIA PÚBLICA</option>
-                                <option value="PANE SEMAFÓRICA">PANE SEMAFÓRICA</option>
-                                <option value="VEÍCULO ABANDONADO">VEÍCULO ABANDONADO</option>
-                                <option value="APOIO DO AGENTE">APOIO DO AGENTE</option>
-                                <option value="OUTROS">OUTROS</option>
-                            </select>
-                            <div id="subtipoContainer" class="subtipo-container">
-                                <span class="subtipo-label">ESPECIFICAR TIPO:</span>
-                                <select id="subtipoSelect"></select>
-                            </div>
-                        </td>
-                        <td>
-                            <textarea id="local" class="campo-obrigatorio" placeholder="RUA / Nº / REF" required></textarea>
-                            <button type="button" class="btn-clear-textarea" data-clear-textarea="local">LIMPAR LOCAL</button>
-                        </td>
-                        <td>
-                            <textarea id="detalhamento" class="campo-obrigatorio" required></textarea>
-                            <button type="button" class="btn-clear-textarea" data-clear-textarea="detalhamento">LIMPAR DETALHE</button>
-                        </td>
-                        <td>
-                            <select id="zona" class="campo-obrigatorio" required>
-                                <option value="">SELECIONE...</option>
-                                <option value="REGIÃO 1">REGIÃO 1</option>
-                                <option value="REGIÃO 2">REGIÃO 2</option>
-                                <option value="REGIÃO 3">REGIÃO 3</option>
-                                <option value="REGIÃO 4">REGIÃO 4</option>
-                                <option value="REGIÃO 5">REGIÃO 5</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select id="equipeSelect" class="campo-obrigatorio"></select>
-                            <div id="containerEquipes" class="chip-container"></div>
-                        </td>
-                        <td>
-                            <div class="hora-field">
-                                <input type="text" id="horaEnvio" class="campo-obrigatorio hora-atual" inputmode="numeric" placeholder="HH:MM:SS" maxlength="8" required title="Digite a hora ou clique para preencher com a hora atual">
-                                <button type="button" class="btn-clear-hora" data-clear-time="horaEnvio" aria-label="Limpar hora envio">×</button>
-                            </div>
-                        </td>
-                        <td>
-                            <select id="situacao" class="campo-obrigatorio" required onchange="verificarRegrasObrigatoriedade()">
-                                <option value="">SELECIONE...</option>
-                                <option value="ENCAMINHADA">ENCAMINHADA</option>
-                                <option value="CONCLUÍDA">CONCLUÍDA</option>
-                                <option value="NÃO ATENDIDA">NÃO ATENDIDA</option>
-                                <option value="PARA O DESPACHO">PARA O DESPACHO</option>
-                                <option value="PARA O PRÓXIMO TURNO">PARA O PRÓXIMO TURNO</option>
-                            </select>
-                            <div id="qtcContainer" class="qtc-container">
-                                <span class="qtc-label">MOTIVO QTC:</span>
-                                <textarea id="qtcTexto" placeholder="DESCREVA O MOTIVO"></textarea>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="hora-field">
-                                <input type="text" id="horaFinal" class="hora-atual" inputmode="numeric" placeholder="HH:MM:SS" maxlength="8" title="Digite a hora ou clique para preencher com a hora atual">
-                                <button type="button" class="btn-clear-hora" data-clear-time="horaFinal" aria-label="Limpar hora final">×</button>
-                            </div>
-                        </td>
-                        <td>
-                            <textarea id="resultadoFinal" placeholder="Obrigatório ao concluir"></textarea>
-                            <button type="button" class="btn-clear-textarea" data-clear-textarea="resultadoFinal">LIMPAR RESULTADO</button>
-                            <div class="inline-ocorrencias-6">
-                                <button type="submit" class="btn btn-salvar">REGISTRAR OCORRÊNCIA</button>
-                                <button type="button" id="btnLimparOcorrencia" class="btn btn-limpar-ocorrencia">LIMPAR OCORRÊNCIA</button>
-                            </div>
-                        </td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="registro-panel">
+            <div class="registro-hero">
+                <div class="registro-hero-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 5h6"></path>
+                        <path d="M9 3h6v4H9z"></path>
+                        <path d="M6 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8"></path>
+                        <path d="M18 11V7a2 2 0 0 0-2-2h-1"></path>
+                        <path d="M7 11h7"></path>
+                        <path d="M7 15h4"></path>
+                        <path d="M17 14v6"></path>
+                        <path d="M14 17h6"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h2>Cadastro de Ocorrência</h2>
+                    <p>Registre e acompanhe ocorrências da operação</p>
+                </div>
+            </div>
+
+            <section class="registro-section registro-section-top">
+                <div class="registro-field registro-field-numero">
+                    <label for="numRegistro">Nº registro</label>
+                    <input type="text" id="numRegistro" class="auto-number inline-ocorrencias-4" value="GERADO AO SALVAR" readonly>
+                </div>
+                <div class="registro-field registro-field-solicitante">
+                    <label for="solicitante">Solicitante</label>
+                    <div class="registro-split">
+                        <input type="text" id="solicitante" class="campo-obrigatorio" placeholder="NOME" required>
+                        <input type="text" id="sobrenome" class="campo-obrigatorio inline-ocorrencias-5" placeholder="SOBRENOME" required>
+                    </div>
+                </div>
+                <div class="registro-field registro-field-contato">
+                    <label for="contato">Contato</label>
+                    <input type="tel" id="contato" class="campo-obrigatorio" placeholder="(  )" autocomplete="tel" maxlength="15" required>
+                </div>
+                <div class="registro-field registro-field-ocorrencia">
+                    <label for="ocorrencia">Ocorrência</label>
+                    <select id="ocorrencia" class="campo-obrigatorio" required onchange="verificarRegrasObrigatoriedade()">
+                        <option value="">SELECIONE...</option>
+                        <option value="ESTACIONAMENTO IRREGULAR">ESTACIONAMENTO IRREGULAR</option>
+                        <option value="SINISTRO SEM VÍTIMA">SINISTRO SEM VÍTIMA</option>
+                        <option value="SINISTRO SEM VÍTIMA / VEÍCULO OFICIAL">SINISTRO SEM VÍTIMA / VEÍCULO OFICIAL</option>
+                        <option value="FISCALIZAÇÃO EM TRANSPORTE">FISCALIZAÇÃO EM TRANSPORTE</option>
+                        <option value="SINISTRO COM VÍTIMA">SINISTRO COM VÍTIMA</option>
+                        <option value="SINISTRO COM VÍTIMA E/OU CRIME">SINISTRO COM VÍTIMA E/OU CRIME</option>
+                        <option value="INTERVENÇÃO VIÁRIA">INTERVENÇÃO VIÁRIA</option>
+                        <option value="INTERVENÇÃO EM VIA">INTERVENÇÃO EM VIA PÚBLICA</option>
+                        <option value="PANE SEMAFÓRICA">PANE SEMAFÓRICA</option>
+                        <option value="VEÍCULO ABANDONADO">VEÍCULO ABANDONADO</option>
+                        <option value="APOIO DO AGENTE">APOIO DO AGENTE</option>
+                        <option value="OUTROS">OUTROS</option>
+                    </select>
+                    <div id="subtipoContainer" class="subtipo-container">
+                        <span class="subtipo-label">ESPECIFICAR TIPO:</span>
+                        <select id="subtipoSelect"></select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="registro-section registro-section-main">
+                <div class="registro-field registro-field-local">
+                    <label for="local">Local</label>
+                    <textarea id="local" class="campo-obrigatorio" placeholder="RUA / Nº / REF" required></textarea>
+                    <button type="button" class="btn-clear-textarea" data-clear-textarea="local">
+                        <span class="btn-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M3 6h18"></path>
+                                <path d="M8 6V4h8v2"></path>
+                                <path d="M19 6l-1 15H6L5 6"></path>
+                                <path d="M10 11v6"></path>
+                                <path d="M14 11v6"></path>
+                            </svg>
+                        </span>
+                        LIMPAR LOCAL
+                    </button>
+                </div>
+                <div class="registro-field registro-field-detalhe">
+                    <label for="detalhamento">Detalhe</label>
+                    <textarea id="detalhamento" class="campo-obrigatorio" required></textarea>
+                    <button type="button" class="btn-clear-textarea" data-clear-textarea="detalhamento">
+                        <span class="btn-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M3 6h18"></path>
+                                <path d="M8 6V4h8v2"></path>
+                                <path d="M19 6l-1 15H6L5 6"></path>
+                                <path d="M10 11v6"></path>
+                                <path d="M14 11v6"></path>
+                            </svg>
+                        </span>
+                        LIMPAR DETALHE
+                    </button>
+                </div>
+                <div class="registro-field registro-field-regiao">
+                    <label for="zona">Região</label>
+                    <select id="zona" class="campo-obrigatorio" required>
+                        <option value="">SELECIONE...</option>
+                        <option value="REGIÃO 1">REGIÃO 1</option>
+                        <option value="REGIÃO 2">REGIÃO 2</option>
+                        <option value="REGIÃO 3">REGIÃO 3</option>
+                        <option value="REGIÃO 4">REGIÃO 4</option>
+                        <option value="REGIÃO 5">REGIÃO 5</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="registro-section registro-section-flow">
+                <div class="registro-field">
+                    <label for="equipeSelect">Equipe(s)</label>
+                    <select id="equipeSelect" class="campo-obrigatorio"></select>
+                    <div id="containerEquipes" class="chip-container"></div>
+                </div>
+                <div class="registro-field">
+                    <label for="horaEnvio">Hora envio</label>
+                    <div class="hora-field">
+                        <input type="text" id="horaEnvio" class="campo-obrigatorio hora-atual" inputmode="numeric" placeholder="HH:MM:SS" maxlength="8" required title="Digite a hora ou clique para preencher com a hora atual">
+                        <button type="button" class="btn-clear-hora" data-clear-time="horaEnvio" aria-label="Limpar hora envio">×</button>
+                    </div>
+                </div>
+                <div class="registro-field registro-field-situacao">
+                    <label for="situacao">Situação</label>
+                    <select id="situacao" class="campo-obrigatorio" required onchange="verificarRegrasObrigatoriedade()">
+                        <option value="">SELECIONE...</option>
+                        <option value="EM ANDAMENTO">EM ANDAMENTO</option>
+                        <option value="ENCAMINHADA">ENCAMINHADA</option>
+                        <option value="CONCLUÍDA">CONCLUÍDA</option>
+                        <option value="NÃO ATENDIDA">NÃO ATENDIDA</option>
+                        <option value="PARA O DESPACHO">PARA O DESPACHO</option>
+                        <option value="PARA O PRÓXIMO TURNO">PARA O PRÓXIMO TURNO</option>
+                    </select>
+                    <div id="qtcContainer" class="qtc-container">
+                        <span class="qtc-label">MOTIVO QTC:</span>
+                        <textarea id="qtcTexto" placeholder="DESCREVA O MOTIVO"></textarea>
+                    </div>
+                </div>
+                <div class="registro-field">
+                    <label for="horaFinal">Hora final</label>
+                    <div class="hora-field">
+                        <input type="text" id="horaFinal" class="hora-atual" inputmode="numeric" placeholder="HH:MM:SS" maxlength="8" title="Digite a hora ou clique para preencher com a hora atual">
+                        <button type="button" class="btn-clear-hora" data-clear-time="horaFinal" aria-label="Limpar hora final">×</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="registro-section registro-section-result">
+                <div class="registro-field">
+                    <label for="resultadoFinal">Resultado final</label>
+                    <textarea id="resultadoFinal" placeholder="Obrigatório ao concluir"></textarea>
+                    <button type="button" class="btn-clear-textarea" data-clear-textarea="resultadoFinal">
+                        <span class="btn-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M3 6h18"></path>
+                                <path d="M8 6V4h8v2"></path>
+                                <path d="M19 6l-1 15H6L5 6"></path>
+                                <path d="M10 11v6"></path>
+                                <path d="M14 11v6"></path>
+                            </svg>
+                        </span>
+                        LIMPAR RESULTADO
+                    </button>
+                </div>
+            </section>
+
+            <div class="registro-actions inline-ocorrencias-6">
+                <button type="submit" class="btn btn-salvar">
+                    <span class="btn-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <path d="M17 21v-8H7v8"></path>
+                            <path d="M7 3v5h8"></path>
+                        </svg>
+                    </span>
+                    REGISTRAR OCORRÊNCIA
+                </button>
+                <button type="button" id="btnLimparOcorrencia" class="btn btn-limpar-ocorrencia">
+                    <span class="btn-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 6h18"></path>
+                            <path d="M8 6V4h8v2"></path>
+                            <path d="M19 6l-1 15H6L5 6"></path>
+                            <path d="M10 11v6"></path>
+                            <path d="M14 11v6"></path>
+                        </svg>
+                    </span>
+                    LIMPAR OCORRÊNCIA
+                </button>
+            </div>
         </div>
     </form>
 </div>
@@ -283,6 +362,7 @@
         <div class="form-group">
             <label>SITUAÇÃO:</label>
             <select id="editSituacao">
+                <option value="EM ANDAMENTO">EM ANDAMENTO</option>
                 <option value="ENCAMINHADA">ENCAMINHADA</option>
                 <option value="CONCLUÍDA">CONCLUÍDA</option>
                 <option value="NÃO ATENDIDA">NÃO ATENDIDA</option>
@@ -307,22 +387,28 @@
     </div>
 </div>
 
+<div id="modalConcluirOcorrencia" class="modal-overlay">
+    <div class="modal-content modal-concluir-ocorrencia">
+        <div class="modal-header">CONCLUIR OCORRÊNCIA</div>
+        <input type="hidden" id="concluirId">
+        <div class="form-group">
+            <label for="concluirResultado">RESULTADO FINAL / MOTIVO QTC:</label>
+            <textarea id="concluirResultado" placeholder="Digite o resultado final da ocorrência"></textarea>
+        </div>
+        <div class="inline-ocorrencias-10">
+            <button class="btn btn-close-modal" onclick="fecharModalConcluir()">CANCELAR</button>
+            <button class="btn btn-concluir" onclick="confirmarConclusaoOcorrencia()">CONCLUIR</button>
+        </div>
+    </div>
+</div>
+
 <script src="js/theme-switch.js"></script>
-<script src="js/app-menu.js?v=20260623-11"></script>
-<script src="js/pdf-emblema.js?v=20260623-1"></script>
-<script src="js/ocorrencias.js?v=20260624-3"></script>
+<script src="js/app-menu.js?v=20260626-1"></script>
+<script src="js/pdf-emblema.js?v=20260630-2"></script>
+<script src="js/ocorrencias.js?v=20260630-1"></script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
 
 
 

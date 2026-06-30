@@ -19,22 +19,27 @@ async function atualizarCredenciais(data, authUid) {
   }
 
   const {uid, nome, matricula, cargo, senha} = data || {};
+  const uidSolicitado = String(uid || "").trim();
   const matriculaFinal = normalizarMatricula(matricula);
 
   console.log("Solicitação de atualização de usuário", {
     solicitante: authUid,
-    uid,
+    uid: uidSolicitado,
     matricula: matriculaFinal,
     cargo,
     alteraSenha: Boolean(senha)
   });
 
-  if (!uid || !nome || !matriculaFinal || !cargo) {
+  if (!nome || !matriculaFinal || !cargo) {
     return {ok: false, message: "Dados obrigatórios ausentes."};
   }
 
   if (senha && String(senha).length < 6) {
     return {ok: false, message: "A senha deve ter no mínimo 6 caracteres."};
+  }
+
+  if (!uidSolicitado && !senha) {
+    return {ok: false, message: "Informe uma senha inicial para criar o novo usuario."};
   }
 
   const authUpdate = {
@@ -46,8 +51,48 @@ async function atualizarCredenciais(data, authUid) {
   }
 
   try {
+    const usuarioComMesmoLogin = await admin.auth().getUserByEmail(authUpdate.email)
+      .catch((error) => {
+        if (error.code === "auth/user-not-found") return null;
+        throw error;
+      });
+
+    if (usuarioComMesmoLogin && usuarioComMesmoLogin.uid !== uidSolicitado) {
+      const usuarioBancoComMesmoLogin = await admin.firestore()
+        .collection("usuarios")
+        .where("matricula", "==", matriculaFinal)
+        .limit(1)
+        .get();
+
+      if (!usuarioBancoComMesmoLogin.empty) {
+        const docMesmoLogin = usuarioBancoComMesmoLogin.docs[0];
+        if (docMesmoLogin.id !== uidSolicitado) {
+          return {ok: false, message: "Essa matrícula/login já está sendo usada por outro usuário."};
+        }
+      }
+
+      console.warn("Removendo usuário órfão do Authentication para liberar login", {
+        uidOrfao: usuarioComMesmoLogin.uid,
+        matricula: matriculaFinal,
+        uidDestino: uidSolicitado || "novo_usuario"
+      });
+      await admin.auth().deleteUser(usuarioComMesmoLogin.uid);
+    }
+
+    let uidFinal = uidSolicitado;
+
     try {
-      await admin.auth().updateUser(uid, authUpdate);
+      if (uidFinal) {
+        await admin.auth().updateUser(uidFinal, authUpdate);
+      } else {
+        const novoUsuario = await admin.auth().createUser({
+          email: authUpdate.email,
+          password: String(senha),
+          emailVerified: true,
+          disabled: false
+        });
+        uidFinal = novoUsuario.uid;
+      }
     } catch (authError) {
       if (authError.code !== "auth/user-not-found") {
         throw authError;
@@ -61,7 +106,7 @@ async function atualizarCredenciais(data, authUid) {
       }
 
       await admin.auth().createUser({
-        uid,
+        uid: uidFinal,
         email: authUpdate.email,
         password: String(senha),
         emailVerified: true,
@@ -69,13 +114,34 @@ async function atualizarCredenciais(data, authUid) {
       });
     }
 
-    await admin.firestore().doc(`usuarios/${uid}`).update({
+    const dadosUsuario = {
       nome: String(nome).trim().toUpperCase(),
       matricula: matriculaFinal,
       cargo
-    });
+    };
 
-    return {ok: true};
+    if (!uidSolicitado) {
+      Object.assign(dadosUsuario, {
+        nivel_acesso: "total",
+        status: "aprovado",
+        ativo: true,
+        aprovado: true,
+        online: false,
+        criadoPeloAdmin: true,
+        criadoEm: admin.firestore.FieldValue.serverTimestamp()
+      });
+    }
+
+    if (senha && !uidSolicitado) {
+      Object.assign(dadosUsuario, {
+        trocarSenhaNoPrimeiroAcesso: true,
+        senhaInicialDefinidaEm: admin.firestore.FieldValue.serverTimestamp()
+      });
+    }
+
+    await admin.firestore().doc(`usuarios/${uidFinal}`).set(dadosUsuario, {merge: true});
+
+    return {ok: true, uid: uidFinal};
   } catch (error) {
     console.error("Erro ao atualizar credenciais do usuário:", error);
 

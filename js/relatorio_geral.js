@@ -27,7 +27,7 @@
             return await new Promise(async (resolve, reject) => {
                 const timeoutId = setTimeout(() => reject(new Error("Tempo excedido ao carregar emblema.")), 1500);
                 try {
-                    const resposta = await fetch(url, { cache: "force-cache" });
+                    const resposta = await fetch(url, { cache: "reload" });
                     if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
                     const blob = await resposta.blob();
                     const reader = new FileReader();
@@ -47,10 +47,10 @@
             });
         }
 
-        async function adicionarEmblemaPdf(doc, x = 14, y = 8, largura = 24, altura = 24) {
+        async function adicionarEmblemaPdf(doc, x = 14, y = 8, largura = 32, altura = 32) {
             try {
-                const emblema = await carregarImagemPdf("src/emblemasttu.jpeg");
-                doc.addImage(emblema, "JPEG", x, y, largura, altura);
+                const emblema = await carregarImagemPdf("src/emblemasttu_relatorios.png");
+                doc.addImage(emblema, "PNG", x, y, largura, altura);
             } catch (error) {
                 console.error("Erro ao inserir o emblema no PDF:", error);
             }
@@ -605,7 +605,7 @@
                 
                 const larguraPagina = doc.internal.pageSize.width;
                 doc.setFontSize(14); doc.setTextColor(44, 62, 80); doc.setFont("helvetica", "bold");
-                doc.text("CENTRAL DE OPERAÇÕES DE TRÂNSITO E TRANSPORTE - COTT", larguraPagina / 2, 20, { align: "center" });
+                doc.text("CENTRAL DE OPERAÇÕES DE TRÂNSITO E TRANSPORTES - COTT", larguraPagina / 2, 20, { align: "center" });
                 
                 doc.setFontSize(10); doc.setTextColor(100); doc.setFont("helvetica", "normal");
                 // Adicionando a informação do horário no cabeçalho do PDF

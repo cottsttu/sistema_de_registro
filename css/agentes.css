@@ -72,7 +72,7 @@
         .regiao-3 { background-color: #64ec02 !important; color: white; text-align: center; font-weight: bold; } 
         .regiao-4 { background-color: #096acc !important; color: white; text-align: center; font-weight: bold; } 
         .regiao-5 { background-color: #d30000 !important; color: black; text-align: center; font-weight: bold; } 
-        .regiao-geral { background-color: #f8f9fa !important; color: #333; text-align: center; font-weight: bold; }
+        .regiao-geral { background-color: #67479a !important; color: #ffffff; text-align: center; font-weight: bold; }
 
 :root {
         --cyan: #55f6ff;
@@ -531,7 +531,7 @@
     .regiao-3 { background-color: #64ec02 !important; color: #111; text-align: center; font-weight: bold; }
     .regiao-4 { background-color: #096acc !important; color: white; text-align: center; font-weight: bold; }
     .regiao-5 { background-color: #d30000 !important; color: white; text-align: center; font-weight: bold; }
-    .regiao-geral { background-color: #69727c !important; color: white; text-align: center; font-weight: bold; }
+    .regiao-geral { background-color: #67479a !important; color: white; text-align: center; font-weight: bold; }
 
     body[data-theme="night"] #tabelaAtivos td.regiao-1,
     body[data-theme="night"] #relatorioFinal td.regiao-1,
@@ -555,7 +555,7 @@
 
     body[data-theme="night"] #tabelaAtivos td.regiao-geral,
     body[data-theme="night"] #relatorioFinal td.regiao-geral,
-    body[data-theme="night"] form td.regiao-geral { background-color: #69727c !important; color: #ffffff !important; }
+    body[data-theme="night"] form td.regiao-geral { background-color: #67479a !important; color: #ffffff !important; }
 
     body[data-theme="day"] #tabelaAtivos td.regiao-1,
     body[data-theme="day"] #relatorioFinal td.regiao-1,
@@ -579,7 +579,7 @@
 
     body[data-theme="day"] #tabelaAtivos td.regiao-geral,
     body[data-theme="day"] #relatorioFinal td.regiao-geral,
-    body[data-theme="day"] form td.regiao-geral { background-color: #f8f9fa !important; color: #333333 !important; }
+    body[data-theme="day"] form td.regiao-geral { background-color: #67479a !important; color: #ffffff !important; }
 
     @media (min-width: 1100px) {
         body {
@@ -633,383 +633,385 @@
     margin-bottom: 14px;
 }
 
-#registroForm table {
-    display: block;
-    min-width: 0;
-    margin: 0;
+#registroForm .registro-panel {
     padding: clamp(14px, 1.8vw, 22px);
-    border: 1px solid rgba(85, 246, 255, 0.38) !important;
-    border-radius: 16px;
-    background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02)),
-        rgba(7, 21, 30, 0.64) !important;
-    box-shadow:
-        inset 0 1px 22px rgba(255, 255, 255, 0.08),
-        0 0 18px rgba(85, 246, 255, 0.20);
+    border: 1px solid rgba(116, 187, 215, 0.86);
+    border-radius: 18px;
+    background: rgba(248, 252, 255, 0.88);
+    box-shadow: inset 0 1px 20px rgba(255, 255, 255, 0.62);
 }
 
-body[data-theme="day"] #registroForm table {
-    background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.70), rgba(255, 255, 255, 0.34)),
-        rgba(238, 249, 252, 0.78) !important;
-    border-color: rgba(20, 122, 142, 0.34) !important;
+#registroForm h2 {
+    margin: 0;
+    color: #0d223f;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: clamp(24px, 2vw, 34px);
+    font-weight: 900;
+    line-height: 1;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0;
 }
 
-#registroForm thead,
-#registroForm tbody {
-    display: block;
-}
-
-#registroForm thead tr:first-child,
-#registroForm thead tr:nth-child(2) {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 10px;
-}
-
-#registroForm thead tr:nth-child(2) {
-    grid-template-columns: minmax(220px, 330px);
-    justify-content: center;
-    margin: 2px 0 12px;
-}
-
-#registroForm thead tr:first-child th,
-#registroForm thead tr:nth-child(2) td {
-    border: 0 !important;
-    background: transparent !important;
-}
-
-#registroForm thead tr:first-child th {
-    grid-column: 1 / -1;
-    padding: 0 0 2px;
-    color: var(--page-text) !important;
-    font-size: clamp(1.05rem, 1.7vw, 1.55rem);
-    letter-spacing: 0.03em;
-    text-shadow: 0 0 10px rgba(85, 246, 255, 0.28);
-}
-
-#registroForm thead tr:nth-child(2) td:first-child {
-    grid-column: auto;
-}
-
-#registroForm thead tr:nth-child(2) td:last-child {
-    display: none;
-}
-
-#registroForm #diaSemana,
-#registroForm #dataRelatorio {
-    min-height: 34px;
-    border: 1px solid rgba(85, 246, 255, 0.32) !important;
-    border-radius: 9px;
-    color: var(--input-text) !important;
-    background: rgba(6, 20, 29, 0.42) !important;
+#registroForm .registro-date {
+    width: fit-content;
+    min-width: 310px;
+    min-height: 44px;
+    margin: 10px auto 8px;
+    padding: 0 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 5px 10px;
-    font-size: 14px;
+    gap: 12px;
+    border: 1px solid #91d7ef;
+    border-radius: 8px;
+    color: #0d223f;
+    background: rgba(239, 252, 255, 0.78);
+    font-size: clamp(13px, 0.98vw, 16px);
     font-weight: 900;
 }
 
-body[data-theme="day"] #registroForm #diaSemana,
-body[data-theme="day"] #registroForm #dataRelatorio {
-    background: rgba(255, 255, 255, 0.62) !important;
+#registroForm .registro-date i {
+    color: #26aee9;
+    font-size: clamp(14px, 1vw, 18px);
 }
 
-#registroForm #headerOriginalRow {
-    display: none;
-}
-
-#registroForm tbody tr {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 14px;
-    align-items: stretch;
-}
-
-#registroForm tbody td {
-    min-width: 0;
-    min-height: 96px;
-    padding: 0;
+#registroForm #dataRelatorio,
+#registroForm .registro-headers-clone {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    min-height: 0 !important;
+    padding: 0 !important;
     border: 0 !important;
-    background: transparent !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    white-space: nowrap !important;
+}
+
+#registroForm .registro-section {
+    margin-top: 10px;
+    padding: 16px;
+    border: 1px solid rgba(116, 187, 215, 0.72);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.40);
+}
+
+#registroForm .registro-section-main {
+    min-height: 305px;
+    display: grid;
+    grid-template-columns: 280px minmax(420px, 1fr) 190px 190px;
+    gap: 30px;
+}
+
+#registroForm .registro-section-extra {
+    display: grid;
+    grid-template-columns: minmax(250px, 0.9fr) minmax(190px, 0.7fr) minmax(280px, 1fr) minmax(250px, 0.9fr);
+    gap: 44px;
+}
+
+#registroForm .registro-section-base {
+    padding-top: 12px;
+}
+
+#registroForm .registro-field {
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 10px;
 }
 
-#registroForm tbody td::before {
-    color: var(--page-text);
-    font-size: clamp(14px, 1vw, 16px);
+#registroForm label,
+#registroForm .registro-label {
+    color: #0d223f;
+    font-size: clamp(14px, 1vw, 18px);
     font-weight: 900;
-    text-align: left;
+    line-height: 1.1;
     text-transform: uppercase;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
 }
-
-#registroForm tbody td:nth-child(1)::before { content: "Veículo e local"; }
-#registroForm tbody td:nth-child(2)::before { content: "Agentes e condutor"; }
-#registroForm tbody td:nth-child(3)::before { content: "HT"; }
-#registroForm tbody td:nth-child(4)::before { content: "ASE"; }
-#registroForm tbody td:nth-child(5)::before { content: "Função equipe"; }
-#registroForm tbody td:nth-child(6)::before { content: "Maletas"; }
-#registroForm tbody td:nth-child(7)::before { content: "Região atual"; }
-#registroForm tbody td:nth-child(8)::before { content: "Hora início"; }
-#registroForm tbody td:nth-child(9)::before { content: "Ponto base atual"; }
-
-#registroForm tbody td:nth-child(1) { grid-column: span 2; }
-#registroForm tbody td:nth-child(2) { grid-column: span 4; }
-#registroForm tbody td:nth-child(3),
-#registroForm tbody td:nth-child(4),
-#registroForm tbody td:nth-child(6),
-#registroForm tbody td:nth-child(7),
-#registroForm tbody td:nth-child(8) { grid-column: span 2; }
-#registroForm tbody td:nth-child(5) { grid-column: span 4; }
-#registroForm tbody td:nth-child(9) { grid-column: span 6; }
 
 #registroForm input,
 #registroForm select,
 #registroForm textarea {
-    width: 100%;
-    min-height: 46px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    font-size: 14px;
+    width: 100% !important;
+    min-height: 52px;
+    padding: 0 16px;
+    border: 1px solid #7ec3e3 !important;
+    border-radius: 8px;
+    color: #0d223f !important;
+    background: rgba(255, 255, 255, 0.56) !important;
+    font-size: clamp(13px, 0.98vw, 16px);
+    font-weight: 500;
     line-height: 1.15;
+    box-shadow: none !important;
+}
+
+#registroForm input::placeholder,
+#registroForm textarea::placeholder {
+    color: #6b7280;
+    opacity: 1;
+}
+
+#registroForm select {
+    appearance: auto;
+    cursor: pointer;
 }
 
 #registroForm textarea {
-    min-height: 230px;
+    min-height: 170px;
+    padding-top: 16px;
     resize: vertical;
+}
+
+#registroForm .campo-numerico {
+    border-color: #e3be32 !important;
+    background: rgba(255, 252, 235, 0.76) !important;
+    font-weight: 500;
 }
 
 #registroForm .agentes-container {
     min-width: 0;
-    gap: 8px;
+    gap: 6px;
 }
 
 #registroForm .agente-row {
     min-height: 46px;
-    padding: 0 8px 0 10px;
-    border: 1px solid var(--input-border);
-    border-radius: 10px;
-    background: var(--input-bg);
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid #7ec3e3;
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.56);
 }
 
 #registroForm .agente-row .agente-input {
-    min-height: 42px;
+    min-height: 44px;
+    padding: 0 4px !important;
     border: 0 !important;
     background: transparent !important;
-    box-shadow: none;
-    cursor: text;
 }
 
 #registroForm .condutor-radio {
     flex: 0 0 auto;
-    width: 18px;
-    height: 18px;
+    width: 20px !important;
+    height: 20px;
+    min-height: 20px;
+    accent-color: #0d223f;
+}
+
+#registroForm #container-ht,
+#registroForm #container-ase {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 #registroForm .input-multiplo {
-    width: 100%;
-    margin-bottom: 8px;
-}
-
-#registroForm .inline-agentes-6 {
-    margin-top: 6px;
-    padding: 10px 0 0;
-    border: 1px solid rgba(85, 246, 255, 0.26);
-    border-width: 0;
-    border-radius: 0;
-    background: transparent;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: flex-start;
-    align-items: center;
-    text-align: left;
-}
-
-body[data-theme="day"] #registroForm .inline-agentes-6 {
-    background: transparent;
-}
-
-#registroForm .btn-salvar {
-    width: auto;
-    min-width: 190px;
-    min-height: 44px;
-    padding: 0 22px !important;
-    font-size: 14px;
-}
-
-#registroForm .btn-limpar-equipe {
-    width: auto;
-    min-width: 170px;
-    min-height: 44px;
-    padding: 0 20px !important;
-    border: 1px solid rgba(255, 141, 102, 0.58) !important;
-    border-radius: 10px;
-    background: linear-gradient(180deg, #8f3d2d, #4c1713) !important;
-    color: #ffffff !important;
-    font-size: 14px;
-    font-weight: 800;
-    text-transform: uppercase;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.20),
-        0 0 10px rgba(255, 77, 77, 0.22);
-    cursor: pointer;
-}
-
-#registroForm .btn-limpar-equipe:hover {
-    filter: brightness(1.08);
-}
-
-@media (max-width: 1180px) {
-    #registroForm tbody tr {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-    }
-
-    #registroForm thead tr:nth-child(2) td:first-child,
-    #registroForm thead tr:nth-child(2) td:last-child,
-    #registroForm tbody td:nth-child(1),
-    #registroForm tbody td:nth-child(3),
-    #registroForm tbody td:nth-child(4),
-    #registroForm tbody td:nth-child(6),
-    #registroForm tbody td:nth-child(7),
-    #registroForm tbody td:nth-child(8) {
-        grid-column: span 3;
-    }
-
-    #registroForm thead tr:nth-child(2) td:first-child,
-    #registroForm thead tr:nth-child(2) td:last-child {
-        grid-column: auto;
-    }
-
-    #registroForm thead tr:nth-child(2) td:last-child {
-        display: none;
-    }
-
-    #registroForm tbody td:nth-child(2),
-    #registroForm tbody td:nth-child(5),
-    #registroForm tbody td:nth-child(9) {
-        grid-column: span 6;
-    }
-}
-
-@media (max-width: 700px) {
-    #registroForm table {
-        padding: 12px;
-    }
-
-    #registroForm thead tr:first-child,
-    #registroForm thead tr:nth-child(2),
-    #registroForm tbody tr {
-        grid-template-columns: 1fr;
-    }
-
-    #registroForm thead tr:nth-child(2) td:first-child,
-    #registroForm thead tr:nth-child(2) td:last-child,
-    #registroForm tbody td:nth-child(n) {
-        grid-column: 1 / -1;
-    }
-
-    #registroForm thead tr:nth-child(2) td:last-child {
-        display: none;
-    }
+    width: 100% !important;
+    margin: 0;
 }
 
 #registroForm .hora-field {
     position: relative;
-    width: 118px !important;
-    min-width: 118px !important;
-    max-width: 118px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
 }
 
 #registroForm .hora-field .hora-atual {
-    width: 118px !important;
-    min-width: 118px !important;
-    max-width: 118px !important;
-    padding-left: 8px !important;
-    padding-right: 24px !important;
-    text-align: center;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding-right: 46px !important;
+    text-align: left;
     cursor: text;
 }
 
 #registroForm .btn-clear-hora {
     position: absolute;
     top: 50%;
-    right: 3px;
-    width: 18px;
-    height: 18px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     transform: translateY(-50%);
-    border: 1px solid rgba(160, 175, 184, 0.55);
+    border: 0;
     border-radius: 50%;
-    color: #6a7880;
-    background: rgba(255, 255, 255, 0.72);
-    font-size: 13px;
-    font-weight: 800;
-    line-height: 1;
+    color: #456172;
+    background: transparent;
+    font-size: 16px;
     cursor: pointer;
 }
 
 #registroForm .btn-clear-hora:hover {
-    color: #ffffff;
-    background: #c0392b;
-    border-color: #c0392b;
+    color: #0d223f;
+    background: rgba(126, 195, 227, 0.18);
 }
 
-#registroForm #veiculo {
-    width: 150px;
+#registroForm .registro-actions {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 10px;
+    align-items: center;
 }
 
-#registroForm #container-ht,
-#registroForm #container-ase,
-#registroForm tbody td:nth-child(6),
-#registroForm tbody td:nth-child(7),
-#registroForm tbody td:nth-child(8) {
-    align-items: flex-start;
+#registroForm .registro-actions button,
+#registroForm .btn-salvar,
+#registroForm .btn-limpar-equipe,
+#registroForm .btn-clear-textarea {
+    width: auto !important;
+    min-width: fit-content;
+    min-height: 38px !important;
+    margin: 0;
+    padding: 0 16px !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    border-radius: 7px !important;
+    color: #ffffff !important;
+    font-size: 12px !important;
+    font-weight: 900;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(21, 38, 50, 0.18) !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
 }
 
-#registroForm #container-ht .input-multiplo,
-#registroForm #container-ase .input-multiplo {
-    width: 96px;
+#registroForm .btn-icon {
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
 }
 
-#registroForm #situacao {
-    width: fit-content;
-    min-width: 245px;
-    max-width: min(100%, 340px);
-}
-
-#registroForm #maletas {
-    width: 120px;
-}
-
-#registroForm #zona {
-    width: 150px;
+#registroForm .btn-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 #registroForm .btn-clear-textarea {
-    width: fit-content;
-    min-height: 30px;
-    padding: 0 12px;
-    border: 1px solid rgba(255, 77, 77, 0.48);
-    border-radius: 8px;
-    color: #ffffff;
-    background: rgba(160, 35, 35, 0.82);
-    box-shadow: 0 0 10px rgba(255, 77, 77, 0.16);
-    font-size: 11px;
-    font-weight: 800;
-    cursor: pointer;
-    align-self: flex-start;
+    background: linear-gradient(180deg, #e55454, #c93434) !important;
 }
 
-#registroForm .btn-clear-textarea:hover {
-    filter: brightness(1.08);
+#registroForm .btn-salvar {
+    background: linear-gradient(180deg, #0678a8, #005779) !important;
+}
+
+#registroForm .btn-limpar-equipe {
+    background: linear-gradient(180deg, #a93b34, #87231e) !important;
+}
+
+#registroForm .registro-actions button:hover {
+    filter: brightness(1.04);
     transform: translateY(-1px);
+}
+
+#registroForm .registro-section-base .btn-clear-textarea {
+    align-self: flex-start;
+    min-height: 34px !important;
+    margin-top: -4px;
+    padding: 0 14px !important;
+    font-size: 11px !important;
+}
+
+#registroForm .registro-actions .btn-salvar {
+    grid-column: 2;
+    justify-self: end;
+}
+
+#registroForm .registro-actions .btn-limpar-equipe {
+    grid-column: 3;
+    justify-self: end;
+}
+
+body[data-theme="night"] #registroForm .registro-panel,
+body[data-theme="night"] #registroForm .registro-section {
+    background: radial-gradient(circle at 0 0, rgba(20, 164, 204, 0.16), transparent 31%), linear-gradient(145deg, rgba(8, 30, 44, 0.94), rgba(4, 17, 27, 0.98)) !important;
+    border-color: rgba(144, 220, 238, 0.24);
+}
+
+body[data-theme="night"] #registroForm h2,
+body[data-theme="night"] #registroForm label,
+body[data-theme="night"] #registroForm .registro-label,
+body[data-theme="night"] #registroForm .registro-date {
+    color: #f4fbff !important;
+}
+
+body[data-theme="night"] #registroForm input,
+body[data-theme="night"] #registroForm select,
+body[data-theme="night"] #registroForm textarea,
+body[data-theme="night"] #registroForm .agente-row {
+    color: #ffffff !important;
+    background: rgba(2, 17, 29, 0.70) !important;
+    border-color: rgba(85, 246, 255, 0.34) !important;
+}
+
+body[data-theme="night"] #registroForm input::placeholder,
+body[data-theme="night"] #registroForm textarea::placeholder {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+body[data-theme="night"] #registroForm .registro-date {
+    background: rgba(2, 17, 29, 0.70) !important;
+    border-color: rgba(85, 246, 255, 0.34);
+}
+
+body[data-theme="night"] #registroForm .campo-numerico {
+    background: rgba(80, 62, 12, 0.74) !important;
+    border-color: rgba(227, 190, 50, 0.68) !important;
+}
+
+@media (max-width: 1180px) {
+    #registroForm .registro-section-main,
+    #registroForm .registro-section-extra {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    #registroForm .field-agentes {
+        grid-row: span 2;
+    }
+
+    #registroForm .registro-actions {
+        grid-template-columns: 1fr auto auto;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 700px) {
+    #registroForm .registro-panel {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    #registroForm .registro-date {
+        min-width: 0;
+        width: 100%;
+        padding: 0 12px;
+        font-size: 1rem;
+    }
+
+    #registroForm .registro-section-main,
+    #registroForm .registro-section-extra {
+        grid-template-columns: 1fr;
+    }
+
+    #registroForm .registro-section {
+        padding: 12px;
+    }
 }
 
 /* Padronização visual com Observações/Ocorrências: sem brilho neon. */
@@ -1362,7 +1364,9 @@ body[data-theme="night"] .modal-detalhes-item strong {
 }
 
 .btn-editar-historico {
-    display: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: #2c3e50;
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.22);
@@ -1377,6 +1381,7 @@ body[data-theme="night"] .modal-detalhes-item strong {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     gap: 6px;
 }
 

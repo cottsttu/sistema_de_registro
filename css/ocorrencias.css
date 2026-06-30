@@ -355,6 +355,19 @@
             max-width: 840px;
         }
 
+        .modal-concluir-ocorrencia {
+            max-width: 620px;
+        }
+
+        #concluirResultado {
+            width: 100%;
+            min-height: 160px;
+            box-sizing: border-box;
+            resize: vertical;
+            font-size: 15px;
+            line-height: 1.35;
+        }
+
         .registro-completo-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -795,6 +808,29 @@ body[data-theme="night"] .registro-campo span {
     font-weight: 800;
     cursor: pointer;
     align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+}
+
+#areaRegistro #registroForm .btn-clear-textarea .btn-icon {
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+#areaRegistro #registroForm .btn-clear-textarea .btn-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 #areaRegistro #registroForm .btn-clear-textarea:hover {
@@ -1132,4 +1168,387 @@ body {
 .modal-content {
     position: relative;
     z-index: 5001 !important;
+}
+
+#areaRegistro #registroForm {
+    max-width: none;
+}
+
+#areaRegistro #registroForm .registro-panel {
+    width: calc(100% - clamp(10px, 2vw, 30px));
+    max-width: 1880px;
+    margin: 0 auto;
+    padding: clamp(22px, 2.2vw, 34px);
+    box-sizing: border-box;
+    border: 1px solid rgba(85, 246, 255, 0.42);
+    border-radius: 8px;
+    color: #f4fbff;
+    background: radial-gradient(circle at 0 0, rgba(20, 164, 204, 0.16), transparent 31%), linear-gradient(145deg, rgba(8, 30, 44, 0.94), rgba(4, 17, 27, 0.98));
+    box-shadow: inset 0 1px 30px rgba(85, 246, 255, 0.07), 0 0 18px rgba(85, 246, 255, 0.14), 0 20px 46px rgba(0, 0, 0, 0.28);
+}
+
+#areaRegistro #registroForm .registro-hero {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 20px;
+}
+
+#areaRegistro #registroForm .registro-hero-icon {
+    width: 70px;
+    height: 70px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border: 1px solid rgba(85, 246, 255, 0.52);
+    border-radius: 8px;
+    color: #86f7ff;
+    background: rgba(12, 106, 139, 0.44);
+    box-shadow: inset 0 0 18px rgba(85, 246, 255, 0.18), 0 0 18px rgba(85, 246, 255, 0.24);
+}
+
+#areaRegistro #registroForm .registro-hero-icon svg {
+    width: 42px;
+    height: 42px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#areaRegistro #registroForm .registro-hero h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(24px, 2vw, 34px);
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1.05;
+    text-transform: uppercase;
+}
+
+#areaRegistro #registroForm .registro-hero p {
+    margin: 8px 0 0;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: clamp(15px, 1.15vw, 20px);
+    font-weight: 500;
+    line-height: 1.25;
+}
+
+#areaRegistro #registroForm .registro-section {
+    display: grid;
+    gap: clamp(16px, 1.6vw, 28px);
+    margin-top: 18px;
+    padding: clamp(18px, 1.8vw, 26px);
+    border: 1px solid rgba(144, 220, 238, 0.24);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.035);
+    box-shadow: inset 0 1px 20px rgba(255, 255, 255, 0.04);
+}
+
+#areaRegistro #registroForm .registro-section-top {
+    grid-template-columns: minmax(170px, 0.9fr) minmax(410px, 2.15fr) minmax(150px, 0.75fr) minmax(300px, 1.55fr);
+}
+
+#areaRegistro #registroForm .registro-section-main {
+    grid-template-columns: minmax(320px, 1.15fr) minmax(360px, 1.25fr) minmax(240px, 0.95fr);
+}
+
+#areaRegistro #registroForm .registro-section-flow {
+    grid-template-columns: minmax(240px, 1fr) minmax(210px, 1.1fr) minmax(300px, 1.3fr) minmax(220px, 1.05fr);
+}
+
+#areaRegistro #registroForm .registro-section-result {
+    grid-template-columns: 1fr;
+}
+
+#areaRegistro #registroForm .registro-field {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#areaRegistro #registroForm .registro-field label {
+    color: currentColor;
+    font-size: clamp(14px, 1vw, 18px);
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+#areaRegistro #registroForm .registro-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.98fr);
+    gap: 14px;
+}
+
+#areaRegistro #registroForm .registro-panel input[type="text"],
+#areaRegistro #registroForm .registro-panel input[type="tel"],
+#areaRegistro #registroForm .registro-panel select,
+#areaRegistro #registroForm .registro-panel textarea,
+#areaRegistro #registroForm .registro-panel .hora-atual {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    min-height: 64px;
+    height: auto;
+    margin: 0;
+    padding: 14px 16px;
+    border: 1px solid rgba(85, 246, 255, 0.78);
+    border-radius: 8px;
+    color: #ffffff;
+    background: rgba(2, 17, 29, 0.70);
+    box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.18);
+    font-size: clamp(13px, 0.98vw, 16px);
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+#areaRegistro #registroForm .registro-panel input::placeholder,
+#areaRegistro #registroForm .registro-panel textarea::placeholder {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+#areaRegistro #registroForm .registro-panel select {
+    align-self: stretch;
+    padding-right: 42px;
+}
+
+#areaRegistro #registroForm .registro-panel #numRegistro {
+    width: 100%;
+    max-width: none;
+    color: #cbd9ff !important;
+    background: rgba(6, 34, 82, 0.58) !important;
+    border-color: rgba(44, 121, 255, 0.58);
+}
+
+#areaRegistro #registroForm .registro-panel #contato,
+#areaRegistro #registroForm .registro-panel #equipeSelect,
+#areaRegistro #registroForm .registro-panel #ocorrencia,
+#areaRegistro #registroForm .registro-panel #subtipoSelect,
+#areaRegistro #registroForm .registro-panel #situacao {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+}
+
+#areaRegistro #registroForm .registro-panel #local,
+#areaRegistro #registroForm .registro-panel #detalhamento {
+    min-height: 88px;
+}
+
+#areaRegistro #registroForm .registro-panel #resultadoFinal {
+    min-height: 128px;
+}
+
+#areaRegistro #registroForm .registro-panel .hora-field {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+}
+
+#areaRegistro #registroForm .registro-panel .hora-field .hora-atual {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding-right: 42px !important;
+    text-align: left;
+}
+
+#areaRegistro #registroForm .registro-panel .hora-field .btn-clear-hora {
+    right: 12px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+}
+
+#areaRegistro #registroForm .registro-panel .btn-clear-textarea {
+    min-height: 38px;
+    padding: 0 16px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+#areaRegistro #registroForm .registro-panel .subtipo-container,
+#areaRegistro #registroForm .registro-panel .qtc-container {
+    margin-top: 0;
+    padding: 10px;
+    border-color: rgba(85, 246, 255, 0.34);
+    background: rgba(7, 34, 48, 0.74);
+}
+
+#areaRegistro #registroForm .registro-panel .subtipo-label {
+    color: #8df8ff;
+}
+
+#areaRegistro #registroForm .registro-panel .qtc-label {
+    color: #ffb0a8;
+}
+
+#areaRegistro #registroForm .registro-panel .chip-container {
+    min-height: 36px;
+}
+
+#areaRegistro #registroForm .registro-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin: 26px 0 0;
+    text-align: right;
+    flex-wrap: wrap;
+}
+
+#areaRegistro #registroForm .registro-actions .btn {
+    width: auto;
+    min-width: 0;
+    min-height: 42px;
+    margin: 0;
+    padding: 0 16px !important;
+    border-radius: 6px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: clamp(12px, 0.82vw, 14px);
+    letter-spacing: 0;
+}
+
+#areaRegistro #registroForm .registro-actions .btn-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+#areaRegistro #registroForm .registro-actions .btn-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#areaRegistro #registroForm .registro-actions .btn-salvar::before {
+    content: none;
+}
+
+#areaRegistro #registroForm .registro-actions .btn-limpar-ocorrencia::before {
+    content: none;
+}
+
+#areaRegistro #registroForm .registro-actions .btn-salvar .btn-icon {
+    color: #42f7ff;
+}
+
+#areaRegistro #registroForm .registro-actions .btn-limpar-ocorrencia .btn-icon {
+    color: #ff8d78;
+}
+
+body[data-theme="day"] #areaRegistro #registroForm .registro-panel {
+    color: #17313c;
+    background: radial-gradient(circle at 0 0, rgba(8, 139, 161, 0.14), transparent 30%), linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(222, 242, 247, 0.94));
+    border-color: rgba(20, 122, 142, 0.34);
+    box-shadow: inset 0 1px 22px rgba(255, 255, 255, 0.46), 0 14px 36px rgba(35, 65, 80, 0.14);
+}
+
+body[data-theme="day"] #areaRegistro #registroForm .registro-hero h2 {
+    color: #17313c;
+}
+
+body[data-theme="day"] #areaRegistro #registroForm .registro-hero p {
+    color: rgba(23, 49, 60, 0.82);
+}
+
+body[data-theme="day"] #areaRegistro #registroForm .registro-hero-icon {
+    color: #087c90;
+    background: rgba(215, 247, 252, 0.82);
+    border-color: rgba(8, 124, 144, 0.38);
+    box-shadow: inset 0 0 14px rgba(8, 124, 144, 0.08);
+}
+
+body[data-theme="day"] #areaRegistro #registroForm .registro-section {
+    background: rgba(255, 255, 255, 0.54);
+    border-color: rgba(20, 122, 142, 0.22);
+}
+
+body[data-theme="day"] #areaRegistro #registroForm .registro-panel input[type="text"],
+body[data-theme="day"] #areaRegistro #registroForm .registro-panel input[type="tel"],
+body[data-theme="day"] #areaRegistro #registroForm .registro-panel select,
+body[data-theme="day"] #areaRegistro #registroForm .registro-panel textarea,
+body[data-theme="day"] #areaRegistro #registroForm .registro-panel .hora-atual {
+    color: #17313c;
+    background: rgba(255, 255, 255, 0.82) !important;
+    border-color: rgba(20, 122, 142, 0.54);
+}
+
+body[data-theme="day"] #areaRegistro #registroForm .registro-panel input::placeholder,
+body[data-theme="day"] #areaRegistro #registroForm .registro-panel textarea::placeholder {
+    color: rgba(23, 49, 60, 0.62);
+}
+
+body[data-theme="day"] #areaRegistro #registroForm .registro-panel #numRegistro {
+    color: #1b4b8e !important;
+    background: rgba(232, 243, 255, 0.90) !important;
+    border-color: rgba(41, 111, 181, 0.38);
+}
+
+body[data-theme="day"] #areaRegistro #registroForm .registro-panel .subtipo-container,
+body[data-theme="day"] #areaRegistro #registroForm .registro-panel .qtc-container {
+    background: rgba(231, 247, 250, 0.86);
+    border-color: rgba(20, 122, 142, 0.28);
+}
+
+@media (max-width: 1180px) {
+    #areaRegistro #registroForm .registro-section-top,
+    #areaRegistro #registroForm .registro-section-main,
+    #areaRegistro #registroForm .registro-section-flow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #areaRegistro #registroForm .registro-field-solicitante,
+    #areaRegistro #registroForm .registro-field-local,
+    #areaRegistro #registroForm .registro-field-detalhe,
+    #areaRegistro #registroForm .registro-field-situacao {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 700px) {
+    #areaRegistro #registroForm .registro-panel {
+        width: 100%;
+        padding: 16px;
+    }
+
+    #areaRegistro #registroForm .registro-hero {
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    #areaRegistro #registroForm .registro-hero-icon {
+        width: 54px;
+        height: 54px;
+    }
+
+    #areaRegistro #registroForm .registro-hero-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    #areaRegistro #registroForm .registro-section-top,
+    #areaRegistro #registroForm .registro-section-main,
+    #areaRegistro #registroForm .registro-section-flow,
+    #areaRegistro #registroForm .registro-split {
+        grid-template-columns: 1fr;
+    }
+
+    #areaRegistro #registroForm .registro-actions .btn {
+        width: 100%;
+        min-width: 0;
+    }
 }
