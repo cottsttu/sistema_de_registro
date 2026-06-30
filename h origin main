@@ -1,0 +1,48 @@
+[33mcommit 68ea5d8f09204e533d342e3360c8a15ad88d430e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: daniellimacodes <daniel.lima.codes@gmail.com>
+Date:   Tue Jun 30 15:45:41 2026 -0300
+
+    Atualiza projeto STTU
+
+M	admin.html
+M	agentes.html
+M	auditoria.html
+M	css/agentes.css
+M	css/app-menu.css
+M	css/index.css
+M	css/login.css
+M	css/ocorrencias.css
+M	css/smartwall.css
+M	estatisticas.html
+M	functions/index.js
+M	gestao_usuarios.html
+M	index.html
+M	js/admin.js
+M	js/agentes-2.js
+M	js/app-menu.js
+M	js/estatisticas.js
+M	js/gestao_usuarios.js
+M	js/index.js
+M	js/login-2.js
+M	js/ocorrencias.js
+M	js/pdf-emblema.js
+M	js/relatorio_geral.js
+M	js/smartwall.js
+M	js/theme-switch.js
+M	login.html
+M	observacoes.html
+M	ocorrencias.html
+M	relatorio_geral.html
+M	smartwall.html
+A	src/andamento_png.png
+A	src/c.png
+A	src/concluido_png.png
+A	src/despacho_png.png
+A	src/emblemasttu_relatorios.png
+A	src/emblemasttu_transparente.png
+M	src/imagem_fundo_branco.png
+A	src/live_png.png
+A	src/mt_png.png
+A	src/total_png.png
+A	src/veiculos_png.png
+A	src/vt_png.png
