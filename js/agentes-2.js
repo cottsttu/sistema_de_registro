@@ -72,7 +72,7 @@
                     const nivelAcesso = String(dados.nivel_acesso || "").toLowerCase();
                     usuarioEhAdmin = temPermissaoAdministrativaModulo(dados, "agentes"); 
                     
-                    document.getElementById('nomeUsuarioDisplay').innerText = "Olá, " + nomeUsuarioLogado + (usuarioEhAdmin ? " (ADMIN)" : "");
+                    document.getElementById('nomeUsuarioDisplay').innerText = "Olá, " + nomeUsuarioLogado;
 
                     // 2. FORÇA A ATUALIZAÇÃO DA TABELA (Para aparecer o botão de excluir)
                     renderizarTabelaHistorico();

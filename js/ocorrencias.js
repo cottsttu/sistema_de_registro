@@ -108,7 +108,7 @@
                         renderizarTabelas(); 
                     }
                     
-                    document.getElementById('nomeUsuarioDisplay').innerText = "Olá, " + nomeUsuarioLogado + (usuarioEhAdmin ? " (ADMIN)" : "");
+                    document.getElementById('nomeUsuarioDisplay').innerText = "Olá, " + nomeUsuarioLogado;
 
                     if (!temPermissaoModulo(dados, "relatorios")) {
                         const btnCsv = document.getElementById('btnDownloadCSV');
