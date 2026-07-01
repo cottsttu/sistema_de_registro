@@ -15,6 +15,17 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+    function temPermissaoModulo(dadosUsuario, modulo, acao = "habilitado") {
+        const cargo = String(dadosUsuario?.cargo || "").toLowerCase();
+        const nivel = String(dadosUsuario?.nivel_acesso || "").toLowerCase();
+        if (cargo === "admin" || nivel === "admin") return true;
+        const permissaoModulo = dadosUsuario?.permissoes?.[modulo];
+        if (!permissaoModulo || typeof permissaoModulo !== "object") return false;
+        return permissaoModulo?.[acao] === true
+            || permissaoModulo?.[acao] === "true"
+            || (acao !== "habilitado" && permissaoModulo?.habilitado === true);
+    }
+
     async function marcarOffline(uid = auth.currentUser?.uid) {
         if (!uid) return;
         try {
@@ -60,7 +71,7 @@
         });
     }
 
-    async function adicionarEmblemaPdf(doc, x = 14, y = 8, largura = 32, altura = 32) {
+    async function adicionarEmblemaPdf(doc, x = 14, y = 8, largura = 22, altura = 22) {
         try {
             const emblema = await carregarImagemPdf("src/emblemasttu_relatorios.png");
             doc.addImage(emblema, "PNG", x, y, largura, altura);
@@ -132,7 +143,8 @@
                     const dados = docSnap.data();
                     const nomeDisplay = document.getElementById('nomeUsuarioDisplay');
                     if (nomeDisplay) nomeDisplay.innerText = "OLÁ, " + (dados.nome || "Usuário");
-                    const isVisualizador = (dados.cargo === 'visualizador' || dados.nivel_acesso === 'leitura') && dados.cargo !== 'admin';
+                    const isVisualizador = !temPermissaoModulo(dados, "estatisticas")
+                        || ((dados.cargo === 'visualizador' || dados.nivel_acesso === 'leitura') && dados.cargo !== 'admin' && !temPermissaoModulo(dados, "estatisticas"));
 
                     if (isVisualizador) {
                         alert("⛔ ACESSO NEGADO: Você não tem permissão para ver estatísticas.");
@@ -455,7 +467,7 @@
 
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF('p', 'mm', 'a4');
-        await adicionarEmblemaPdf(doc);
+        await adicionarEmblemaPdf(doc, 14, 4, 18, 18);
 
         doc.setFontSize(14);
         doc.setFont("helvetica", "bold");
@@ -540,7 +552,7 @@
 
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        await adicionarEmblemaPdf(doc);
+        await adicionarEmblemaPdf(doc, 14, 4, 18, 18);
         
         doc.setFontSize(16);
         doc.setFont("helvetica", "bold");

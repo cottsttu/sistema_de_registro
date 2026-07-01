@@ -24,6 +24,17 @@
     let usuariosCache = [];
     let agentesAdminCache = [];
 
+    function temPermissaoModulo(dadosUsuario, modulo, acao = "habilitado") {
+        const cargo = String(dadosUsuario?.cargo || "").toLowerCase();
+        const nivel = String(dadosUsuario?.nivel_acesso || "").toLowerCase();
+        if (cargo === "admin" || nivel === "admin") return true;
+        const permissaoModulo = dadosUsuario?.permissoes?.[modulo];
+        if (!permissaoModulo || typeof permissaoModulo !== "object") return false;
+        return permissaoModulo?.[acao] === true
+            || permissaoModulo?.[acao] === "true"
+            || (acao !== "habilitado" && permissaoModulo?.habilitado === true);
+    }
+
     document.getElementById('btnSair')?.addEventListener('click', () => {
         if (confirm("Deseja realmente sair?")) {
             signOut(auth).then(() => window.location.href = "login.html");
@@ -210,7 +221,7 @@
                 const docRef = doc(db, "usuarios", user.uid);
                 const docSnap = await getDoc(docRef);
                 
-                if (!docSnap.exists() || docSnap.data().cargo !== 'admin') {
+                if (!docSnap.exists() || !temPermissaoModulo(docSnap.data(), "usuarios")) {
                     alert("ACESSO NEGADO.");
                     window.location.href = "index.html";
                     return;

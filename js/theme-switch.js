@@ -29,11 +29,45 @@
         });
     };
 
+    const prepararCorretorTextarea = (root = document) => {
+        const textareas = root.matches?.("textarea")
+            ? [root]
+            : Array.from(root.querySelectorAll?.("textarea") || []);
+
+        textareas.forEach((textarea) => {
+            textarea.setAttribute("spellcheck", "true");
+            textarea.setAttribute("lang", textarea.getAttribute("lang") || "pt-BR");
+            textarea.setAttribute("autocorrect", "on");
+            textarea.setAttribute("autocapitalize", "sentences");
+        });
+    };
+
+    const initCorretorTextarea = () => {
+        prepararCorretorTextarea();
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        prepararCorretorTextarea(node);
+                    }
+                });
+            });
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+    };
+
     if (document.body) {
         initThemeSwitch();
+        initCorretorTextarea();
     } else if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initThemeSwitch);
+        document.addEventListener("DOMContentLoaded", () => {
+            initThemeSwitch();
+            initCorretorTextarea();
+        });
     } else {
         initThemeSwitch();
+        initCorretorTextarea();
     }
 })();

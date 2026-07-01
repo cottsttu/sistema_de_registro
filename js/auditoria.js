@@ -15,6 +15,17 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        function temPermissaoModulo(dadosUsuario, modulo, acao = "habilitado") {
+            const cargo = String(dadosUsuario?.cargo || "").toLowerCase();
+            const nivel = String(dadosUsuario?.nivel_acesso || "").toLowerCase();
+            if (cargo === "admin" || nivel === "admin") return true;
+            const permissaoModulo = dadosUsuario?.permissoes?.[modulo];
+            if (!permissaoModulo || typeof permissaoModulo !== "object") return false;
+            return permissaoModulo?.[acao] === true
+                || permissaoModulo?.[acao] === "true"
+                || (acao !== "habilitado" && permissaoModulo?.habilitado === true);
+        }
+
         document.getElementById('btnSair')?.addEventListener('click', () => {
             if (confirm("Deseja realmente sair?")) {
                 signOut(auth).then(() => window.location.href = "login.html");
@@ -25,7 +36,7 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const docSnap = await getDoc(doc(db, "usuarios", user.uid));
-                if (docSnap.exists() && docSnap.data().cargo === 'admin') {
+                if (docSnap.exists() && temPermissaoModulo(docSnap.data(), "auditoria")) {
                     carregarLogs();
                 } else {
                     alert("Acesso restrito a administradores.");

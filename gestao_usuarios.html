@@ -2,8 +2,9 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gest&atilde;o de Usu&aacute;rios - Admin</title>
-    <link rel="stylesheet" href="css/gestao_usuarios.css?v=20260624-1">
+    <link rel="stylesheet" href="css/gestao_usuarios.css?v=20260701-14">
     <link rel="stylesheet" href="css/app-menu.css?v=20260626-1">
 </head>
 <body>
@@ -22,7 +23,8 @@
             </svg>
         </a>
         <button type="button" class="app-menu-toggle" aria-label="Abrir menu de atalhos" aria-expanded="false">&#9776;</button>
-        <button type="button" id="btnSair" class="app-logout-button">SAIR</button>
+            <span id="nomeUsuarioDisplay">Carregando...</span>
+            <button type="button" id="btnSair" class="app-logout-button">SAIR</button>
         <div class="app-menu-dropdown">
             <a href="agentes.html" data-page="agentes.html" class="app-menu-link">Agentes</a>
             <a href="auditoria.html" data-page="auditoria.html" class="app-menu-link">Auditoria</a>
@@ -40,7 +42,7 @@
     <section class="permissions-header" aria-label="Cabe&ccedil;alho de permiss&otilde;es">
         <div>
             <h1>Gerenciar Permiss&otilde;es de Acesso</h1>
-            <p>Defina o n&iacute;vel de poder de cada usu&aacute;rio no sistema.</p>
+            <p>Defina o n&iacute;vel de poder e as permiss&otilde;es de cada usu&aacute;rio no sistema.</p>
         </div>
         <span class="header-badge">Administra&ccedil;&atilde;o</span>
     </section>
@@ -60,10 +62,10 @@
                 <span id="distribuicaoCargos">Carregando...</span>
             </div>
         </article>
-        <article class="overview-card compact">
+        <article class="overview-card compact access-summary-card">
             <span class="donut-chart" id="graficoPermissoes" aria-hidden="true"></span>
             <div>
-                <strong>Permiss&otilde;es</strong>
+                <strong>N&iacute;veis de acesso</strong>
                 <span id="resumoPermissoes">--</span>
             </div>
         </article>
@@ -76,29 +78,55 @@
         </article>
     </section>
 
-    <section class="table-panel" aria-label="Lista de permiss&otilde;es">
-        <table class="permissions-table">
-            <thead>
-                <tr>
-                    <th><button type="button" id="ordenarUsuariosNome" class="sort-column-button" title="Ordenar por nome">Usu&aacute;rio</button></th>
-                    <th>Matr&iacute;cula</th>
-                    <th>Cargo</th>
-                    <th>N&iacute;vel de Acesso</th>
-                    <th>Acesso</th>
-                    <th>Conex&atilde;o</th>
-                    <th>A&ccedil;&otilde;es</th>
-                </tr>
-            </thead>
-            <tbody id="listaUsuarios">
-                <tr><td colspan="7" class="empty-state">Verificando permiss&otilde;es...</td></tr>
-            </tbody>
-        </table>
+    <section class="permissions-workspace" aria-label="Gerenciamento individual de permiss&otilde;es">
+        <aside class="users-panel users-sidebar">
+            <div class="users-panel-header">
+                <h2>Usu&aacute;rios</h2>
+                <a class="new-user-link" href="admin.html">+ Novo usu&aacute;rio</a>
+            </div>
+            <div class="users-tools">
+                <label class="search-field" aria-label="Pesquisar usu&aacute;rios">
+                    <span aria-hidden="true"></span>
+                    <input type="search" id="buscaUsuarios" placeholder="Buscar por nome, matr&iacute;cula ou cargo...">
+                </label>
+                <select id="filtroUsuarios" aria-label="Filtrar usu&aacute;rios">
+                    <option value="todos">Todos</option>
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
+                    <option value="admin">Admin</option>
+                    <option value="agente">Agente</option>
+                    <option value="ciosp">CIOSP</option>
+                    <option value="visualizador">Visualizador</option>
+                </select>
+            </div>
+            <div id="listaUsuarios" class="users-list">
+                <div class="empty-state">Verificando permiss&otilde;es...</div>
+            </div>
+        </aside>
+
+        <section class="permission-detail" aria-label="Permiss&otilde;es do usu&aacute;rio selecionado">
+            <article class="selected-user-card" id="usuarioSelecionadoCard">
+                <div class="empty-state">Selecione um usu&aacute;rio para configurar as permiss&otilde;es.</div>
+            </article>
+
+            <article class="module-permissions module-permissions-panel">
+                <div class="section-title">
+                    <h2>Permiss&otilde;es por m&oacute;dulo</h2>
+                    <span id="statusAlteracoes">Sem altera&ccedil;&otilde;es pendentes</span>
+                </div>
+                <div class="permission-matrix" id="matrizPermissoes"></div>
+                <div class="permissions-actions permissions-action-bar">
+                    <button type="button" class="btn-cancel" id="btnCancelarAlteracoes">Cancelar</button>
+                    <button type="button" class="btn-save" id="btnSalvarAlteracoes">Salvar altera&ccedil;&otilde;es</button>
+                </div>
+            </article>
+        </section>
     </section>
 </main>
 
 <script src="js/theme-switch.js?v=20260619-3"></script>
-<script src="js/app-menu.js?v=20260626-1"></script>
-<script src="js/gestao_usuarios.js?v=20260624-3"></script>
+<script src="js/app-menu.js?v=20260701-3"></script>
+<script src="js/gestao_usuarios.js?v=20260701-17"></script>
 
 </body>
 </html>

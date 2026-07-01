@@ -17,6 +17,21 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    function temPermissaoModulo(dadosUsuario, modulo, acao = "habilitado") {
+        const cargo = String(dadosUsuario?.cargo || "").toLowerCase();
+        const nivel = String(dadosUsuario?.nivel_acesso || "").toLowerCase();
+        if (cargo === "admin" || nivel === "admin") return true;
+        const permissaoModulo = dadosUsuario?.permissoes?.[modulo];
+        if (!permissaoModulo || typeof permissaoModulo !== "object") return false;
+        return permissaoModulo?.[acao] === true
+            || permissaoModulo?.[acao] === "true"
+            || (acao !== "habilitado" && permissaoModulo?.habilitado === true);
+    }
+
+    function temPermissaoAdministrativaModulo(dadosUsuario, modulo) {
+        return ["editar", "excluir"].some((acao) => temPermissaoModulo(dadosUsuario, modulo, acao));
+    }
+
     async function marcarOffline(uid = auth.currentUser?.uid) {
         if (!uid) return;
         try {
@@ -208,7 +223,7 @@
                     const nivel = dados.nivel_acesso || 'total';
                     const cargo = dados.cargo || '';
                     
-                    isAdmin = String(cargo || "").toLowerCase() === 'admin';
+                    isAdmin = temPermissaoAdministrativaModulo(dados, "observacoes");
                     isVisualizador = (nivel === 'leitura' || cargo === 'visualizador') && cargo !== 'admin';
                     renderizarRegistrosObservacoes(registrosObservacoesHoje);
 
@@ -229,7 +244,7 @@
                         window.abrirModalFalta = () => alert("Acesso Negado: Modo Visualizador.");
                     }
 
-                    if (dados.cargo !== 'admin') {
+                    if (!temPermissaoModulo(dados, "relatorios")) {
                         const btnRel = document.getElementById('btnNavRelatorios');
                         if (btnRel) btnRel.style.display = 'none';
                     }

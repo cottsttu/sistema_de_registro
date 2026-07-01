@@ -56,11 +56,43 @@
 
     const getCurrentFile = () => (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
     const normalize = (value) => String(value || '').trim().toLowerCase();
+    const pagesByPermission = {
+        agentes: 'agentes.html',
+        ocorrencias: 'ocorrencias.html',
+        smartwall: 'smartwall.html',
+        relatorios: 'relatorio_geral.html',
+        observacoes: 'observacoes.html',
+        usuarios: 'admin.html',
+        permissoes: 'gestao_usuarios.html',
+        auditoria: 'auditoria.html',
+        estatisticas: 'estatisticas.html'
+    };
+
+    function getPagesFromPermissions(userData) {
+        const permissoes = userData?.permissoes;
+        if (!permissoes || typeof permissoes !== 'object') return null;
+
+        const paginas = new Set();
+        Object.entries(pagesByPermission).forEach(([modulo, pagina]) => {
+            const permissaoModulo = permissoes?.[modulo];
+            const habilitado = permissaoModulo?.habilitado === true
+                || permissaoModulo?.habilitado === "true"
+                || (permissaoModulo?.habilitado === undefined && permissaoModulo?.visualizar === true);
+            if (habilitado) paginas.add(pagina);
+        });
+
+        return paginas;
+    }
 
     function getAllowedPages(userData) {
         const cargo = normalize(userData?.cargo);
         const nivel = normalize(userData?.nivel_acesso);
         const isAdmin = cargo.includes('admin') || nivel === 'admin';
+        const paginasPersonalizadas = getPagesFromPermissions(userData);
+
+        if (paginasPersonalizadas) {
+            return paginasPersonalizadas;
+        }
 
         if (isAdmin) {
             return new Set([...defaultPages, ...adminPages]);
@@ -74,7 +106,7 @@
             return new Set(['agentes.html', 'ocorrencias.html', 'smartwall.html']);
         }
 
-        return new Set(defaultPages);
+        return new Set([...defaultPages, 'smartwall.html']);
     }
 
     function atualizarUsuarioMenu(userData, user) {
@@ -108,6 +140,12 @@
     function filterMenu(allowedPages) {
         const currentFile = getCurrentFile();
         const dropdown = menu.querySelector('.app-menu-dropdown');
+
+        if (currentFile !== 'index.html' && !allowedPages.has(currentFile)) {
+            alert('Voce nao tem permissao para acessar esta pagina.');
+            window.location.href = 'index.html';
+            return;
+        }
 
         if (dropdown) {
             allowedPages.forEach((page) => {

@@ -109,7 +109,7 @@
             <section class="registro-section registro-section-main">
                 <div class="registro-field registro-field-local">
                     <label for="local">Local</label>
-                    <textarea id="local" class="campo-obrigatorio" placeholder="RUA / Nº / REF" required></textarea>
+                    <textarea id="local" class="campo-obrigatorio" placeholder="RUA / Nº / REF" required spellcheck="true" lang="pt-BR" autocorrect="on" autocapitalize="sentences"></textarea>
                     <button type="button" class="btn-clear-textarea" data-clear-textarea="local">
                         <span class="btn-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24">
@@ -125,7 +125,7 @@
                 </div>
                 <div class="registro-field registro-field-detalhe">
                     <label for="detalhamento">Detalhe</label>
-                    <textarea id="detalhamento" class="campo-obrigatorio" required></textarea>
+                    <textarea id="detalhamento" class="campo-obrigatorio" required spellcheck="true" lang="pt-BR" autocorrect="on" autocapitalize="sentences"></textarea>
                     <button type="button" class="btn-clear-textarea" data-clear-textarea="detalhamento">
                         <span class="btn-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24">
@@ -178,7 +178,7 @@
                     </select>
                     <div id="qtcContainer" class="qtc-container">
                         <span class="qtc-label">MOTIVO QTC:</span>
-                        <textarea id="qtcTexto" placeholder="DESCREVA O MOTIVO"></textarea>
+                        <textarea id="qtcTexto" placeholder="DESCREVA O MOTIVO" spellcheck="true" lang="pt-BR" autocorrect="on" autocapitalize="sentences"></textarea>
                     </div>
                 </div>
                 <div class="registro-field">
@@ -193,7 +193,7 @@
             <section class="registro-section registro-section-result">
                 <div class="registro-field">
                     <label for="resultadoFinal">Resultado final</label>
-                    <textarea id="resultadoFinal" placeholder="Obrigatório ao concluir"></textarea>
+                    <textarea id="resultadoFinal" placeholder="Obrigatório ao concluir" spellcheck="true" lang="pt-BR" autocorrect="on" autocapitalize="sentences"></textarea>
                     <button type="button" class="btn-clear-textarea" data-clear-textarea="resultadoFinal">
                         <span class="btn-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24">
@@ -342,8 +342,8 @@
                 <option value="OUTROS">OUTROS</option>
             </select>
         </div>
-        <div class="form-group"><label>LOCAL:</label><textarea id="editLocal"></textarea></div>
-        <div class="form-group"><label>DETALHE:</label><textarea id="editDetalhamento"></textarea></div>
+        <div class="form-group"><label>LOCAL:</label><textarea id="editLocal" spellcheck="true" lang="pt-BR" autocorrect="on" autocapitalize="sentences"></textarea></div>
+        <div class="form-group"><label>DETALHE:</label><textarea id="editDetalhamento" spellcheck="true" lang="pt-BR" autocorrect="on" autocapitalize="sentences"></textarea></div>
         <div class="form-group">
             <label>REGIÃO:</label>
             <select id="editZona">
@@ -393,7 +393,7 @@
         <input type="hidden" id="concluirId">
         <div class="form-group">
             <label for="concluirResultado">RESULTADO FINAL / MOTIVO QTC:</label>
-            <textarea id="concluirResultado" placeholder="Digite o resultado final da ocorrência"></textarea>
+            <textarea id="concluirResultado" placeholder="Digite o resultado final da ocorrência" spellcheck="true" lang="pt-BR" autocorrect="on" autocapitalize="sentences"></textarea>
         </div>
         <div class="inline-ocorrencias-10">
             <button class="btn btn-close-modal" onclick="fecharModalConcluir()">CANCELAR</button>
@@ -403,13 +403,9 @@
 </div>
 
 <script src="js/theme-switch.js"></script>
-<script src="js/app-menu.js?v=20260626-1"></script>
+<script src="js/app-menu.js?v=20260701-3"></script>
 <script src="js/pdf-emblema.js?v=20260630-2"></script>
-<script src="js/ocorrencias.js?v=20260630-1"></script>
+<script src="js/ocorrencias.js?v=20260701-2"></script>
 
 </body>
 </html>
-
-
-
-

@@ -16,6 +16,21 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    function temPermissaoModulo(dadosUsuario, modulo, acao = "habilitado") {
+        const cargo = String(dadosUsuario?.cargo || "").toLowerCase();
+        const nivel = String(dadosUsuario?.nivel_acesso || "").toLowerCase();
+        if (cargo === "admin" || nivel === "admin") return true;
+        const permissaoModulo = dadosUsuario?.permissoes?.[modulo];
+        if (!permissaoModulo || typeof permissaoModulo !== "object") return false;
+        return permissaoModulo?.[acao] === true
+            || permissaoModulo?.[acao] === "true"
+            || (acao !== "habilitado" && permissaoModulo?.habilitado === true);
+    }
+
+    function temPermissaoAdministrativaModulo(dadosUsuario, modulo) {
+        return ["editar", "excluir"].some((acao) => temPermissaoModulo(dadosUsuario, modulo, acao));
+    }
+
     async function marcarOffline(uid = auth.currentUser?.uid) {
         if (!uid) return;
         try {
@@ -55,7 +70,7 @@
                     // 1. DEFINE SE É ADMIN
                     const cargoUsuario = String(dados.cargo || "").toLowerCase();
                     const nivelAcesso = String(dados.nivel_acesso || "").toLowerCase();
-                    usuarioEhAdmin = (cargoUsuario === 'admin'); 
+                    usuarioEhAdmin = temPermissaoAdministrativaModulo(dados, "agentes"); 
                     
                     document.getElementById('nomeUsuarioDisplay').innerText = "Olá, " + nomeUsuarioLogado + (usuarioEhAdmin ? " (ADMIN)" : "");
 
@@ -271,6 +286,12 @@
         const campo = document.createElement(multiline ? 'textarea' : 'input');
         campo.name = nome;
         campo.value = valor || "";
+        if (multiline) {
+            campo.spellcheck = true;
+            campo.lang = 'pt-BR';
+            campo.setAttribute('autocorrect', 'on');
+            campo.setAttribute('autocapitalize', 'sentences');
+        }
         if (nome === 'horaInicio' || nome === 'horaFim') {
             campo.inputMode = 'numeric';
             campo.maxLength = 8;

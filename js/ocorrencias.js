@@ -20,6 +20,21 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    function temPermissaoModulo(dadosUsuario, modulo, acao = "habilitado") {
+        const cargo = String(dadosUsuario?.cargo || "").toLowerCase();
+        const nivel = String(dadosUsuario?.nivel_acesso || "").toLowerCase();
+        if (cargo === "admin" || nivel === "admin") return true;
+        const permissaoModulo = dadosUsuario?.permissoes?.[modulo];
+        if (!permissaoModulo || typeof permissaoModulo !== "object") return false;
+        return permissaoModulo?.[acao] === true
+            || permissaoModulo?.[acao] === "true"
+            || (acao !== "habilitado" && permissaoModulo?.habilitado === true);
+    }
+
+    function temPermissaoAdministrativaModulo(dadosUsuario, modulo) {
+        return ["editar", "excluir"].some((acao) => temPermissaoModulo(dadosUsuario, modulo, acao));
+    }
+
     async function marcarOffline(uid = auth.currentUser?.uid) {
         if (!uid) return;
         try {
@@ -66,7 +81,7 @@
         });
     }
 
-    async function adicionarEmblemaPdf(doc, x = 14, y = 8, largura = 32, altura = 32) {
+    async function adicionarEmblemaPdf(doc, x = 14, y = 4, largura = 18, altura = 18) {
         try {
             const emblema = await carregarImagemPdf("src/emblemasttu_relatorios.png");
             doc.addImage(emblema, "PNG", x, y, largura, altura);
@@ -86,7 +101,7 @@
                     const dados = docSnap.data();
                     
                     nomeUsuarioLogado = dados.nome || "Usuário";
-                    usuarioEhAdmin = (dados.cargo === 'admin'); 
+                    usuarioEhAdmin = temPermissaoAdministrativaModulo(dados, "ocorrencias"); 
                     
                     // Se já tiver dados carregados, renderiza novamente com as permissões corretas
                     if(listaGlobalOcorrencias.length > 0) {
@@ -95,7 +110,7 @@
                     
                     document.getElementById('nomeUsuarioDisplay').innerText = "Olá, " + nomeUsuarioLogado + (usuarioEhAdmin ? " (ADMIN)" : "");
 
-                    if (dados.cargo !== 'admin') {
+                    if (!temPermissaoModulo(dados, "relatorios")) {
                         const btnCsv = document.getElementById('btnDownloadCSV');
                         if (btnCsv) btnCsv.style.display = 'none';
 
@@ -150,7 +165,7 @@
                         if(linkRel) linkRel.style.display = 'none';
                     }
 
-                    if (dados.cargo === 'agente') {
+                    if (dados.cargo === 'agente' && !usuarioEhAdmin) {
                         const btnCsv = document.getElementById('btnDownloadCSV');
                         if(btnCsv) btnCsv.style.display = 'none';
                         const btnRel = document.getElementById('btnNavRelatorios');

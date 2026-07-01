@@ -15,6 +15,17 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        function temPermissaoModulo(dadosUsuario, modulo, acao = "habilitado") {
+            const cargo = String(dadosUsuario?.cargo || "").toLowerCase();
+            const nivel = String(dadosUsuario?.nivel_acesso || "").toLowerCase();
+            if (cargo === "admin" || nivel === "admin") return true;
+            const permissaoModulo = dadosUsuario?.permissoes?.[modulo];
+            if (!permissaoModulo || typeof permissaoModulo !== "object") return false;
+            return permissaoModulo?.[acao] === true
+                || permissaoModulo?.[acao] === "true"
+                || (acao !== "habilitado" && permissaoModulo?.habilitado === true);
+        }
+
         document.getElementById('btnSair')?.addEventListener('click', () => {
             if (confirm("Deseja realmente sair?")) {
                 signOut(auth).then(() => window.location.href = "login.html");
@@ -47,7 +58,7 @@
             });
         }
 
-        async function adicionarEmblemaPdf(doc, x = 14, y = 8, largura = 32, altura = 32) {
+        async function adicionarEmblemaPdf(doc, x = 14, y = 8, largura = 22, altura = 22) {
             try {
                 const emblema = await carregarImagemPdf("src/emblemasttu_relatorios.png");
                 doc.addImage(emblema, "PNG", x, y, largura, altura);
@@ -69,7 +80,7 @@
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const dados = docSnap.data();
-                    if (dados.cargo === 'admin') {
+                    if (temPermissaoModulo(dados, "relatorios", "editar")) {
                         isAdmin = true;
                         document.getElementById('msgAdmin').style.display = 'block';
                     }
@@ -601,7 +612,7 @@
             for (let i = 0; i < dias.length; i++) {
                 if (i > 0) { doc.addPage(); paginaAtual++; }
 
-                await adicionarEmblemaPdf(doc, 14, 10, 25, 25);
+                await adicionarEmblemaPdf(doc);
                 
                 const larguraPagina = doc.internal.pageSize.width;
                 doc.setFontSize(14); doc.setTextColor(44, 62, 80); doc.setFont("helvetica", "bold");

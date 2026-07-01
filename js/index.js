@@ -117,7 +117,38 @@ async function iniciarIndex() {
         "estatisticas.html": "btnEstatisticas"
     };
 
-    function obterPaginasPermitidas(cargo, nivel) {
+    const paginasPorPermissao = {
+        agentes: "agentes.html",
+        ocorrencias: "ocorrencias.html",
+        smartwall: "smartwall.html",
+        relatorios: "relatorio_geral.html",
+        observacoes: "observacoes.html",
+        usuarios: "admin.html",
+        permissoes: "gestao_usuarios.html",
+        auditoria: "auditoria.html",
+        estatisticas: "estatisticas.html"
+    };
+
+    function obterPaginasPorPermissoes(dadosUsuario) {
+        const permissoes = dadosUsuario?.permissoes;
+        if (!permissoes || typeof permissoes !== "object") return null;
+
+        const paginas = new Set();
+        Object.entries(paginasPorPermissao).forEach(([modulo, pagina]) => {
+            const permissaoModulo = permissoes?.[modulo];
+            const habilitado = permissaoModulo?.habilitado === true
+                || permissaoModulo?.habilitado === "true"
+                || (permissaoModulo?.habilitado === undefined && permissaoModulo?.visualizar === true);
+            if (habilitado) paginas.add(pagina);
+        });
+
+        return paginas;
+    }
+
+    function obterPaginasPermitidas(cargo, nivel, dadosUsuario) {
+        const paginasPersonalizadas = obterPaginasPorPermissoes(dadosUsuario);
+        if (paginasPersonalizadas) return paginasPersonalizadas;
+
         const isAdmin = cargo.includes("admin") || nivel === "admin";
 
         if (isAdmin) {
@@ -132,7 +163,7 @@ async function iniciarIndex() {
             return new Set(["agentes.html", "ocorrencias.html", "smartwall.html"]);
         }
 
-        return new Set(["agentes.html", "ocorrencias.html", "observacoes.html"]);
+        return new Set(["agentes.html", "ocorrencias.html", "smartwall.html", "observacoes.html"]);
     }
 
     function aplicarCartoesPermitidos(paginasPermitidas) {
@@ -182,7 +213,8 @@ async function iniciarIndex() {
             const nivel = normalizarValor(dados.nivel_acesso);
             const status = obterStatusUsuario(dados);
             const isAdmin = cargo.includes("admin") || nivel === "admin";
-            const paginasPermitidas = obterPaginasPermitidas(cargo, nivel);
+            const paginasPersonalizadas = obterPaginasPorPermissoes(dados);
+            const paginasPermitidas = obterPaginasPermitidas(cargo, nivel, dados);
 
             if (status === "desativado") {
                 alert("Usuário não autorizado.");
@@ -231,6 +263,12 @@ async function iniciarIndex() {
                 document.documentElement.dataset.indexRole = "admin";
                 document.body.classList.add("admin-cache");
                 document.body.classList.remove("non-admin-panel");
+            } else if (paginasPersonalizadas) {
+                localStorage.removeItem("sttu-index-admin-cache");
+                localStorage.setItem("sttu-index-role", "custom");
+                document.documentElement.dataset.indexRole = "custom";
+                document.body.classList.remove("admin-cache");
+                document.body.classList.remove("non-admin-panel");
             } else {
                 localStorage.removeItem("sttu-index-admin-cache");
                 document.body.classList.remove("admin-cache");
@@ -239,7 +277,7 @@ async function iniciarIndex() {
 
             aplicarCartoesPermitidos(paginasPermitidas);
 
-            const isVisualizador = (cargo === "visualizador" || nivel === "leitura") && !isAdmin;
+            const isVisualizador = (cargo === "visualizador" || nivel === "leitura") && !isAdmin && !paginasPersonalizadas;
             if (isVisualizador) {
                 localStorage.setItem("sttu-index-role", "visualizador");
                 document.documentElement.dataset.indexRole = "visualizador";
@@ -259,7 +297,7 @@ async function iniciarIndex() {
                 document.querySelector("h1").innerText = "Painel CIR";
             }
 
-            if (!isAdmin && !isVisualizador && cargo !== "ciosp" && cargo !== "cir") {
+            if (!isAdmin && !paginasPersonalizadas && !isVisualizador && cargo !== "ciosp" && cargo !== "cir") {
                 localStorage.setItem("sttu-index-role", "non-admin");
                 document.documentElement.dataset.indexRole = "non-admin";
             }

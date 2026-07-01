@@ -1418,3 +1418,76 @@ body[data-theme="night"] .menu-icon img {
     color: #ffffff !important;
     filter: brightness(0) invert(1) !important;
 }
+
+/* Cards dinamicos do painel: centraliza automaticamente qualquer quantidade visivel. */
+.button-group,
+.panel-shell.mobile-menu-open .button-group,
+body.non-admin-panel .button-group,
+body.non-admin-panel .panel-shell[data-visible-cards] .button-group {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-content: center !important;
+    align-items: stretch !important;
+    gap: clamp(12px, 1.6vw, 22px) !important;
+    width: 100% !important;
+    margin-inline: auto !important;
+}
+
+.menu-card,
+body[data-theme="day"] .menu-card,
+body[data-theme="night"] .menu-card,
+body.non-admin-panel .menu-card,
+body.non-admin-panel .panel-shell[data-visible-cards] .menu-card {
+    flex: 0 1 clamp(158px, calc((100% - 66px) / 4), 260px) !important;
+    width: auto !important;
+    min-width: 0 !important;
+}
+
+.panel-shell[data-visible-cards="1"] .menu-card,
+body.non-admin-panel .panel-shell[data-visible-cards="1"] .menu-card {
+    flex-basis: clamp(180px, 30vw, 260px) !important;
+}
+
+.panel-shell[data-visible-cards="2"] .menu-card,
+body.non-admin-panel .panel-shell[data-visible-cards="2"] .menu-card {
+    flex-basis: clamp(170px, calc((100% - 22px) / 2), 260px) !important;
+}
+
+.panel-shell[data-visible-cards="3"] .menu-card,
+body.non-admin-panel .panel-shell[data-visible-cards="3"] .menu-card {
+    flex-basis: clamp(160px, calc((100% - 44px) / 3), 260px) !important;
+}
+
+body.non-admin-panel .panel-shell[data-visible-cards="3"] #btnObservacoes {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    justify-self: auto !important;
+    width: auto !important;
+}
+
+@media (max-width: 768px) {
+    .button-group,
+    .panel-shell.mobile-menu-open .button-group,
+    body.non-admin-panel .button-group,
+    body.non-admin-panel .panel-shell[data-visible-cards] .button-group {
+        flex: 1 1 auto !important;
+        align-content: center !important;
+        justify-content: center !important;
+        gap: clamp(6px, 1.7vw, 10px) !important;
+    }
+
+    .menu-card,
+    body[data-theme="day"] .menu-card,
+    body[data-theme="night"] .menu-card,
+    body.non-admin-panel .menu-card,
+    body.non-admin-panel .panel-shell[data-visible-cards] .menu-card {
+        flex: 0 1 calc((100% - clamp(6px, 1.7vw, 10px)) / 2) !important;
+        height: auto !important;
+    }
+
+    .panel-shell[data-visible-cards="1"] .menu-card,
+    body.non-admin-panel .panel-shell[data-visible-cards="1"] .menu-card {
+        flex-basis: min(100%, 260px) !important;
+    }
+}
