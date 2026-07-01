@@ -597,7 +597,7 @@
         .page-shell::-webkit-scrollbar-thumb { background: rgba(85, 246, 255, 0.34); border-radius: 999px; }
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 768px) {
         .page-header {
             align-items: flex-start;
             flex-direction: column;
@@ -974,7 +974,7 @@ body[data-theme="night"] #registroForm .campo-numerico {
     border-color: rgba(227, 190, 50, 0.68) !important;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 768px) {
     #registroForm .registro-section-main,
     #registroForm .registro-section-extra {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1460,7 +1460,7 @@ body[data-theme="night"] .historico-editor-form label {
     color: #fff;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
     body {
         overflow-x: hidden !important;
     }

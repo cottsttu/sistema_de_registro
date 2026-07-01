@@ -882,7 +882,7 @@ body[data-theme="night"] .registro-campo span {
         0 0 10px rgba(255, 77, 77, 0.22);
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 768px) {
     #areaRegistro #registroForm tbody tr {
         grid-template-columns: repeat(6, minmax(0, 1fr));
     }
@@ -1504,7 +1504,7 @@ body[data-theme="day"] #areaRegistro #registroForm .registro-panel .qtc-containe
     border-color: rgba(20, 122, 142, 0.28);
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 768px) {
     #areaRegistro #registroForm .registro-section-top,
     #areaRegistro #registroForm .registro-section-main,
     #areaRegistro #registroForm .registro-section-flow {

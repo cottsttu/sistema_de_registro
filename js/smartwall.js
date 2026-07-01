@@ -415,6 +415,9 @@ async function iniciarSmartwall() {
             const frota = frotaHistoricoPorRegiao[regiao] || { mt: 0, vt: 0 };
             return (frota.mt || 0) + (frota.vt || 0);
         });
+        const temDadosRegiao = totaisPorRegiao.some((valor) => valor > 0);
+        const datasetData = temDadosRegiao ? totaisPorRegiao : [1];
+        const datasetColors = temDadosRegiao ? coresRegiao : ["rgba(255, 255, 255, 0.16)"];
         const totalGeral = totaisPorRegiao.reduce((acc, valor) => acc + valor, 0);
         const totalMt = labelsResumo.reduce((acc, regiao) => acc + (frotaHistoricoPorRegiao[regiao]?.mt || 0), 0);
         const totalVt = labelsResumo.reduce((acc, regiao) => acc + (frotaHistoricoPorRegiao[regiao]?.vt || 0), 0);
@@ -496,8 +499,8 @@ async function iniciarSmartwall() {
             data: {
                 labels: labelsResumo,
                 datasets: [{
-                    data: totaisPorRegiao,
-                    backgroundColor: coresRegiao,
+                    data: datasetData,
+                    backgroundColor: datasetColors,
                     borderColor: document.body.dataset.theme === "day" ? "#ffffff" : "rgba(255, 255, 255, 0.82)",
                     borderWidth: 2,
                     hoverOffset: 5,
@@ -631,6 +634,9 @@ async function iniciarSmartwall() {
                 const temaDia = document.body.dataset.theme === "day";
                 const corDentro = temaDia ? "#000000" : "#ffffff";
                 const corFora = temaDia ? "#06131f" : "#e8f4ff";
+                const isLargeScreen = window.matchMedia("(min-width: 1518px)").matches;
+                const tamanhoLabelBase = isLargeScreen ? 18 : 11;
+                const tamanhoValorBase = isLargeScreen ? 24 : 16;
 
                 const ajustarFonte = (texto, peso, tamanhoBase, larguraMaxima) => {
                     let tamanho = tamanhoBase;
@@ -652,20 +658,20 @@ async function iniciarSmartwall() {
                     const xBarraInicio = xScale.getPixelForValue(0);
                     const xBarraFim = xScale.getPixelForValue(valor);
                     const larguraBarra = Math.max(0, xBarraFim - xBarraInicio);
-                    ctx.font = "800 11px Segoe UI, sans-serif";
+                    ctx.font = `800 ${tamanhoLabelBase}px Segoe UI, sans-serif`;
                     const larguraLabel = ctx.measureText(textoLabel).width;
-                    ctx.font = "900 16px Segoe UI, sans-serif";
+                    ctx.font = `900 ${tamanhoValorBase}px Segoe UI, sans-serif`;
                     const larguraValor = ctx.measureText(textoValor).width;
                     const cabeDentro = larguraBarra >= Math.max(larguraLabel, larguraValor) + (insideGap * 2);
 
                     if (cabeDentro) {
                         const xCentro = Math.max(chartArea.left + insideGap, Math.min(xBarraFim - insideGap, (xBarraInicio + xBarraFim) / 2));
                         ctx.textAlign = "center";
-                        ctx.font = "800 11px Segoe UI, sans-serif";
+                        ctx.font = `800 ${tamanhoLabelBase}px Segoe UI, sans-serif`;
                         ctx.fillStyle = corDentro;
                         ctx.fillText(textoLabel, xCentro, y - 8);
 
-                        ctx.font = "900 16px Segoe UI, sans-serif";
+                        ctx.font = `900 ${tamanhoValorBase}px Segoe UI, sans-serif`;
                         ctx.fillStyle = corDentro;
                         ctx.fillText(textoValor, xCentro, y + 12);
                         return;
@@ -674,11 +680,11 @@ async function iniciarSmartwall() {
                     const xFora = Math.min(xBarraFim + outsideGap, canvasRight - 12);
                     const larguraFora = Math.max(52, canvasRight - xFora);
                     ctx.textAlign = "left";
-                    ajustarFonte(textoLabel, 800, 11, larguraFora);
+                    ajustarFonte(textoLabel, 800, tamanhoLabelBase, larguraFora);
                     ctx.fillStyle = corFora;
                     ctx.fillText(textoLabel, xFora, y - 8);
 
-                    ajustarFonte(textoValor, 900, 16, larguraFora);
+                    ajustarFonte(textoValor, 900, tamanhoValorBase, larguraFora);
                     ctx.fillStyle = corFora;
                     ctx.fillText(textoValor, xFora, y + 12);
                 });

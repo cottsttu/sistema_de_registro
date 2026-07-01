@@ -517,7 +517,7 @@ input[type="time"] {
     font-weight: bold;
 }
 
-@media (max-width: 1050px) {
+@media (max-width: 768px) {
     .reports-shell {
         padding: 26px 20px;
     }

@@ -564,7 +564,7 @@ body {
     color: #64748b;
 }
 
-@media (max-width: 860px) {
+@media (max-width: 768px) {
     body {
         padding: 64px 12px 20px;
     }

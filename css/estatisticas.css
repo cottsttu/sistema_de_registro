@@ -84,7 +84,7 @@
         
         .chart-box { background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; }
         
-        @media (max-width: 800px) { .charts-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
 
         h3 { color: #2c3e50; margin-bottom: 15px; font-size: 16px; border-bottom: 2px solid #3498db; display: inline-block; padding-bottom: 5px; }
 

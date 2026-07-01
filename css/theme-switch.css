@@ -70,7 +70,7 @@ body[data-theme="night"] .theme-icon.moon {
     color: #aeb7be;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
     .theme-switch {
         position: absolute;
     }
