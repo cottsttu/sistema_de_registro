@@ -147,6 +147,20 @@ async function iniciarSmartwall() {
     atualizarRelogio();
     setInterval(atualizarRelogio, 1000);
 
+    function agendarAtualizacaoMeiaNoite() {
+        const agora = new Date();
+        const proximaMeiaNoite = new Date(agora);
+        proximaMeiaNoite.setDate(proximaMeiaNoite.getDate() + 1);
+        proximaMeiaNoite.setHours(0, 0, 0, 0);
+
+        const tempoAteMeiaNoite = proximaMeiaNoite.getTime() - agora.getTime();
+        setTimeout(() => {
+            window.location.reload();
+        }, tempoAteMeiaNoite);
+    }
+
+    agendarAtualizacaoMeiaNoite();
+
     function calcularTempoAberto(horaEnvio) {
         if (!horaEnvio || !horaEnvio.includes(":")) return "Tempo desconhecido";
 
