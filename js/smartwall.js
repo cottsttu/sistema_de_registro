@@ -1168,16 +1168,13 @@ async function iniciarSmartwall() {
                 fonteAjustada(String(totalGeral), 950, Math.max(15, centroRadius * 0.34), centroRadius * 1.08, 9);
                 ctx.fillText(String(totalGeral), centerX, centerY - centroRadius * 0.28);
 
-                const iconSize = Math.max(8, Math.min(22, centroRadius * 0.2));
-                const colunaOffset = centroRadius * 0.36;
-                const iconY = centerY + centroRadius * 0.04;
+                const iconSize = Math.max(11, Math.min(28, centroRadius * 0.28));
+                const colunaOffset = centroRadius * 0.32;
+                const iconY = centerY + centroRadius * 0.03;
                 ctx.filter = temaDia ? "brightness(0)" : "brightness(0) invert(1)";
                 if (vtIconImg.complete) ctx.drawImage(vtIconImg, centerX - colunaOffset - (iconSize / 2), iconY - (iconSize / 2), iconSize, iconSize);
                 if (mtIconImg.complete) ctx.drawImage(mtIconImg, centerX + colunaOffset - (iconSize / 2), iconY - (iconSize / 2), iconSize, iconSize);
                 ctx.filter = "none";
-                fonteAjustada("VT", 950, Math.max(7, centroRadius * 0.13), centroRadius * 0.36, 6);
-                ctx.fillText("VT", centerX - colunaOffset, centerY + centroRadius * 0.25);
-                ctx.fillText("MT", centerX + colunaOffset, centerY + centroRadius * 0.25);
                 fonteAjustada(String(Math.max(totalVt, totalMt)), 950, Math.max(12, centroRadius * 0.26), centroRadius * 0.52, 8);
                 ctx.fillText(String(totalVt), centerX - colunaOffset, centerY + centroRadius * 0.55);
                 ctx.fillText(String(totalMt), centerX + colunaOffset, centerY + centroRadius * 0.55);

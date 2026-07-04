@@ -62,8 +62,8 @@
         smartwall: 'smartwall.html',
         relatorios: 'relatorio_geral.html',
         observacoes: 'observacoes.html',
-        usuarios: 'admin.html',
-        permissoes: 'gestao_usuarios.html',
+        usuarios: 'gestao_usuarios.html',
+        permissoes: 'admin.html',
         auditoria: 'auditoria.html',
         estatisticas: 'estatisticas.html'
     };
