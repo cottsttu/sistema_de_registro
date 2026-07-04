@@ -22,18 +22,49 @@ async function iniciarSmartwall() {
     const STATUS_DESPACHO = new Set(["PARA O DESPACHO"]);
     const STATUS_EM_ANDAMENTO = new Set(["ENCAMINHADA", "EM ANDAMENTO"]);
     const STATUS_ATIVOS_SMARTWALL = new Set([...STATUS_DESPACHO, ...STATUS_EM_ANDAMENTO]);
-    const regioesBase = ["GERAL", "REGI\u00c3O 1", "REGI\u00c3O 2", "REGI\u00c3O 3", "REGI\u00c3O 4", "REGI\u00c3O 5"];
+    const regioesPainel = ["REGI\u00c3O 1", "REGI\u00c3O 2", "REGI\u00c3O 3", "REGI\u00c3O 4", "REGI\u00c3O 5", "GERAL"];
+    const regioesBase = regioesPainel;
     const coresRegiao = ["#67479a", "#3b364c", "#e4f001", "#64ec02", "#096acc", "#d30000"];
+    const coresPainelRegiao = ["#6f42c1", "#ffcc00", "#55c80a", "#1188ff", "#e50606", "#8d55d9"];
     const coresRegiaoVt = ["#8060b2", "#554e6c", "#f2ff3b", "#80ff28", "#2387e8", "#ff2a2a"];
     const coresRegiaoMt = ["#4b3274", "#292639", "#aab300", "#43aa00", "#064a91", "#8f0000"];
     const coresTipo = ["#2f86ff", "#ffbd1a", "#64d637", "#ff4c5d", "#9d55ff"];
+    const iconesTipoOcorrencia = {
+        "APOIO DO AGENTE": "src/apoio_do_agente.png",
+        "ESTACIONAMENTO IRREGULAR": "src/estacionamento_irregular.png",
+        "FISCALIZACAO EM TRANSPORTE": "src/fiscalizacao_em_transporte.png",
+        "INTERVENCAO EM VIA": "src/intervencao_via_publica.png",
+        "INTERVENCAO EM VIA PUBLICA": "src/intervencao_via_publica.png",
+        "INTERVENCAO VIARIA": "src/intervencao_viaria.png",
+        "OUTROS": "src/outros.png",
+        "PANE SEMAFORICA": "src/pane_semaforica.png",
+        "SINISTRO COM VITIMA": "src/sinistro_com_vitima.png",
+        "SINISTRO COM VITIMA E/OU CRIME": "src/sinistro_com_vitima_ou_crime.png",
+        "SINISTRO SEM VITIMA": "src/sinistro_sem_vitima.png",
+        "SINISTRO SEM VITIMA / VEICULO OFICIAL": "src/sinistro_sem_vitima.png",
+        "VEICULO ABANDONADO": "src/veiculo_abandonado.png"
+    };
+    const turnosAtendimento = [
+        { key: "total", label: "TOTAL", range: "Historico + abertos", icon: "src/total_png.png", color: "#2be477" },
+        { key: "manha", label: "MANH\u00c3", range: "06:00:00 \u00e0s 11:59:59", inicio: 21600, fim: 43199, icon: "src/andamento_png.png", color: "#1188ff" },
+        { key: "tarde", label: "TARDE", range: "12:00:00 \u00e0s 17:59:59", inicio: 43200, fim: 64799, icon: "src/total_png.png", color: "#ff9f1c" },
+        { key: "noite", label: "NOITE", range: "18:00:00 \u00e0s 23:59:59", inicio: 64800, fim: 86399, icon: "src/concluido_png.png", color: "#9b5dff" },
+        { key: "corujao", label: "CORUJ\u00c3O", range: "00:00:00 \u00e0s 05:59:59", inicio: 0, fim: 21599, icon: "src/live_png.png", color: "#16c8d8" }
+    ];
     const mtIconImg = new Image();
     const vtIconImg = new Image();
+    mtIconImg.addEventListener("load", () => myChartRegioes?.update("none"));
+    vtIconImg.addEventListener("load", () => myChartRegioes?.update("none"));
     mtIconImg.src = "src/mt_png.png";
     vtIconImg.src = "src/vt_png.png";
-
     let myChartRegioes = null;
     let myChartTipos = null;
+    let turnoAtendimentoAtual = getTurnoAtualKey();
+    let ultimosDocsHoje = [];
+    let ultimosDocsAtivosAgentes = [];
+    let ultimosDocsHistoricoAgentes = [];
+    let ultimasOcorrenciasAtivas = [];
+    let ultimaContagemRegiaoAtivas = {};
     const ocorrenciasModal = new Map();
     const kpiValoresAnteriores = {
         total: null,
@@ -102,6 +133,14 @@ async function iniciarSmartwall() {
             .replaceAll("'", "&#39;");
     }
 
+    function formatarNomeEquipe(nome) {
+        const partes = String(nome || "").trim().split(/\s+/).filter(Boolean);
+        if (partes.length <= 2) return partes.join(" ");
+        const segundo = normalizarTexto(partes[1]).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const conectivos = new Set(["DE", "DA", "DO", "DAS", "DOS"]);
+        return [partes[0], conectivos.has(segundo) ? partes[2] : partes[1]].filter(Boolean).join(" ");
+    }
+
     function getTimestamp(ocorrencia) {
         if (ocorrencia?.timestamp?.seconds) return ocorrencia.timestamp.seconds;
         if (ocorrencia?.criadoEm?.seconds) return ocorrencia.criadoEm.seconds;
@@ -112,6 +151,51 @@ async function iniciarSmartwall() {
         const match = String(hora || "").match(/^(\d{1,2}):(\d{2})/);
         if (!match) return -1;
         return Number(match[1]) * 60 + Number(match[2]);
+    }
+
+    function getHoraSegundos(hora) {
+        const match = String(hora || "").trim().match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+        if (!match) return -1;
+        return (Number(match[1]) * 3600) + (Number(match[2]) * 60) + Number(match[3] || 0);
+    }
+
+    function getTurnoAtualKey() {
+        const agora = new Date();
+        const segundos = (agora.getHours() * 3600) + (agora.getMinutes() * 60) + agora.getSeconds();
+        const turno = turnosAtendimento.find((item) => item.key !== "total" && segundos >= item.inicio && segundos <= item.fim);
+        return turno?.key || "manha";
+    }
+
+    function itemNoTurnoAtendimento(item, turnoKey) {
+        if (turnoKey === "total") return true;
+        const turno = turnosAtendimento.find((opcao) => opcao.key === turnoKey);
+        if (!turno) return true;
+        const segundosInicio = getHoraSegundos(item?.horaInicio || item?.inicio || item?.horaEnvio);
+        if (segundosInicio < 0) return true;
+        return segundosInicio >= turno.inicio && segundosInicio <= turno.fim;
+    }
+
+    function filtrarPorTurnoAtendimento(registros) {
+        return registros.filter((item) => itemNoTurnoAtendimento(item, turnoAtendimentoAtual));
+    }
+
+    function calcularContagemRegiao(registros) {
+        const contagem = Object.fromEntries(regioesBase.map((regiao) => [regiao, 0]));
+        registros.forEach((registro) => {
+            const zona = getZona(registro);
+            if (contagem[zona] !== undefined) {
+                contagem[zona]++;
+            }
+        });
+        return contagem;
+    }
+
+    function calcularContagemTipo(registros) {
+        return registros.reduce((acc, ocorrencia) => {
+            const tipoBase = getTipoBase(ocorrencia);
+            acc[tipoBase] = (acc[tipoBase] || 0) + 1;
+            return acc;
+        }, {});
     }
 
     function formatarHoraComSegundos(hora) {
@@ -187,11 +271,45 @@ async function iniciarSmartwall() {
         return String(ocorrencia?.ocorrencia || "Sem natureza").split(" (")[0].trim() || "Sem natureza";
     }
 
+    function getIconeTipoOcorrencia(tipo) {
+        const chave = normalizarTexto(tipo).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        return iconesTipoOcorrencia[chave] || "src/ocorrencias_painel.png";
+    }
+
     function getZona(ocorrencia) {
-        return normalizarTexto(ocorrencia?.zona || ocorrencia?.regiao || "SEM REGI\u00c3O");
+        const referenciasZona = [
+            ocorrencia?.classeRegiao,
+            ocorrencia?.zonaClasse,
+            ocorrencia?.className,
+            ocorrencia?.zona,
+            ocorrencia?.regiao
+        ];
+        if (referenciasZona.some((valor) => normalizarZona(valor) === "GERAL")) return "GERAL";
+        return normalizarZona(referenciasZona.find((valor) => String(valor || "").trim()) || "SEM REGI\u00c3O");
+    }
+
+    function normalizarZona(valor) {
+        const zona = normalizarTexto(valor);
+        const zonaSemAcento = zona.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        if (zonaSemAcento.includes("GERAL") || zonaSemAcento.includes("REGIAO-GERAL")) return "GERAL";
+        const numero = zonaSemAcento.match(/\b(?:REGIAO|ZONA|REGIAO-)\s*([1-6])\b/)?.[1];
+        if (numero === "6") return "GERAL";
+        if (numero) return `REGI\u00c3O ${numero}`;
+        return zona;
+    }
+
+    function getClasseTipoLista(ocorrencia) {
+        const tipo = normalizarTexto(ocorrencia?.ocorrencia).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        if (tipo.includes("SINISTRO")) return "tipo-sinistro";
+        if (tipo.includes("ESTACIONAMENTO IRREGULAR")) return "tipo-estacionamento";
+        return "tipo-padrao";
     }
 
     function atualizarDashboard(docsHoje, docsPendentes, docsAtivosAgentes, docsHistoricoAgentes) {
+        ultimosDocsHoje = docsHoje;
+        ultimosDocsAtivosAgentes = docsAtivosAgentes;
+        ultimosDocsHistoricoAgentes = docsHistoricoAgentes;
+
         const mapaUnico = new Map();
         docsPendentes.forEach((item) => mapaUnico.set(item.id, item));
         docsHoje.forEach((item) => mapaUnico.set(item.id, item));
@@ -199,101 +317,135 @@ async function iniciarSmartwall() {
         const todas = Array.from(mapaUnico.values());
         const hoje = todas.filter((ocorrencia) => ocorrencia.data_filtro === dataFiltro);
         const ativas = todas.filter(isAtivaNoPainelPendentes).sort(ordenarRecentes);
-        const ativasHoje = ativas.filter((ocorrencia) => ocorrencia.data_filtro === dataFiltro);
+        ultimasOcorrenciasAtivas = ativas;
         const concluidasHoje = hoje.filter(isConcluida);
         const qtdDespacho = ativas.filter((ocorrencia) => STATUS_DESPACHO.has(normalizarTexto(ocorrencia.situacao))).length;
         const qtdAndamento = ativas.filter((ocorrencia) => STATUS_EM_ANDAMENTO.has(normalizarTexto(ocorrencia.situacao))).length;
 
-        const contagemRegiaoAtivas = Object.fromEntries(regioesBase.map((regiao) => [regiao, 0]));
-        const contagemRegiaoHistorico = Object.fromEntries(regioesBase.map((regiao) => [regiao, 0]));
-        const contagemTipo = {};
-        const frotaAtiva = calcularFrotaAtiva(docsAtivosAgentes);
-        const frotaAtivaPorRegiao = calcularFrotaPorRegiao(docsAtivosAgentes);
-        const frotaHistoricoPorRegiao = calcularFrotaPorRegiao(docsHistoricoAgentes);
+        const frotaAtiva = calcularFrotaOcorrencias(ativas);
+        const docsAtivosAgentesTurno = docsAtivosAgentes;
+        const hojeTurno = filtrarPorTurnoAtendimento(hoje);
+        const ativasTurno = filtrarPorTurnoAtendimento(ativas);
+        const ativasHojeTurno = ativasTurno.filter((ocorrencia) => ocorrencia.data_filtro === dataFiltro);
+        const contagemTipo = calcularContagemTipo(hojeTurno);
+        const contagemRegiaoHoje = calcularContagemRegiao(hojeTurno);
+        const contagemRegiaoAtivas = calcularContagemRegiao(ativasTurno);
+        const frotaAtivaPorRegiao = calcularFrotaOcorrenciasPorRegiao(ativasTurno);
+        const frotaOcorrenciasHoje = calcularFrotaOcorrencias(hojeTurno);
+        const frotaOcorrenciasHojePorRegiao = calcularFrotaOcorrenciasPorRegiaoPeriodo(hojeTurno);
+        const agentesPorRegiao = calcularAgentesPorRegiao(docsAtivosAgentesTurno, ativasTurno);
 
-        hoje.forEach((ocorrencia) => {
-            const tipoBase = getTipoBase(ocorrencia);
-            contagemTipo[tipoBase] = (contagemTipo[tipoBase] || 0) + 1;
-        });
-
-        docsHistoricoAgentes.forEach((registro) => {
-            const zona = getZona(registro);
-            if (contagemRegiaoHistorico[zona] !== undefined) {
-                contagemRegiaoHistorico[zona]++;
-            }
-        });
-
-        ativas.forEach((ocorrencia) => {
-            const zona = getZona(ocorrencia);
-            if (contagemRegiaoAtivas[zona] !== undefined) {
-                contagemRegiaoAtivas[zona]++;
-            }
-        });
-
-        atualizarKpiNumero("kpiTotal", concluidasHoje.length + ativas.length, "total", null, null);
-        atualizarKpiNumero("kpiDespacho", qtdDespacho, "despacho", "despacho", qtdDespacho, true);
-        atualizarKpiNumero("kpiAndamento", qtdAndamento, "andamento", "encaminhada", qtdAndamento, true);
-        atualizarKpiNumero("kpiConcluidas", concluidasHoje.length, "concluidas", "concluidaStatus", concluidasHoje.length, true);
-        document.getElementById("kpiVtrs").innerHTML = `
-            <span class="fleet-value fleet-mt"><img class="fleet-icon" src="src/mt_png.png" alt="MT"><span class="fleet-count">${frotaAtiva.mt}</span></span>
-            <span class="fleet-value fleet-vt"><img class="fleet-icon" src="src/vt_png.png" alt="VT"><span class="fleet-count">${frotaAtiva.vt}</span></span>
-        `;
-        atualizarKpiFrota(frotaAtiva);
-        atualizarResumoAtendimento(ativas.length);
-
-        atualizarListaAtivas(ativasHoje);
-        atualizarGraficos(contagemRegiaoAtivas, contagemRegiaoHistorico, contagemTipo, frotaAtivaPorRegiao, frotaHistoricoPorRegiao);
+        atualizarResumoAtendimento(ativasHojeTurno.length);
+        atualizarIndicadoresKpi(hoje.length, qtdDespacho, qtdAndamento, concluidasHoje.length, frotaAtiva);
+        atualizarListaAtivas(ativasHojeTurno.filter((ocorrencia) => ocorrencia.data_filtro === dataFiltro));
+        atualizarGraficos(
+            contagemRegiaoAtivas,
+            contagemRegiaoHoje,
+            contagemTipo,
+            frotaAtivaPorRegiao,
+            frotaOcorrenciasHoje,
+            frotaOcorrenciasHojePorRegiao,
+            hojeTurno,
+            criarMapaNomesAgentes(docsAtivosAgentes, docsHistoricoAgentes),
+            agentesPorRegiao
+        );
     }
 
-    function atualizarKpiNumero(id, valor, chave, chaveAlerta = chave, valorAlerta = valor, alertarSomenteAumento = false) {
-        const elemento = document.getElementById(id);
-        if (!elemento) return;
+    function atualizarIndicadoresKpi(total, despacho, andamento, concluidas, frota) {
+        const totalFrota = (frota?.mt || 0) + (frota?.vt || 0);
+        const pares = [
+            ["kpiTotal", total],
+            ["kpiDespacho", despacho],
+            ["kpiAndamento", andamento],
+            ["kpiConcluidas", concluidas]
+        ];
 
-        const anterior = kpiValoresAnteriores[chave];
-        const anteriorAlerta = kpiValoresAnteriores[chaveAlerta];
-        elemento.innerText = valor;
-        const deveAlertar = chaveAlerta &&
-            anteriorAlerta !== null &&
-            anteriorAlerta !== valorAlerta &&
-            (!alertarSomenteAumento || valorAlerta > anteriorAlerta);
-        if (deveAlertar) {
-            const card = elemento.closest(".kpi-card");
-            if (card) {
-                card.classList.remove("kpi-alert");
-                void card.offsetWidth;
-                card.classList.add("kpi-alert");
-                setTimeout(() => card.classList.remove("kpi-alert"), 10000);
-            }
+        pares.forEach(([id, valor]) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = String(valor ?? 0);
+        });
+
+        const frotaEl = document.getElementById("kpiVtrs");
+        if (frotaEl) {
+            frotaEl.innerHTML = `
+                <span class="fleet-value fleet-mt"><img class="fleet-icon" src="src/mt_png.png" alt="MT"><span class="fleet-count">${frota?.mt || 0}</span></span>
+                <span class="fleet-value fleet-vt"><img class="fleet-icon" src="src/vt_png.png" alt="VT"><span class="fleet-count">${frota?.vt || 0}</span></span>
+            `;
+            frotaEl.setAttribute("aria-label", `${totalFrota} viaturas em atendimento`);
         }
-        kpiValoresAnteriores[chave] = valor;
-        if (chaveAlerta) kpiValoresAnteriores[chaveAlerta] = valorAlerta;
-    }
 
-    function atualizarKpiFrota(frotaAtiva) {
-        const assinatura = `${frotaAtiva.mt}-${frotaAtiva.vt}`;
-        const anterior = kpiValoresAnteriores.frota;
-        const [mtAnterior = 0, vtAnterior = 0] = String(anterior || "0-0").split("-").map(Number);
-        if (anterior !== null) {
-            const card = document.getElementById("kpiVtrsCard");
-            if (frotaAtiva.mt !== mtAnterior) acionarPiscaFleet(card?.querySelector(".fleet-mt .fleet-icon"));
-            if (frotaAtiva.vt !== vtAnterior) acionarPiscaFleet(card?.querySelector(".fleet-vt .fleet-icon"));
+        const acionarAlertaKpi = (id) => {
+            const card = document.getElementById(id)?.closest(".kpi-card");
+            if (!card) return;
+            card.classList.remove("kpi-alert");
+            void card.offsetWidth;
+            card.classList.add("kpi-alert");
+        };
+
+        const houveLeituraAnterior = kpiValoresAnteriores.despacho !== null;
+        if (houveLeituraAnterior && kpiValoresAnteriores.despacho === 0 && despacho > 0) {
+            acionarAlertaKpi("kpiDespacho");
         }
-        kpiValoresAnteriores.frota = assinatura;
+        if (houveLeituraAnterior && andamento > 0 && andamento !== kpiValoresAnteriores.andamento) {
+            acionarAlertaKpi("kpiAndamento");
+        }
+        if (houveLeituraAnterior && concluidas > 0 && concluidas !== kpiValoresAnteriores.concluidas) {
+            acionarAlertaKpi("kpiConcluidas");
+        }
+
+        kpiValoresAnteriores.total = total;
+        kpiValoresAnteriores.despacho = despacho;
+        kpiValoresAnteriores.andamento = andamento;
+        kpiValoresAnteriores.concluidas = concluidas;
+        kpiValoresAnteriores.frota = totalFrota;
     }
 
-    function acionarPiscaFleet(icon) {
-        if (!icon) return;
-        icon.classList.remove("fleet-icon-alert");
-        void icon.offsetWidth;
-        icon.classList.add("fleet-icon-alert");
-        setTimeout(() => icon.classList.remove("fleet-icon-alert"), 10000);
-    }
-
-    function atualizarResumoAtendimento(total) {
+    function atualizarResumoAtendimento(qtdAtivas) {
         const bloco = document.getElementById("activeLiveSummary");
         if (!bloco) return;
         const numero = bloco.querySelector("strong");
-        if (numero) numero.textContent = String(total);
+        if (numero) numero.textContent = String(qtdAtivas);
+    }
+
+    function getTextoCampo(item, chaves) {
+        for (const chave of chaves) {
+            const valor = item?.[chave];
+            if (valor === null || valor === undefined || valor === "") continue;
+            if (Array.isArray(valor)) {
+                const textoArray = valor.map((parte) => String(parte || "").trim()).filter(Boolean).join(", ");
+                if (textoArray) return textoArray;
+                continue;
+            }
+            return String(valor).trim();
+        }
+        return "";
+    }
+
+    function extrairAgentes(item) {
+        const candidato = getTextoCampo(item, ["nomes", "nome", "nomeCompleto", "nomeAgente", "agente", "responsavel", "motorista", "operador", "usuario", "equipe"]);
+        if (!candidato) return [];
+        return candidato.split(/[\n\r,;/|]+/).map((parte) => parte.trim()).filter(Boolean);
+    }
+
+    function normalizarCodigoEquipe(codigo, tipoPadrao = "") {
+        const texto = String(codigo || "").toUpperCase();
+        const match = texto.match(/\b(MT|VT)\s*[- Nº°]*\s*(\d{1,4})\b/);
+        if (match) return `${match[1]} ${match[2].padStart(2, "0")}`;
+        if (tipoPadrao) {
+            const numero = texto.match(/\b(\d{1,4})\b/)?.[1];
+            if (numero) return `${tipoPadrao} ${numero.padStart(2, "0")}`;
+        }
+        return texto.replace(/\s+/g, " ").trim();
+    }
+
+    function extrairCodigosEquipe(veiculo, tipo) {
+        const texto = Array.isArray(veiculo) ? veiculo.join(" ") : String(veiculo || "");
+        const normalizado = texto.toUpperCase();
+        if (!new RegExp(`\\b${tipo}\\b`, "i").test(normalizado)) return [];
+        const codigosComTipo = [...texto.matchAll(new RegExp(`\\b${tipo}\\s*[- Nº°]*\\s*(\\d{1,4})\\b`, "gi"))]
+            .map((match) => normalizarCodigoEquipe(`${tipo} ${match[1]}`, tipo));
+        if (codigosComTipo.length) return [...new Set(codigosComTipo)];
+        return [tipo];
     }
 
     function calcularFrotaAtiva(docsAtivosAgentes) {
@@ -317,6 +469,187 @@ async function iniciarSmartwall() {
         });
 
         return base;
+    }
+
+    function calcularFrotaOcorrencias(ocorrenciasAtivas) {
+        const codigosMt = new Set();
+        const codigosVt = new Set();
+
+        ocorrenciasAtivas.forEach((ocorrencia) => {
+            extrairCodigosEquipe(ocorrencia?.equipe || ocorrencia?.veiculo || ocorrencia?.codigoEquipe, "MT").forEach((codigo) => codigosMt.add(codigo));
+            extrairCodigosEquipe(ocorrencia?.equipe || ocorrencia?.veiculo || ocorrencia?.codigoEquipe, "VT").forEach((codigo) => codigosVt.add(codigo));
+        });
+
+        return { mt: codigosMt.size, vt: codigosVt.size };
+    }
+
+    function calcularFrotaOcorrenciasPorRegiao(ocorrenciasAtivas) {
+        const setsPorRegiao = Object.fromEntries(regioesBase.map((regiao) => [regiao, { mt: new Set(), vt: new Set() }]));
+        const codigosMt = new Set();
+        const codigosVt = new Set();
+
+        ocorrenciasAtivas.forEach((ocorrencia) => {
+            const zona = getZona(ocorrencia);
+            if (!setsPorRegiao[zona]) return;
+            const origemEquipe = ocorrencia?.equipe || ocorrencia?.veiculo || ocorrencia?.codigoEquipe;
+            extrairCodigosEquipe(origemEquipe, "MT").forEach((codigo) => {
+                if (codigosMt.has(codigo)) return;
+                setsPorRegiao[zona].mt.add(codigo);
+                codigosMt.add(codigo);
+            });
+            extrairCodigosEquipe(origemEquipe, "VT").forEach((codigo) => {
+                if (codigosVt.has(codigo)) return;
+                setsPorRegiao[zona].vt.add(codigo);
+                codigosVt.add(codigo);
+            });
+        });
+
+        return Object.fromEntries(regioesBase.map((regiao) => [
+            regiao,
+            {
+                mt: setsPorRegiao[regiao].mt.size,
+                vt: setsPorRegiao[regiao].vt.size
+            }
+        ]));
+    }
+
+    function calcularFrotaOcorrenciasPorRegiaoPeriodo(ocorrenciasPeriodo) {
+        const setsPorRegiao = Object.fromEntries(regioesBase.map((regiao) => [regiao, { mt: new Set(), vt: new Set() }]));
+
+        ocorrenciasPeriodo.forEach((ocorrencia) => {
+            const zona = getZona(ocorrencia);
+            if (!setsPorRegiao[zona]) return;
+            const origemEquipe = ocorrencia?.equipe || ocorrencia?.veiculo || ocorrencia?.codigoEquipe;
+            extrairCodigosEquipe(origemEquipe, "MT").forEach((codigo) => setsPorRegiao[zona].mt.add(codigo));
+            extrairCodigosEquipe(origemEquipe, "VT").forEach((codigo) => setsPorRegiao[zona].vt.add(codigo));
+        });
+
+        return Object.fromEntries(regioesBase.map((regiao) => [
+            regiao,
+            {
+                mt: setsPorRegiao[regiao].mt.size,
+                vt: setsPorRegiao[regiao].vt.size
+            }
+        ]));
+    }
+
+    function calcularAgentesPorRegiao(docsAtivosAgentes, ocorrenciasAtivas = []) {
+        const ocorrenciasPorEquipe = new Map();
+        const codigosEmOcorrencia = new Set();
+        ocorrenciasAtivas.forEach((ocorrencia) => {
+            const origemEquipe = ocorrencia?.equipe || ocorrencia?.veiculo || ocorrencia?.codigoEquipe;
+            const codigos = [
+                ...extrairCodigosEquipe(origemEquipe, "VT"),
+                ...extrairCodigosEquipe(origemEquipe, "MT")
+            ];
+            [...new Set(codigos)].forEach((codigo) => {
+                const lista = ocorrenciasPorEquipe.get(codigo) || [];
+                lista.push(ocorrencia);
+                ocorrenciasPorEquipe.set(codigo, lista);
+                codigosEmOcorrencia.add(codigo);
+            });
+        });
+
+        const base = Object.fromEntries(regioesBase.map((regiao) => [regiao, { mt: [], vt: [] }]));
+        const equipesAtivasPorCodigo = new Map();
+
+        docsAtivosAgentes.forEach((item) => {
+            const nomes = [...new Set(extrairAgentes(item))];
+            const disponivelSmartwall = item?.disponivelSmartwall !== false;
+            const motivoIndisponibilidadeSmartwall = item?.motivoIndisponibilidadeSmartwall || "";
+
+            ["VT", "MT"].forEach((tipo) => {
+                extrairCodigosEquipe(item?.veiculo || item?.equipe || item?.codigoEquipe, tipo).forEach((codigo) => {
+                    const atual = equipesAtivasPorCodigo.get(codigo);
+                    equipesAtivasPorCodigo.set(codigo, {
+                        codigo,
+                        tipo,
+                        zona: atual?.zona || getZona(item),
+                        nomes: [...new Set([...(atual?.nomes || []), ...nomes])],
+                        disponivelSmartwall,
+                        motivoIndisponibilidadeSmartwall
+                    });
+                });
+            });
+        });
+
+        const codigosRegistrados = new Set();
+        equipesAtivasPorCodigo.forEach((equipeAtiva, codigo) => {
+            const zona = equipeAtiva.zona;
+            if (!base[zona] || codigosEmOcorrencia.has(codigo)) return;
+            const destino = equipeAtiva.tipo === "MT" ? base[zona].mt : base[zona].vt;
+            destino.push({
+                codigo,
+                nomes: equipeAtiva.nomes || [],
+                disponivelSmartwall: equipeAtiva.disponivelSmartwall !== false,
+                motivoIndisponibilidadeSmartwall: equipeAtiva.motivoIndisponibilidadeSmartwall || "",
+                ocorrencias: [],
+                atendimentoStatus: "despacho"
+            });
+            codigosRegistrados.add(`${equipeAtiva.tipo}:${codigo}`);
+        });
+
+        ocorrenciasAtivas.forEach((ocorrencia) => {
+            const zona = getZona(ocorrencia);
+            if (!base[zona]) return;
+            const origemEquipe = ocorrencia?.equipe || ocorrencia?.veiculo || ocorrencia?.codigoEquipe;
+            const atendimentoStatus = normalizarTexto(ocorrencia?.situacao) === "EM ANDAMENTO" ? "andamento" : "despacho";
+
+            extrairCodigosEquipe(origemEquipe, "VT").forEach((codigo) => {
+                const chave = `VT:${codigo}`;
+                if (codigosRegistrados.has(chave)) return;
+                const equipeAtiva = equipesAtivasPorCodigo.get(codigo) || {};
+                base[zona].vt.push({
+                    codigo,
+                    nomes: equipeAtiva.nomes || [],
+                    disponivelSmartwall: equipeAtiva.disponivelSmartwall !== false,
+                    motivoIndisponibilidadeSmartwall: equipeAtiva.motivoIndisponibilidadeSmartwall || "",
+                    ocorrencias: ocorrenciasPorEquipe.get(codigo) || [ocorrencia],
+                    atendimentoStatus
+                });
+                codigosRegistrados.add(chave);
+            });
+
+            extrairCodigosEquipe(origemEquipe, "MT").forEach((codigo) => {
+                const chave = `MT:${codigo}`;
+                if (codigosRegistrados.has(chave)) return;
+                const equipeAtiva = equipesAtivasPorCodigo.get(codigo) || {};
+                base[zona].mt.push({
+                    codigo,
+                    nomes: equipeAtiva.nomes || [],
+                    disponivelSmartwall: equipeAtiva.disponivelSmartwall !== false,
+                    motivoIndisponibilidadeSmartwall: equipeAtiva.motivoIndisponibilidadeSmartwall || "",
+                    ocorrencias: ocorrenciasPorEquipe.get(codigo) || [ocorrencia],
+                    atendimentoStatus
+                });
+                codigosRegistrados.add(chave);
+            });
+        });
+
+        return base;
+    }
+
+    function criarMapaNomesAgentes(...listas) {
+        const mapa = new Map();
+
+        listas.flat().filter(Boolean).forEach((item) => {
+            const nomes = [...new Set(extrairAgentes(item).filter(Boolean))];
+            if (!nomes.length) return;
+            ["VT", "MT"].forEach((tipo) => {
+                extrairCodigosEquipe(item?.veiculo || item?.equipe || item?.codigoEquipe, tipo).forEach((codigo) => {
+                    const atuais = mapa.get(codigo) || [];
+                    mapa.set(codigo, [...new Set([...atuais, ...nomes])]);
+                });
+            });
+        });
+
+        return mapa;
+    }
+
+    function nomeZona(regiao, index) {
+        if (normalizarZona(regiao) === "GERAL") return "GERAL";
+        const numero = String(regiao).match(/\d+/)?.[0] || String(index + 1);
+        return `ZONA ${numero}`;
     }
 
     function atualizarListaAtivas(ativas) {
@@ -346,12 +679,14 @@ async function iniciarSmartwall() {
                 !kpiValoresAnteriores.encaminhadas.has(modalId);
             if (statusClass === "encaminhada") kpiValoresAnteriores.encaminhadas.add(modalId);
             const horaEnvio = formatarHoraComSegundos(ocorrencia.horaEnvio);
+            const tipoClass = getClasseTipoLista(ocorrencia);
 
             divLista.insertAdjacentHTML("beforeend", `
-                <button type="button" class="list-item ${statusClass} ${alertaEncaminhada ? "list-alert" : ""}" data-modal-id="${escapeHtml(modalId)}">
+                <button type="button" class="list-item ${statusClass} ${tipoClass} ${alertaEncaminhada ? "list-alert" : ""}" data-modal-id="${escapeHtml(modalId)}">
                     <span class="status-dot" aria-hidden="true"></span>
                     <span class="item-hora">${escapeHtml(horaEnvio)}</span>
                     <span class="item-tipo">${escapeHtml(ocorrencia.ocorrencia || "Sem natureza")}</span>
+                    <span class="item-action" aria-hidden="true"></span>
                 </button>
             `);
         });
@@ -362,13 +697,15 @@ async function iniciarSmartwall() {
     function abrirModalRegistro(ocorrencia) {
         const modal = document.getElementById("smartRegistroModal");
         const content = document.getElementById("smartModalContent");
+        const title = document.getElementById("smartModalTitle");
         if (!modal || !content || !ocorrencia) return;
+        if (title) title.textContent = "Detalhes da ocorr\u00eancia";
 
         const campos = [
-            ["Nº Registro", ocorrencia.numRegistro || ocorrencia.numeroRegistro || "-"],
-            ["Situação", ocorrencia.situacao || "-"],
-            ["Ocorrência", ocorrencia.ocorrencia || "-"],
-            ["Região", getZona(ocorrencia)],
+            ["N\u00ba Registro", ocorrencia.numRegistro || ocorrencia.numeroRegistro || "-"],
+            ["Situa\u00e7\u00e3o", ocorrencia.situacao || "-"],
+            ["Ocorr\u00eancia", ocorrencia.ocorrencia || "-"],
+            ["Regi\u00e3o", getZona(ocorrencia)],
             ["Hora envio", formatarHoraComSegundos(ocorrencia.horaEnvio)],
             ["Tempo aberto", calcularTempoAberto(ocorrencia.horaEnvio)],
             ["Equipe(s)", ocorrencia.equipe || "-"],
@@ -392,6 +729,159 @@ async function iniciarSmartwall() {
         modal.setAttribute("aria-hidden", "false");
     }
 
+    function formatarDataOcorrencia(ocorrencia) {
+        const data = String(ocorrencia?.data_filtro || "").trim();
+        if (/^\d{4}-\d{2}-\d{2}$/.test(data)) return data.split("-").reverse().join("/");
+        return data || "-";
+    }
+
+    function formatarCodigoEquipeExibicao(codigo) {
+        const match = String(codigo || "").match(/\b(MT|VT)\s*(\d{1,4})\b/i);
+        if (!match) return String(codigo || "-").trim() || "-";
+        return `${match[1].toUpperCase()}-${match[2].padStart(2, "0")}`;
+    }
+
+    function criarLinhasEquipeOcorrencia(ocorrencia, mapaNomesAgentes) {
+        const equipeOriginal = String(ocorrencia?.equipe || ocorrencia?.veiculo || ocorrencia?.codigoEquipe || "").trim();
+        const codigosEquipe = [
+            ...extrairCodigosEquipe(equipeOriginal, "VT").map((codigo) => ({ codigo, tipoEquipe: "VT" })),
+            ...extrairCodigosEquipe(equipeOriginal, "MT").map((codigo) => ({ codigo, tipoEquipe: "MT" }))
+        ];
+        const nomesCampos = getTextoCampo(ocorrencia, ["nomes", "nome", "nomeCompleto", "nomeAgente", "agente", "responsavel", "motorista", "operador", "usuario"])
+            .split(/[\n\r,;/|]+/)
+            .map((nome) => nome.trim())
+            .filter(Boolean);
+
+        if (!codigosEquipe.length) {
+            return [{
+                equipe: equipeOriginal || "-",
+                tipoEquipe: "-",
+                agentes: nomesCampos.length ? nomesCampos : []
+            }];
+        }
+
+        return codigosEquipe.map(({ codigo, tipoEquipe }) => {
+            const nomesMapa = mapaNomesAgentes.get(codigo) || [];
+            const agentes = [...new Set([...nomesMapa, ...nomesCampos])];
+            return {
+                equipe: formatarCodigoEquipeExibicao(codigo),
+                tipoEquipe,
+                agentes
+            };
+        });
+    }
+
+    function criarHistoricoRegiao(registros, mapaNomesAgentes = new Map()) {
+        const grupos = new Map();
+
+        registros.forEach((ocorrencia) => {
+            const equipes = criarLinhasEquipeOcorrencia(ocorrencia, mapaNomesAgentes);
+            const item = {
+                tipo: getTipoBase(ocorrencia),
+                data: formatarDataOcorrencia(ocorrencia),
+                hora: formatarHoraComSegundos(ocorrencia?.horaEnvio),
+                equipes
+            };
+            const chaveOcorrencia = ocorrencia?.id || ocorrencia?.numRegistro || ocorrencia?.numeroRegistro || [
+                item.tipo,
+                item.data,
+                item.hora,
+                String(ocorrencia?.local || ""),
+                String(ocorrencia?.detalhamento || ocorrencia?.detalhe || "")
+            ].join("|");
+            const atual = grupos.get(chaveOcorrencia) || { ...item, quantidade: 0 };
+            atual.quantidade += 1;
+            grupos.set(chaveOcorrencia, atual);
+        });
+
+        return [...grupos.values()].sort((a, b) => {
+            const horaA = getHoraSegundos(a.hora);
+            const horaB = getHoraSegundos(b.hora);
+            return horaB - horaA || a.tipo.localeCompare(b.tipo, "pt-BR");
+        });
+    }
+
+    function renderizarEquipeHistorico(equipe) {
+        const nomes = Array.isArray(equipe.agentes) && equipe.agentes.length ? equipe.agentes : [equipe.equipe].filter(Boolean);
+        return `
+            <span class="smart-history-team-card region-agent-group">
+                <span>
+                    <span class="region-agent-code">${escapeHtml(equipe.equipe || "-")}</span>
+                    ${nomes.map((nome) => `
+                        <span class="region-agent-name region-agent-name-available" title="${escapeHtml(nome)}">${escapeHtml(formatarNomeEquipe(nome))}</span>
+                    `).join("")}
+                </span>
+            </span>
+        `;
+    }
+
+    function abrirModalRegiaoGrafico(regiao, registros, frota, mapaNomesAgentes) {
+        const modal = document.getElementById("smartRegistroModal");
+        const content = document.getElementById("smartModalContent");
+        const title = document.getElementById("smartModalTitle");
+        if (!modal || !content) return;
+
+        const historico = criarHistoricoRegiao(registros, mapaNomesAgentes);
+        const totalOcorrencias = registros.length;
+
+        if (title) title.textContent = `Hist\u00f3rico - ${regiao}`;
+        content.innerHTML = `
+            <div class="smart-region-history">
+                <div class="smart-region-summary">
+                    <span><strong>${escapeHtml(totalOcorrencias)}</strong> ocorr\u00eancias</span>
+                    <span><strong>${escapeHtml(frota?.vt || 0)}</strong> VT</span>
+                    <span><strong>${escapeHtml(frota?.mt || 0)}</strong> MT</span>
+                </div>
+                <div class="smart-region-history-list">
+                    <div class="smart-region-history-head">
+                        <span>Tipo</span>
+                        <span>Data</span>
+                        <span>Hor\u00e1rio</span>
+                        <span>Equipes</span>
+                        <span>Qtd.</span>
+                    </div>
+                    ${historico.length ? historico.map((item) => `
+                        <div class="smart-region-history-row">
+                            <span class="smart-region-history-type">${escapeHtml(item.tipo)}</span>
+                            <span>${escapeHtml(item.data)}</span>
+                            <span>${escapeHtml(item.hora)}</span>
+                            <span class="smart-region-history-teams">${item.equipes.map(renderizarEquipeHistorico).join("")}</span>
+                            <span class="smart-region-history-count">${escapeHtml(item.quantidade)}</span>
+                        </div>
+                    `).join("") : '<div class="smart-region-history-empty">Nenhum registro para o per\u00edodo filtrado.</div>'}
+                </div>
+            </div>
+        `;
+
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+    }
+
+    function abrirModalMotivoIndisponibilidade(nome, motivo, codigo) {
+        const modal = document.getElementById("smartRegistroModal");
+        const content = document.getElementById("smartModalContent");
+        const title = document.getElementById("smartModalTitle");
+        if (!modal || !content) return;
+
+        if (title) title.textContent = "Motivo da indisponibilidade";
+        content.innerHTML = `
+            <div class="smart-modal-field smart-modal-field-wide">
+                <strong>Agente</strong>
+                <span>${escapeHtml(nome || "-")}</span>
+            </div>
+            <div class="smart-modal-field">
+                <strong>Equipe</strong>
+                <span>${escapeHtml(codigo || "-")}</span>
+            </div>
+            <div class="smart-modal-field smart-modal-field-wide">
+                <strong>Motivo</strong>
+                <span>${escapeHtml(motivo || "Motivo n\u00e3o informado")}</span>
+            </div>
+        `;
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+    }
+
     function fecharModalRegistro() {
         const modal = document.getElementById("smartRegistroModal");
         if (!modal) return;
@@ -400,6 +890,42 @@ async function iniciarSmartwall() {
     }
 
     document.addEventListener("click", (event) => {
+        const nomeIndisponivel = event.target.closest(".region-agent-name-reason");
+        if (nomeIndisponivel) {
+            abrirModalMotivoIndisponibilidade(
+                nomeIndisponivel.dataset.agentName,
+                nomeIndisponivel.dataset.reason,
+                nomeIndisponivel.dataset.codigo
+            );
+            return;
+        }
+
+        const filtroTurno = event.target.closest(".shift-filter-btn[data-shift]");
+        if (filtroTurno) {
+            turnoAtendimentoAtual = filtroTurno.dataset.shift;
+            renderizarFiltroTurnos();
+            const hojeTurno = filtrarPorTurnoAtendimento(ultimosDocsHoje);
+            const ativosAgentesTurno = ultimosDocsAtivosAgentes;
+            const ocorrenciasAtivasTurno = filtrarPorTurnoAtendimento(ultimasOcorrenciasAtivas);
+            const frotaAtivaPorRegiao = calcularFrotaOcorrenciasPorRegiao(ocorrenciasAtivasTurno);
+            const contagemRegiaoAtivas = calcularContagemRegiao(ocorrenciasAtivasTurno);
+            ultimaContagemRegiaoAtivas = contagemRegiaoAtivas;
+            atualizarResumoAtendimento(ocorrenciasAtivasTurno.length);
+            atualizarListaAtivas(ocorrenciasAtivasTurno.filter((ocorrencia) => ocorrencia.data_filtro === dataFiltro));
+            atualizarGraficos(
+                contagemRegiaoAtivas,
+                calcularContagemRegiao(hojeTurno),
+                calcularContagemTipo(hojeTurno),
+                frotaAtivaPorRegiao,
+                calcularFrotaOcorrencias(hojeTurno),
+                calcularFrotaOcorrenciasPorRegiaoPeriodo(hojeTurno),
+                hojeTurno,
+                criarMapaNomesAgentes(ultimosDocsAtivosAgentes, ultimosDocsHistoricoAgentes),
+                calcularAgentesPorRegiao(ativosAgentesTurno, ocorrenciasAtivasTurno)
+            );
+            return;
+        }
+
         const item = event.target.closest(".list-item[data-modal-id]");
         if (item) {
             abrirModalRegistro(ocorrenciasModal.get(item.dataset.modalId));
@@ -415,190 +941,134 @@ async function iniciarSmartwall() {
         if (event.key === "Escape") fecharModalRegistro();
     });
 
-    function atualizarGraficos(dadosRegiaoAtivas, dadosRegiaoHoje, dadosTipo, frotaAtivaPorRegiao, frotaHistoricoPorRegiao) {
-        atualizarGraficoRegioes(dadosRegiaoAtivas, dadosRegiaoHoje, frotaAtivaPorRegiao, frotaHistoricoPorRegiao);
+    function atualizarGraficos(dadosRegiaoAtivas, dadosRegiaoHoje, dadosTipo, frotaAtivaPorRegiao, frotaOcorrenciasHoje, frotaOcorrenciasHojePorRegiao, ocorrenciasPeriodo, mapaNomesAgentes, agentesAtivosPorRegiao) {
+        atualizarGraficoRegioes(dadosRegiaoAtivas, dadosRegiaoHoje, frotaAtivaPorRegiao, frotaOcorrenciasHoje, frotaOcorrenciasHojePorRegiao, ocorrenciasPeriodo, mapaNomesAgentes, agentesAtivosPorRegiao);
         atualizarGraficoTipos(dadosTipo);
     }
 
-    function atualizarGraficoRegioes(dadosRegiaoAtivas, dadosRegiaoHoje, frotaAtivaPorRegiao, frotaHistoricoPorRegiao) {
-        const canvas = document.getElementById("chartRegioes");
-        if (!canvas) return;
+    function renderizarFiltroTurnos() {
+        const filtro = document.getElementById("shiftFilter");
+        if (!filtro) return;
 
-        const labelsResumo = regioesBase;
-        const totaisPorRegiao = labelsResumo.map((regiao) => {
-            const frota = frotaHistoricoPorRegiao[regiao] || { mt: 0, vt: 0 };
-            return (frota.mt || 0) + (frota.vt || 0);
-        });
-        const temDadosRegiao = totaisPorRegiao.some((valor) => valor > 0);
-        const datasetData = temDadosRegiao ? totaisPorRegiao : [1];
-        const datasetColors = temDadosRegiao ? coresRegiao : ["rgba(255, 255, 255, 0.16)"];
-        const totalGeral = totaisPorRegiao.reduce((acc, valor) => acc + valor, 0);
-        const totalMt = labelsResumo.reduce((acc, regiao) => acc + (frotaHistoricoPorRegiao[regiao]?.mt || 0), 0);
-        const totalVt = labelsResumo.reduce((acc, regiao) => acc + (frotaHistoricoPorRegiao[regiao]?.vt || 0), 0);
-        const ctxRegioes = canvas.getContext("2d");
-        if (myChartRegioes) myChartRegioes.destroy();
-        renderizarRankingGraficoRegiao(labelsResumo, frotaAtivaPorRegiao);
-
-        const labelsDonutRegiaoPlugin = {
-            id: "labelsDonutRegiaoSmartwall",
-            afterDraw(chart) {
-                const meta = chart.getDatasetMeta(0);
-                if (!meta?.data?.length) return;
-                const { ctx } = chart;
-                const centerX = meta.data[0].x;
-                const centerY = meta.data[0].y;
-                const temaDia = document.body.dataset.theme === "day";
-                const corTexto = temaDia ? "#ffffff" : "#142535";
-                const corSecundaria = corTexto;
-                ctx.save();
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                ctx.shadowColor = "transparent";
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = corTexto;
-                ctx.font = "900 10px Segoe UI, sans-serif";
-                ctx.fillText("TOTAL GERAL", centerX, centerY - 48);
-
-                const iconY = centerY - 28;
-                const iconSize = 24;
-                ctx.filter = temaDia ? "brightness(0) invert(1)" : "brightness(0)";
-                if (mtIconImg.complete) ctx.drawImage(mtIconImg, centerX - 54, iconY - 10, iconSize, iconSize);
-                if (vtIconImg.complete) ctx.drawImage(vtIconImg, centerX + 30, iconY - 10, iconSize, iconSize);
-                ctx.filter = "none";
-                ctx.font = "950 24px Segoe UI, sans-serif";
-                ctx.fillStyle = corTexto;
-                ctx.fillText(String(totalMt), centerX - 42, centerY + 4);
-                ctx.fillText(String(totalVt), centerX + 42, centerY + 4);
-                ctx.strokeStyle = temaDia ? "rgba(15, 31, 54, 0.15)" : "rgba(255, 255, 255, 0.18)";
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(centerX - 58, centerY + 25);
-                ctx.lineTo(centerX + 58, centerY + 25);
-                ctx.stroke();
-                ctx.fillStyle = corSecundaria;
-                ctx.font = "900 10px Segoe UI, sans-serif";
-                ctx.fillText("TOTAL", centerX, centerY + 41);
-                ctx.fillStyle = corTexto;
-                ctx.font = "950 24px Segoe UI, sans-serif";
-                ctx.fillText(String(totalGeral), centerX, centerY + 63);
-
-                meta.data.forEach((arc, index) => {
-                    const valor = chart.data.datasets[0].data[index] || 0;
-                    if (!valor) return;
-                    const regiao = chart.data.labels[index];
-                    const frota = frotaHistoricoPorRegiao[regiao] || { mt: 0, vt: 0 };
-                    const percentual = totalGeral ? ((valor / totalGeral) * 100).toFixed(1).replace(".", ",") : "0,0";
-                    const pos = arc.tooltipPosition();
-                    ctx.shadowColor = "rgba(0, 0, 0, 0.45)";
-                    ctx.shadowBlur = 4;
-                    ctx.fillStyle = "#ffffff";
-                    ctx.font = "950 13px Segoe UI, sans-serif";
-                    ctx.fillText(`${percentual}%`, pos.x, pos.y - 18);
-                    ctx.font = "900 11px Segoe UI, sans-serif";
-                    ctx.fillText(`Total ${valor}`, pos.x, pos.y);
-                    ctx.filter = "brightness(0) invert(1)";
-                    if (vtIconImg.complete) ctx.drawImage(vtIconImg, pos.x - 34, pos.y + 10, 14, 14);
-                    if (mtIconImg.complete) ctx.drawImage(mtIconImg, pos.x + 8, pos.y + 10, 14, 14);
-                    ctx.filter = "none";
-                    ctx.font = "950 11px Segoe UI, sans-serif";
-                    ctx.fillText(String(frota.vt || 0), pos.x - 12, pos.y + 18);
-                    ctx.fillText(String(frota.mt || 0), pos.x + 30, pos.y + 18);
-                });
-                ctx.restore();
-            }
-        };
-
-        myChartRegioes = new Chart(ctxRegioes, {
-            type: "doughnut",
-            data: {
-                labels: labelsResumo,
-                datasets: [{
-                    data: datasetData,
-                    backgroundColor: datasetColors,
-                    borderColor: document.body.dataset.theme === "day" ? "#ffffff" : "rgba(255, 255, 255, 0.82)",
-                    borderWidth: 2,
-                    hoverOffset: 5,
-                    spacing: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: false,
-                cutout: "46%",
-                layout: {
-                    padding: { left: 18, right: 18, top: 18, bottom: 18 }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: (context) => {
-                                const valor = context.raw || 0;
-                                const regiao = context.label;
-                                const frota = frotaHistoricoPorRegiao[regiao] || { mt: 0, vt: 0 };
-                                const percentual = totalGeral ? ((valor / totalGeral) * 100).toFixed(1).replace(".", ",") : "0,0";
-                                return `${regiao}: ${valor} (${percentual}%) | Moto ${frota.mt || 0} | Viatura ${frota.vt || 0}`;
-                            }
-                        }
-                    }
-                }
-            },
-            plugins: [labelsDonutRegiaoPlugin]
-        });
+        filtro.innerHTML = turnosAtendimento.map((turno) => `
+            <button type="button" class="shift-filter-btn ${turnoAtendimentoAtual === turno.key ? "active" : ""}" data-shift="${turno.key}" style="--shift-color: ${turno.color}">
+                <span class="shift-filter-icon" aria-hidden="true">${obterIconeTurno(turno.key)}</span>
+                <strong>${turno.label}</strong>
+            </button>
+        `).join("");
     }
 
-    function renderizarRankingGraficoRegiao(labels, frotaPorRegiao) {
+    function obterIconeTurno(key) {
+        const icones = {
+            total: `<svg viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M6 20V10"/><path d="M12 20V5"/><path d="M18 20v-8"/><path d="M4 12h3"/><path d="M10 7h3"/><path d="M16 14h3"/></svg>`,
+            manha: `<svg viewBox="0 0 24 24"><path d="M4 18h16"/><path d="M7 15a5 5 0 0 1 10 0"/><path d="M12 4v3"/><path d="M5.6 7.6l2.1 2.1"/><path d="M18.4 7.6l-2.1 2.1"/><path d="M3 15h2"/><path d="M19 15h2"/></svg>`,
+            tarde: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3"/><path d="M12 19v3"/><path d="M2 12h3"/><path d="M19 12h3"/><path d="M4.9 4.9 7 7"/><path d="M17 17l2.1 2.1"/><path d="M19.1 4.9 17 7"/><path d="M7 17l-2.1 2.1"/></svg>`,
+            noite: `<svg viewBox="0 0 24 24"><path d="M19 15.6A7.5 7.5 0 0 1 8.4 5a8 8 0 1 0 10.6 10.6Z"/><path d="M17 3l.6 1.4L19 5l-1.4.6L17 7l-.6-1.4L15 5l1.4-.6Z"/></svg>`,
+            corujao: `<svg viewBox="0 0 24 24"><path d="M7 7 4 4v7a8 8 0 0 0 16 0V4l-3 3"/><circle cx="9" cy="11" r="1.7"/><circle cx="15" cy="11" r="1.7"/><path d="M10.5 16 12 17l1.5-1"/><path d="M8 20 6 22"/><path d="M16 20l2 2"/></svg>`
+        };
+        return icones[key] || icones.total;
+    }
+
+    function renderizarRankingGraficoRegiao(labels, frotaPorRegiao, agentesPorRegiao, ocorrenciasPorRegiao = {}) {
         const legend = document.getElementById("regionRankingPanel");
         if (!legend) return;
         const linhas = labels.map((regiao, index) => {
             const frota = frotaPorRegiao[regiao] || { mt: 0, vt: 0 };
             const total = (frota.mt || 0) + (frota.vt || 0);
+            const agentes = agentesPorRegiao?.[regiao] || { mt: [], vt: [] };
             return {
                 regiao,
+                zona: nomeZona(regiao, index),
+                numero: index + 1,
                 total,
                 mt: frota.mt || 0,
                 vt: frota.vt || 0,
-                cor: coresRegiao[index] || "#2f86ff"
+                ocorrencias: ocorrenciasPorRegiao?.[regiao] || 0,
+                agentesMt: agentes.mt || [],
+                agentesVt: agentes.vt || [],
+                cor: coresPainelRegiao[index] || "#2f86ff"
             };
-        }).sort((a, b) => b.total - a.total || a.regiao.localeCompare(b.regiao, "pt-BR"));
+        });
         const totalGeral = linhas.reduce((acc, item) => acc + item.total, 0);
+        const totalMt = linhas.reduce((acc, item) => acc + item.mt, 0);
+        const totalVt = linhas.reduce((acc, item) => acc + item.vt, 0);
         linhas.forEach((item) => {
             item.percentual = totalGeral ? ((item.total / totalGeral) * 100).toFixed(1).replace(".", ",") : "0,0";
+            item.temEquipe = item.agentesMt.length > 0 || item.agentesVt.length > 0;
+            item.temEquipeEmAndamento = [...item.agentesMt, ...item.agentesVt]
+                .some((equipe) => !Array.isArray(equipe) && equipe.atendimentoStatus === "andamento");
+            const ocorrenciasEquipe = [...item.agentesMt, ...item.agentesVt]
+                .flatMap((equipe) => Array.isArray(equipe) ? [] : equipe.ocorrencias || []);
+            const ocorrenciasEquipeAndamento = ocorrenciasEquipe.filter((ocorrencia) => normalizarTexto(ocorrencia?.situacao) === "EM ANDAMENTO");
+            const ocorrenciasEquipeAndamentoUnicas = new Set(ocorrenciasEquipeAndamento.map((ocorrencia, indice) => ocorrencia?.id || `${getTimestamp(ocorrencia)}-${ocorrencia?.numRegistro || ocorrencia?.numeroRegistro || indice}`));
+            item.temEquipeAtendendo = item.temEquipeEmAndamento || ocorrenciasEquipeAndamentoUnicas.size > 0;
         });
-
+        const renderizarNomesEquipe = (equipes, icone, alt, cor) => {
+            if (!equipes?.length) return "";
+            return equipes.map((equipe) => {
+                const nomes = Array.isArray(equipe) ? equipe : equipe.nomes;
+                const ocorrencias = Array.isArray(equipe) ? [] : equipe.ocorrencias || [];
+                const disponivelSmartwall = Array.isArray(equipe) ? true : equipe.disponivelSmartwall !== false;
+                const motivoIndisponibilidadeSmartwall = Array.isArray(equipe) ? "" : equipe.motivoIndisponibilidadeSmartwall || "";
+                const codigoEquipe = Array.isArray(equipe) ? "" : equipe.codigo || "";
+                const statusEquipe = Array.isArray(equipe) ? "" : equipe.atendimentoStatus || "";
+                const nomesUnicos = [...new Set((nomes || []).filter(Boolean))];
+                const nomesExibidos = nomesUnicos.length ? nomesUnicos : [codigoEquipe].filter(Boolean);
+                const classeStatus = statusEquipe === "andamento" ? "region-agent-group-andamento" : "region-agent-group-despacho";
+                if (!nomesExibidos.length) return "";
+                return `
+                <span class="region-agent-group ${classeStatus} ${ocorrencias.length ? "region-agent-group-active" : ""}" style="--agent-color: ${cor}">
+                    <img class="region-agent-icon region-agent-icon-${alt === "Moto" ? "mt" : "vt"}" src="${icone}" alt="${alt}">
+                    <span>
+                        ${codigoEquipe ? `<span class="region-agent-code">${escapeHtml(codigoEquipe)}</span>` : ""}
+                        ${nomesExibidos.map((nome) => {
+                            const nomeCurto = formatarNomeEquipe(nome);
+                            return disponivelSmartwall
+                                ? `<span class="region-agent-name region-agent-name-available" title="${escapeHtml(nome)}">${escapeHtml(nomeCurto)}</span>`
+                                : `<button type="button" class="region-agent-name region-agent-name-unavailable region-agent-name-reason" data-agent-name="${escapeHtml(nome)}" data-reason="${escapeHtml(motivoIndisponibilidadeSmartwall)}" data-codigo="${escapeHtml(codigoEquipe)}" title="${escapeHtml(nome)}">${escapeHtml(nomeCurto)}</button>`;
+                        }).join("")}
+                    </span>
+                </span>
+            `;
+            }).join("");
+        };
         legend.innerHTML = `
             <div class="region-ranking-title">
                 <span>viaturas em atendimento</span>
                 <img src="src/live_png.png" alt="Ao vivo">
             </div>
             <div class="region-ranking-head">
-                <span>Região</span>
-                <span>Total / %</span>
+                <span>ZONA</span>
+                <span>OCORR&Ecirc;NCIAS</span>
+                <span class="region-ranking-head-team"><img src="src/vt_png.png" alt="" aria-hidden="true">VT / EQUIPE</span>
+                <span class="region-ranking-head-team"><img src="src/mt_png.png" alt="" aria-hidden="true">MT / EQUIPE</span>
             </div>
             <div class="region-ranking-list">
-                ${linhas.map((item, index) => `
-                    <div class="region-ranking-row" style="--legend-color: ${item.cor}">
-                        <span class="region-rank-wrap"><strong class="region-rank">${index + 1}</strong></span>
-                        <span class="region-info">
-                            <strong class="region-name">${escapeHtml(item.regiao)}</strong>
-                            <span class="region-fleet-counts">
-                                <span><img src="src/mt_png.png" alt="Moto"> ${item.mt}</span>
-                                <i aria-hidden="true"></i>
-                                <span><img src="src/vt_png.png" alt="Viatura"> ${item.vt}</span>
-                            </span>
-                        </span>
-                        <span class="region-metric">
-                            <strong class="region-total">${item.total}</strong>
-                            <strong class="region-percent">${item.percentual}%</strong>
-                        </span>
+                ${linhas.map((item) => `
+                    <div class="region-ranking-row ${item.temEquipe ? "" : "region-ranking-row-empty"}" style="--legend-color: ${item.cor}">
+                        <div class="region-info">
+                            <div class="region-name-line">
+                                <span>ZONA</span>
+                                <strong class="region-name ${/^ZONA\s+GERAL$/i.test(item.zona) ? "region-name-general" : ""}">${escapeHtml(item.zona.replace(/^ZONA\s+/i, ""))}</strong>
+                            </div>
+                            <div class="region-occurrence-cell ${item.temEquipeAtendendo ? "region-occurrence-active region-occurrence-andamento" : ""}">
+                                <strong>${item.ocorrencias}</strong>
+                                <span>${item.ocorrencias === 1 ? "ativa" : "ativas"}</span>
+                            </div>
+                            <div class="region-fleet-panel region-fleet-vt">
+                                <span class="region-agents">${renderizarNomesEquipe(item.agentesVt, "src/vt_png.png", "Viatura", item.cor)}</span>
+                            </div>
+                            <div class="region-fleet-panel region-fleet-mt">
+                                <span class="region-agents">${renderizarNomesEquipe(item.agentesMt, "src/mt_png.png", "Moto", item.cor)}</span>
+                            </div>
+                        </div>
                     </div>
                 `).join("")}
             </div>
             <div class="region-ranking-total">
-                <span>Total geral</span>
-                <strong>${totalGeral}</strong>
-                <strong>${totalGeral ? "100%" : "0%"}</strong>
+                <span class="region-total-fleet region-total-vt"><img src="src/vt_png.png" alt="Viatura"> ${totalVt}</span>
+                <span class="region-total-label">Total geral</span>
+                <span class="region-total-fleet region-total-mt"><img src="src/mt_png.png" alt="Moto"> ${totalMt}</span>
             </div>
         `;
     }
@@ -616,18 +1086,224 @@ async function iniciarSmartwall() {
         centro.innerHTML = "";
     }
 
-    function atualizarGraficoTipos(dadosTipo) {
-        const canvas = document.getElementById("chartTipos");
+    function atualizarGraficoRegioes(dadosRegiaoAtivas, dadosRegiaoHoje, frotaAtivaPorRegiao, frotaOcorrenciasHoje, frotaOcorrenciasHojePorRegiao, ocorrenciasPeriodo, mapaNomesAgentes, agentesAtivosPorRegiao) {
+        const canvas = document.getElementById("chartRegioes");
         if (!canvas) return;
 
+        const labelsResumo = regioesPainel;
+        const ocorrenciasPorRegiaoPeriodo = labelsResumo.reduce((acc, regiao) => {
+            acc[regiao] = [];
+            return acc;
+        }, {});
+        (ocorrenciasPeriodo || []).forEach((ocorrencia) => {
+            const zona = getZona(ocorrencia);
+            if (ocorrenciasPorRegiaoPeriodo[zona]) ocorrenciasPorRegiaoPeriodo[zona].push(ocorrencia);
+        });
+        const totaisPorRegiao = labelsResumo.map((regiao) => dadosRegiaoHoje?.[regiao] || 0);
+        const temDadosRegiao = totaisPorRegiao.some((valor) => valor > 0);
+        const datasetData = temDadosRegiao ? totaisPorRegiao : [1];
+        const datasetColors = temDadosRegiao ? coresPainelRegiao : ["rgba(255, 255, 255, 0.16)"];
+        const totalGeral = totaisPorRegiao.reduce((acc, valor) => acc + valor, 0);
+        const totalMt = frotaOcorrenciasHoje?.mt || 0;
+        const totalVt = frotaOcorrenciasHoje?.vt || 0;
+        const ctxRegioes = canvas.getContext("2d");
+        const dimensaoGrafico = Math.min(
+            canvas.clientWidth || canvas.parentElement?.clientWidth || 420,
+            canvas.clientHeight || canvas.parentElement?.clientHeight || 420
+        );
+        const paddingGrafico = Math.round(Math.max(14, Math.min(56, dimensaoGrafico * 0.105)));
+        if (myChartRegioes) myChartRegioes.destroy();
+        renderizarRankingGraficoRegiao(labelsResumo, frotaAtivaPorRegiao, agentesAtivosPorRegiao, dadosRegiaoAtivas);
+
+        const formatarRotuloZona = (regiao, index) => {
+            if (normalizarZona(regiao) === "GERAL") return "GERAL";
+            const numero = String(regiao || "").match(/\d+/)?.[0] || String(index + 1);
+            return `ZONA ${numero}`;
+        };
+        const formatarPercentualZona = (valor) => {
+            return totalGeral ? ((valor / totalGeral) * 100).toFixed(1) : "0.0";
+        };
+
+        const labelsDonutRegiaoPlugin = {
+            id: "labelsDonutRegiaoSmartwall",
+            afterDraw(chart) {
+                const meta = chart.getDatasetMeta(0);
+                if (!meta?.data?.length) return;
+                const { ctx } = chart;
+                const temaDia = document.body.dataset.theme === "day";
+                const centerX = meta.data[0].x;
+                const centerY = meta.data[0].y;
+                const largura = chart.width;
+                const altura = chart.height;
+                ctx.save();
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.shadowColor = "transparent";
+                ctx.shadowBlur = 0;
+
+                const arcBase = meta.data.find((arc) => arc.outerRadius) || meta.data[0];
+                const innerRadius = arcBase.innerRadius || 52;
+                const centroRadius = Math.max(innerRadius - Math.max(4, innerRadius * 0.06), 30);
+                const fonteAjustada = (texto, peso, tamanhoBase, larguraMaxima, minimo = 6) => {
+                    let tamanho = tamanhoBase;
+                    do {
+                        ctx.font = `${peso} ${tamanho}px Segoe UI, sans-serif`;
+                        if (ctx.measureText(String(texto)).width <= larguraMaxima || tamanho <= minimo) break;
+                        tamanho -= 1;
+                    } while (tamanho > minimo);
+                    return tamanho;
+                };
+
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, centroRadius, 0, Math.PI * 2);
+                ctx.fillStyle = temaDia ? "#d7dee6" : "#071126";
+                ctx.fill();
+                ctx.lineWidth = Math.max(1, centroRadius * 0.025);
+                ctx.strokeStyle = temaDia ? "rgba(16, 24, 32, 0.46)" : "rgba(255, 255, 255, 0.86)";
+                ctx.stroke();
+
+                ctx.fillStyle = temaDia ? "#101820" : "#ffffff";
+                fonteAjustada("TOTAL GERAL", 900, Math.max(7, centroRadius * 0.14), centroRadius * 1.34, 6);
+                ctx.fillText("TOTAL GERAL", centerX, centerY - centroRadius * 0.58);
+                fonteAjustada(String(totalGeral), 950, Math.max(15, centroRadius * 0.34), centroRadius * 1.08, 9);
+                ctx.fillText(String(totalGeral), centerX, centerY - centroRadius * 0.28);
+
+                const iconSize = Math.max(8, Math.min(22, centroRadius * 0.2));
+                const colunaOffset = centroRadius * 0.36;
+                const iconY = centerY + centroRadius * 0.04;
+                ctx.filter = temaDia ? "brightness(0)" : "brightness(0) invert(1)";
+                if (vtIconImg.complete) ctx.drawImage(vtIconImg, centerX - colunaOffset - (iconSize / 2), iconY - (iconSize / 2), iconSize, iconSize);
+                if (mtIconImg.complete) ctx.drawImage(mtIconImg, centerX + colunaOffset - (iconSize / 2), iconY - (iconSize / 2), iconSize, iconSize);
+                ctx.filter = "none";
+                fonteAjustada("VT", 950, Math.max(7, centroRadius * 0.13), centroRadius * 0.36, 6);
+                ctx.fillText("VT", centerX - colunaOffset, centerY + centroRadius * 0.25);
+                ctx.fillText("MT", centerX + colunaOffset, centerY + centroRadius * 0.25);
+                fonteAjustada(String(Math.max(totalVt, totalMt)), 950, Math.max(12, centroRadius * 0.26), centroRadius * 0.52, 8);
+                ctx.fillText(String(totalVt), centerX - colunaOffset, centerY + centroRadius * 0.55);
+                ctx.fillText(String(totalMt), centerX + colunaOffset, centerY + centroRadius * 0.55);
+
+                if (!temDadosRegiao) {
+                    ctx.restore();
+                    return;
+                }
+
+                meta.data.forEach((arc, index) => {
+                    const valor = chart.data.datasets[0].data[index] || 0;
+                    if (!valor) return;
+                    const regiao = chart.data.labels[index];
+                    const cor = chart.data.datasets[0].backgroundColor[index] || "#ffffff";
+                    const startAngle = Number.isFinite(arc.startAngle) ? arc.startAngle : -Math.PI / 2;
+                    const endAngle = Number.isFinite(arc.endAngle) ? arc.endAngle : startAngle;
+                    const angle = (startAngle + endAngle) / 2;
+                    const outerRadius = arc.outerRadius || Math.min(largura, altura) * 0.32;
+                    const innerRadiusArc = arc.innerRadius || innerRadius;
+                    const textoRadius = innerRadiusArc + ((outerRadius - innerRadiusArc) * 0.54);
+                    const textoX = centerX + Math.cos(angle) * textoRadius;
+                    const textoY = centerY + Math.sin(angle) * textoRadius;
+                    const startX = centerX + Math.cos(angle) * (outerRadius - 2);
+                    const startY = centerY + Math.sin(angle) * (outerRadius - 2);
+                    const turnX = centerX + Math.cos(angle) * (outerRadius + 18);
+                    const turnY = centerY + Math.sin(angle) * (outerRadius + 18);
+                    const ladoDireito = Math.cos(angle) >= 0;
+                    const labelX = Math.min(Math.max(turnX + (ladoDireito ? 24 : -24), 44), largura - 44);
+                    const labelY = Math.min(Math.max(turnY, 18), altura - 22);
+
+                    ctx.strokeStyle = cor;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(startX, startY);
+                    ctx.lineTo(turnX, turnY);
+                    ctx.lineTo(labelX + (ladoDireito ? -6 : 6), labelY);
+                    ctx.stroke();
+
+                    ctx.textAlign = ladoDireito ? "left" : "right";
+                    ctx.fillStyle = cor;
+                    ctx.font = "950 11px Segoe UI, sans-serif";
+                    ctx.fillText(formatarRotuloZona(regiao, index), labelX, labelY - 6);
+                    ctx.font = "950 12px Segoe UI, sans-serif";
+                    ctx.fillText(`${formatarPercentualZona(valor)}%`, labelX, labelY + 8);
+                    ctx.textAlign = "center";
+                    ctx.fillStyle = temaDia ? "#101820" : "#ffffff";
+                    ctx.shadowColor = temaDia ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.48)";
+                    ctx.shadowBlur = temaDia ? 2 : 4;
+                    fonteAjustada(String(valor), 950, Math.max(12, Math.min(18, outerRadius * 0.07)), Math.max(18, outerRadius - innerRadiusArc - 8), 8);
+                    ctx.fillText(String(valor), textoX, textoY);
+                    ctx.shadowColor = "transparent";
+                    ctx.shadowBlur = 0;
+                });
+                ctx.restore();
+            }
+        };
+
+        myChartRegioes = new Chart(ctxRegioes, {
+            type: "doughnut",
+            data: {
+                labels: labelsResumo,
+                datasets: [{
+                    data: datasetData,
+                    backgroundColor: datasetColors,
+                    borderColor: document.body.dataset.theme === "day" ? "rgba(16, 24, 32, 0.42)" : "rgba(255, 255, 255, 0.82)",
+                    borderWidth: 2,
+                    hoverOffset: 4,
+                    spacing: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                cutout: "56%",
+                rotation: -90,
+                layout: {
+                    padding: { left: paddingGrafico, right: paddingGrafico, top: paddingGrafico, bottom: Math.max(12, paddingGrafico * 0.72) }
+                },
+                onClick: (event, elements, chart) => {
+                    if (!temDadosRegiao || !elements.length) return;
+                    const index = elements[0].index;
+                    const regiao = chart.data.labels[index];
+                    const ocorrencias = ocorrenciasPorRegiaoPeriodo?.[regiao] || [];
+                    const frota = frotaOcorrenciasHojePorRegiao?.[regiao] || { mt: 0, vt: 0 };
+                    abrirModalRegiaoGrafico(formatarRotuloZona(regiao, index), ocorrencias, frota, mapaNomesAgentes);
+                },
+                onHover: (event, elements) => {
+                    event.native.target.style.cursor = temDadosRegiao && elements.length ? "pointer" : "default";
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => {
+                                const valor = context.raw || 0;
+                                const regiao = context.label;
+                                const frota = frotaOcorrenciasHojePorRegiao?.[regiao] || { mt: 0, vt: 0 };
+                                const percentual = totalGeral ? ((valor / totalGeral) * 100).toFixed(1).replace(".", ",") : "0,0";
+                                return `${regiao}: ${valor} ocorrencia${valor === 1 ? "" : "s"} (${percentual}%) | VT ${frota.vt || 0} | MT ${frota.mt || 0}`;
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [labelsDonutRegiaoPlugin]
+        });
+    }
+
+    function atualizarGraficoTipos(dadosTipo) {
+        const canvas = document.getElementById("chartTipos");
         const tiposOrdenados = Object.entries(dadosTipo)
             .filter(([, qtd]) => qtd > 0)
             .sort((a, b) => b[1] - a[1]);
         const total = tiposOrdenados.reduce((acc, [, qtd]) => acc + qtd, 0);
         renderizarResumoTipo(tiposOrdenados, total);
+        if (!canvas) return;
 
         const ctxTipos = canvas.getContext("2d");
         if (myChartTipos) myChartTipos.destroy();
+
+        if (!tiposOrdenados.length) {
+            myChartTipos = null;
+            ctxTipos.clearRect(0, 0, canvas.width, canvas.height);
+            return;
+        }
 
         const maiorTipo = tiposOrdenados.reduce((max, [, qtd]) => Math.max(max, qtd), 0);
         ctxTipos.font = "800 11px Segoe UI, sans-serif";
@@ -659,7 +1335,6 @@ async function iniciarSmartwall() {
                         if (ctx.measureText(texto).width <= larguraMaxima || tamanho <= 6) break;
                         tamanho -= 1;
                     } while (tamanho > 6);
-                    return tamanho;
                 };
 
                 ctx.save();
@@ -711,7 +1386,7 @@ async function iniciarSmartwall() {
             data: {
                 labels: tiposOrdenados.map((tipo) => tipo[0]),
                 datasets: [{
-                    label: "Ocorrencias",
+                    label: "Ocorrências",
                     data: tiposOrdenados.map((tipo) => tipo[1]),
                     backgroundColor: tiposOrdenados.map((_, index) => coresTipo[index] || coresTipo[0]),
                     borderColor: tiposOrdenados.map((_, index) => coresTipo[index] || coresTipo[0]),
@@ -732,7 +1407,7 @@ async function iniciarSmartwall() {
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: (context) => `${context.raw} ocorrencias`
+                            label: (context) => `${context.raw} ocorrências`
                         }
                     }
                 },
@@ -761,17 +1436,29 @@ async function iniciarSmartwall() {
         if (!legend) return;
 
         legend.innerHTML = "";
+
         tiposOrdenados.forEach(([tipo, qtd], index) => {
             const cor = coresTipo[index] || coresTipo[0];
+            const percentual = total > 0 ? Math.round((qtd / total) * 100) : 0;
+            const icone = getIconeTipoOcorrencia(tipo);
+            const tipoNormalizado = normalizarTexto(tipo).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const classeIcone = tipoNormalizado === "SINISTRO COM VITIMA E/OU CRIME" ? " type-legend-icon-crime" : "";
             legend.insertAdjacentHTML("beforeend", `
                 <div class="type-legend-item" style="--type-color: ${cor}">
-                    <span class="type-legend-color" aria-hidden="true"></span>
+                    <span class="type-legend-icon" aria-hidden="true">
+                        <img class="${classeIcone.trim()}" src="${icone}" alt="">
+                    </span>
                     <span class="type-legend-name">${escapeHtml(tipo)}</span>
-                    <span class="type-legend-count">${qtd}</span>
+                    <span class="type-legend-metrics">
+                        <strong class="type-legend-count">${qtd}</strong>
+                        <span class="type-legend-percent">${percentual}%</span>
+                    </span>
                 </div>
             `);
         });
     }
+
+    renderizarFiltroTurnos();
 
     onAuthStateChanged(auth, (user) => {
         if (!user) {

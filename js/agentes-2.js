@@ -49,6 +49,7 @@
     let usuarioEhAdmin = false; 
     let isVisualizador = false;
     const listarAgentesCondutoresUrl = "https://us-central1-sttu-registros.cloudfunctions.net/listarAgentesCondutoresHttp";
+    let filtroAtivos = "todos";
     
     // Armazena os dados do histórico para renderizar novamente quando o login confirmar que é admin
     let listaHistoricoCache = []; 
@@ -99,10 +100,7 @@
                         // 2. INJETAR CSS PARA ESCONDER AÇÕES NA TABELA
                         const styleBlock = document.createElement('style');
                         styleBlock.innerHTML = `
-                            .col-acao, .btn-acao-tabela, .btn-encaminhar, .btn-devolver, .btn-confirmar {
-                                display: none !important;
-                            }
-                            table th:last-child, table td:last-child {
+                            .col-acao, .btn-acao-tabela, .btn-encaminhar, .btn-devolver, .btn-confirmar, .btn-editar-ativo {
                                 display: none !important;
                             }
                         `;
@@ -422,6 +420,113 @@
             .replace(/"/g, "&quot;");
     }
 
+    function isVeiculoMtOuVt(valor) {
+        return /^(MT|VT)\b/i.test(String(valor || "").trim());
+    }
+
+    function isDisponivelSmartwall(dados) {
+        return dados?.disponivelSmartwall !== false;
+    }
+
+    function solicitarMotivoIndisponibilidade(dados) {
+        return new Promise((resolve) => {
+            let modal = document.getElementById('modalMotivoIndisponibilidade');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'modalMotivoIndisponibilidade';
+                modal.className = 'modal-motivo-indisponibilidade';
+                modal.innerHTML = `
+                    <div class="modal-motivo-backdrop" data-motivo-cancelar></div>
+                    <section class="modal-motivo-card" role="dialog" aria-modal="true" aria-labelledby="modalMotivoTitulo">
+                        <h2 id="modalMotivoTitulo">Motivo da indisponibilidade</h2>
+                        <label>
+                            <span>Informe o motivo</span>
+                            <textarea id="motivoIndisponibilidadeTexto" maxlength="240" placeholder="Digite o motivo..." spellcheck="true" lang="pt-BR"></textarea>
+                        </label>
+                        <div class="modal-motivo-actions">
+                            <button type="button" class="btn-motivo-cancelar" data-motivo-cancelar>Cancelar</button>
+                            <button type="button" class="btn-motivo-confirmar" data-motivo-confirmar>Salvar</button>
+                        </div>
+                    </section>
+                `;
+                document.body.appendChild(modal);
+            }
+
+            const textarea = modal.querySelector('#motivoIndisponibilidadeTexto');
+            const titulo = modal.querySelector('#modalMotivoTitulo');
+            const finalizar = (valor) => {
+                modal.classList.remove('open');
+                modal.querySelectorAll('[data-motivo-cancelar], [data-motivo-confirmar]').forEach((botao) => {
+                    botao.onclick = null;
+                });
+                resolve(valor);
+            };
+
+            titulo.innerText = `Motivo da indisponibilidade - ${dados.veiculo || 'Equipe'}`;
+            textarea.value = dados.motivoIndisponibilidadeSmartwall || "";
+            modal.classList.add('open');
+            setTimeout(() => textarea.focus(), 0);
+
+            modal.querySelectorAll('[data-motivo-cancelar]').forEach((botao) => {
+                botao.onclick = () => finalizar(null);
+            });
+            modal.querySelector('[data-motivo-confirmar]').onclick = () => {
+                const motivo = textarea.value.trim();
+                if (!motivo) {
+                    alert("Informe o motivo da indisponibilidade.");
+                    textarea.focus();
+                    return;
+                }
+                finalizar(motivo.toUpperCase());
+            };
+        });
+    }
+
+    function criarBotaoDisponibilidadeSmartwall(dados) {
+        const btnDisponibilidade = document.createElement('button');
+        btnDisponibilidade.type = 'button';
+        btnDisponibilidade.className = 'btn btn-disponibilidade-smartwall';
+
+        const atualizarVisual = (disponivel) => {
+            btnDisponibilidade.dataset.disponivel = String(disponivel);
+            btnDisponibilidade.innerText = disponivel ? 'DISPONÍVEL' : 'INDISPONÍVEL';
+            btnDisponibilidade.title = disponivel
+                ? 'Marcar agentes como indisponíveis no Smartwall'
+                : 'Marcar agentes como disponíveis no Smartwall';
+            btnDisponibilidade.setAttribute('aria-label', btnDisponibilidade.title);
+        };
+
+        atualizarVisual(isDisponivelSmartwall(dados));
+
+        btnDisponibilidade.onclick = async function() {
+            const novoStatus = btnDisponibilidade.dataset.disponivel !== 'true';
+            const motivo = novoStatus ? "" : await solicitarMotivoIndisponibilidade(dados);
+            if (motivo === null) return;
+
+            btnDisponibilidade.disabled = true;
+            atualizarVisual(novoStatus);
+
+            try {
+                await updateDoc(doc(db, "ativos_agentes", dados.id), {
+                    disponivelSmartwall: novoStatus,
+                    motivoIndisponibilidadeSmartwall: motivo,
+                    atualizadoDisponibilidadeSmartwallEm: serverTimestamp()
+                });
+                registrarLogAuditoria(
+                    "DISPONIBILIDADE SMARTWALL",
+                    `Veículo: ${dados.veiculo} marcado como ${novoStatus ? "DISPONÍVEL" : "INDISPONÍVEL"} por ${nomeUsuarioLogado}.${motivo ? " Motivo: " + motivo : ""}`
+                );
+            } catch (e) {
+                atualizarVisual(!novoStatus);
+                alert("Erro ao atualizar disponibilidade: " + e.message);
+            } finally {
+                btnDisponibilidade.disabled = false;
+            }
+        };
+
+        return btnDisponibilidade;
+    }
+
     function normalizarBuscaAgente(valor) {
         return String(valor || "")
             .normalize("NFD")
@@ -691,6 +796,17 @@
         return timestampSegundos(b) - timestampSegundos(a);
     }
 
+    function obterTipoFiltroVeiculo(veiculo) {
+        const valor = String(veiculo || "").trim().toUpperCase();
+        if (valor.startsWith("MT")) return "mt";
+        if (valor.startsWith("VT")) return "vt";
+        return "outros";
+    }
+
+    function ativoPassaFiltro(data) {
+        return filtroAtivos === "todos" || obterTipoFiltroVeiculo(data.veiculo) === filtroAtivos;
+    }
+
     // --- FIREBASE OPS ---
     const qAtivos = query(collection(db, "ativos_agentes"), orderBy("timestamp", "asc"));
     onSnapshot(qAtivos, (snapshot) => {
@@ -711,7 +827,6 @@
         const listaRender = [...listaAtivosCache].sort(compararHorarioDecrescente);
 
         listaRender.forEach((data) => {
-            adicionarLinha(tabelaAtivos, data, true);
             veiculosEmUso.add(data.veiculo);
             
             if (data.agente) {
@@ -720,6 +835,10 @@
                     let nomeLimpo = linha.replace(' (C)', '').trim();
                     if(nomeLimpo) agentesEmUso.add(nomeLimpo);
                 });
+            }
+
+            if (ativoPassaFiltro(data)) {
+                adicionarLinha(tabelaAtivos, data, true);
             }
         });
         carregarAgentes(); 
@@ -877,6 +996,10 @@
             const actionCell = row.insertCell();
             actionCell.className = 'acao-botoes';
             actionCell.appendChild(criarBotaoVisualizarRegistro(dados, "Veículo em Operação"));
+
+            if (isVeiculoMtOuVt(dados.veiculo)) {
+                actionCell.appendChild(criarBotaoDisponibilidadeSmartwall(dados));
+            }
             
             // --- AQUI VEM O BLOQUEIO: Só cria botões se NÃO for visualizador
             if (!isVisualizador) {
@@ -988,6 +1111,7 @@
                             // ATUALIZAÇÃO NO BANCO (INCLUINDO HT E ASE)
                             await updateDoc(doc(db, "ativos_agentes", dados.id), {
                                 zona: novaZona,
+                                zonaClasse: obterClasseRegiao(novaZona),
                                 horaInicio: horaCorte,
                                 agente: novaLista.join('\n'),
                                 situacao: cellsMap['situacao'].innerText.trim().toUpperCase(),
@@ -1147,6 +1271,7 @@
                             situacao: cellsMap.situacao.innerText.trim().toUpperCase(),
                             maletas: cellsMap.maletas.innerText.trim().toUpperCase(),
                             zona: novaZona,
+                            zonaClasse: obterClasseRegiao(novaZona),
                             horaInicio: formatarHoraComSegundos(cellsMap.horaInicio.innerText.trim()),
                             pontoBase: cellsMap.pontoBase.innerText.trim().toUpperCase()
                         };
@@ -1217,6 +1342,7 @@
                 situacao: document.getElementById('situacao').value,
                 ht: valoresHT,
                 zona: z,
+                zonaClasse: obterClasseRegiao(z),
                 horaInicio: document.getElementById('horaInicio').value,
                 ase: valoresASE,
                 maletas: maletasVal.toUpperCase(),
@@ -1340,6 +1466,17 @@
                 event.preventDefault();
                 const campo = document.getElementById(button.dataset.clearTextarea);
                 if (campo) campo.value = "";
+            });
+        });
+        document.querySelectorAll('[data-filtro-ativos]').forEach((button) => {
+            button.addEventListener('click', () => {
+                filtroAtivos = button.dataset.filtroAtivos || "todos";
+                document.querySelectorAll('[data-filtro-ativos]').forEach((btn) => {
+                    const ativo = btn === button;
+                    btn.classList.toggle('active', ativo);
+                    btn.setAttribute('aria-pressed', ativo ? 'true' : 'false');
+                });
+                renderizarTabelaAtivos();
             });
         });
         document.getElementById('btnLimparEquipe')?.addEventListener('click', (event) => {

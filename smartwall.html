@@ -7,7 +7,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="css/theme-switch.css">
-    <link rel="stylesheet" href="css/smartwall.css?v=20260630-9">
+    <link rel="stylesheet" href="css/smartwall.css?v=20260704-5">
     <link rel="stylesheet" href="css/app-menu.css?v=20260626-1">
 </head>
 <body>
@@ -80,9 +80,8 @@
                     <img src="src/total_png.png" alt="">
                 </div>
                 <div>
-                    <h3>Total (Hoje)</h3>
                     <div class="value value-blue" id="kpiTotal">0</div>
-                    <p>Ocorrências registradas</p>
+                    <h3>Ocorrências Registradas</h3>
                 </div>
             </div>
             <div class="kpi-card border-red">
@@ -90,9 +89,8 @@
                     <img src="src/despacho_png.png" alt="">
                 </div>
                 <div>
-                    <h3>Para Despacho</h3>
                     <div class="value value-red" id="kpiDespacho">0</div>
-                    <p>Ocorrências para despacho</p>
+                    <h3>Ocorrências para Despacho</h3>
                 </div>
             </div>
             <div class="kpi-card border-orange">
@@ -100,9 +98,8 @@
                     <img src="src/andamento_png.png" alt="">
                 </div>
                 <div>
-                    <h3>Em Andamento</h3>
                     <div class="value value-orange" id="kpiAndamento">0</div>
-                    <p>Ocorrências ativas</p>
+                    <h3>Ocorrências Ativas</h3>
                 </div>
             </div>
             <div class="kpi-card border-green">
@@ -110,9 +107,8 @@
                     <img src="src/concluido_png.png" alt="">
                 </div>
                 <div>
-                    <h3>Concluídas (Hoje)</h3>
                     <div class="value value-green" id="kpiConcluidas">0</div>
-                    <p>Ocorrências finalizadas</p>
+                    <h3>Ocorrências Finalizadas</h3>
                 </div>
             </div>
             <div class="kpi-card border-red" id="kpiVtrsCard">
@@ -120,9 +116,8 @@
                     <img src="src/veiculos_png.png" alt="">
                 </div>
                 <div>
-                    <h3>Veículos em Campo</h3>
                     <div class="value value-red" id="kpiVtrs">0</div>
-                    <p>Viaturas em atendimento</p>
+                    <h3>Viaturas em Atendimento</h3>
                 </div>
             </div>
         </section>
@@ -133,12 +128,13 @@
                     <div class="panel-heading">
                         <h2 class="panel-title">
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12A9 9 0 1 1 12 3v9z"></path><path d="M12 3a9 9 0 0 1 9 9h-9z"></path></svg>
-                            Histórico total de MT / VT por região
+                            Ocorrências por zona (Hoje)
                         </h2>
                     </div>
                     <div class="canvas-container region-chart-wrap">
                         <canvas id="chartRegioes"></canvas>
                     </div>
+                    <div class="shift-filter" id="shiftFilter" aria-label="Filtrar ocorrências por turno"></div>
                 </div>
                 <div class="region-ranking-panel" id="regionRankingPanel"></div>
             </section>
@@ -151,12 +147,13 @@
                     </h2>
                 </div>
                 <div class="type-content">
+                    <div class="canvas-container type-chart-wrap">
+                        <canvas id="chartTipos"></canvas>
+                        <div class="type-legend" id="typeLegend"></div>
+                    </div>
                     <div class="type-total-card">
                         <span>Total Hoje:</span>
                         <strong id="typeTotalHoje">0</strong>
-                    </div>
-                    <div class="canvas-container type-chart-wrap">
-                        <canvas id="chartTipos"></canvas>
                     </div>
                 </div>
             </section>
@@ -165,11 +162,11 @@
                 <div class="panel-heading">
                     <h2 class="panel-title">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg>
-                        Ocorrências Abertas
+                        OCORRÊNCIAS ABERTAS
                     </h2>
                     <div class="active-live-summary" id="activeLiveSummary">
                         <img src="src/live_png.png" alt="Ao vivo">
-                        <span>Em atendimento</span>
+                        <span>EM ATENDIMENTO</span>
                         <strong>0</strong>
                     </div>
                 </div>
@@ -180,7 +177,7 @@
 
     <script src="js/theme-switch.js"></script>
     <script src="js/app-menu.js?v=20260701-3"></script>
-    <script src="js/smartwall.js?v=20260630-1"></script>
+    <script src="js/smartwall.js?v=20260704-2"></script>
     <div class="smart-modal" id="smartRegistroModal" aria-hidden="true">
         <div class="smart-modal-backdrop" data-close-smart-modal></div>
         <section class="smart-modal-card" role="dialog" aria-modal="true" aria-labelledby="smartModalTitle">

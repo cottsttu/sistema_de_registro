@@ -256,3 +256,18 @@ body[data-theme="night"] .page-header #nomeUsuarioDisplay {
         display: none;
     }
 }
+
+.app-user-display,
+.app-user-display b,
+#nomeUsuarioDisplay,
+#nomeUsuarioDisplay b,
+.page-header #userInfo,
+.page-header #nomeUsuarioDisplay,
+body[data-theme="day"] .page-header #userInfo,
+body[data-theme="day"] .page-header #nomeUsuarioDisplay,
+body[data-theme="night"] .app-user-display,
+body[data-theme="night"] .page-header #userInfo,
+body[data-theme="night"] .page-header #nomeUsuarioDisplay {
+    color: #101820 !important;
+    text-shadow: none !important;
+}

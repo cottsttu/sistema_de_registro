@@ -1,0 +1,817 @@
+:root {
+    --metal-bg: #e5e7ea;
+    --metal-text: #142535;
+    --metal-muted: #536a7d;
+    --metal-border: rgba(44, 62, 80, 0.20);
+    --metal-border-strong: rgba(33, 112, 145, 0.32);
+    --metal-panel:
+        radial-gradient(circle at 16% 4%, rgba(255, 255, 255, 0.56), transparent 24%),
+        radial-gradient(circle at 90% 18%, rgba(126, 145, 166, 0.30), transparent 34%),
+        linear-gradient(145deg, rgba(228, 234, 240, 0.96), rgba(156, 168, 181, 0.94) 48%, rgba(207, 214, 221, 0.96));
+    --metal-panel-soft:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.18)),
+        rgba(196, 205, 214, 0.58);
+    --metal-header:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.72), transparent 34%),
+        linear-gradient(180deg, rgba(230, 234, 238, 0.98), rgba(163, 174, 186, 0.94));
+    --metal-table-head: linear-gradient(180deg, #eef3f7, #aab6c2);
+    --metal-shadow: 0 18px 42px rgba(30, 53, 69, 0.16);
+    --metal-shadow-soft: 0 10px 24px rgba(54, 65, 78, 0.14);
+    --metal-inset: inset 0 1px 0 rgba(255, 255, 255, 0.78), inset 0 -1px 0 rgba(75, 88, 102, 0.18);
+}
+
+html,
+body:not([data-theme="night"]),
+body[data-theme="day"] {
+    color: var(--metal-text);
+    background:
+        radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.36), transparent 28%),
+        radial-gradient(circle at 84% 8%, rgba(142, 156, 171, 0.28), transparent 32%),
+        linear-gradient(145deg, #eef2f5 0%, #d7dde3 44%, #aeb9c4 100%) !important;
+}
+
+body:not([data-theme="night"]) .page-background.light,
+body[data-theme="day"] .page-background.light {
+    opacity: 0 !important;
+}
+
+.page-header,
+.header,
+.header-box,
+.hero-title {
+    border: 1px solid rgba(129, 140, 152, 0.42) !important;
+    border-radius: 12px !important;
+    color: var(--metal-text) !important;
+    background: var(--metal-header) !important;
+    box-shadow: var(--metal-shadow-soft), var(--metal-inset) !important;
+    backdrop-filter: blur(14px) saturate(128%);
+    -webkit-backdrop-filter: blur(14px) saturate(128%);
+}
+
+.page-header,
+.header {
+    min-height: 66px;
+}
+
+.title-container,
+.header h2,
+.header-title,
+.hero-title,
+.page-header #nomeUsuarioDisplay,
+.page-header #userInfo {
+    color: var(--metal-text) !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.62) !important;
+}
+
+.page-header .brand-mark,
+.header .brand-mark,
+.logo-sttu,
+.brand-logo {
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.22)) !important;
+}
+
+.app-home-shortcut,
+.app-menu-toggle,
+.app-logout-button,
+.btn-sair,
+.btn-sair-topo,
+.theme-switch {
+    border-color: rgba(94, 108, 123, 0.26) !important;
+    color: var(--metal-text) !important;
+    background: var(--metal-panel-soft) !important;
+    box-shadow: 0 6px 14px rgba(54, 65, 78, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.72) !important;
+}
+
+.app-logout-button,
+.btn-sair,
+.btn-sair-topo,
+.btn-logout,
+.btn-excluir,
+.row-action.delete {
+    color: #ffffff !important;
+    border-color: rgba(183, 70, 64, 0.42) !important;
+    background: linear-gradient(180deg, #c55249, #9d3029) !important;
+}
+
+.app-menu-dropdown,
+.footer-menu {
+    border: 1px solid rgba(113, 130, 148, 0.45) !important;
+    border-radius: 12px !important;
+    background: rgba(228, 234, 240, 0.96) !important;
+    box-shadow: 0 18px 36px rgba(39, 50, 62, 0.18), var(--metal-inset) !important;
+    backdrop-filter: blur(14px) saturate(128%);
+    -webkit-backdrop-filter: blur(14px) saturate(128%);
+}
+
+.app-menu-link,
+.footer-menu button,
+.footer-menu a {
+    border-color: rgba(94, 108, 123, 0.24) !important;
+    border-radius: 9px !important;
+    color: var(--metal-text) !important;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.58), rgba(140, 153, 167, 0.42)) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72) !important;
+}
+
+.app-home-shortcut:hover,
+.app-menu-toggle:hover,
+.app-menu-link:hover,
+.app-home-shortcut:focus-visible,
+.app-menu-toggle:focus-visible,
+.app-menu-link:focus-visible {
+    color: #101820 !important;
+    border-color: rgba(44, 62, 80, 0.38) !important;
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(164, 177, 190, 0.58)) !important;
+}
+
+.admin-shell,
+.reports-shell,
+.panel-shell,
+.users-panel,
+.editor-panel,
+.agents-admin-panel,
+.agents-list-card,
+.agent-editor-card,
+.card,
+.auth-panel,
+.first-access-card,
+.registro-panel,
+.registro-section,
+.table-container,
+.filtros-container,
+.controls,
+.report-card,
+.chart-container,
+.summary-card,
+.stats-card,
+.permissions-shell,
+.permission-card,
+.main-container,
+.container,
+.content,
+.box,
+section[class*="panel"],
+div[class*="panel"] {
+    border: 1px solid rgba(130, 145, 160, 0.50) !important;
+    border-radius: 12px !important;
+    color: var(--metal-text) !important;
+    background: var(--metal-panel) !important;
+    box-shadow: var(--metal-shadow), 0 0 30px rgba(130, 145, 160, 0.18), var(--metal-inset) !important;
+    backdrop-filter: blur(12px) saturate(116%);
+    -webkit-backdrop-filter: blur(12px) saturate(116%);
+}
+
+.menu-card,
+.report-card,
+.users-table tbody tr,
+.agents-table tbody tr,
+.permission-table tbody tr,
+.table-custom tr {
+    border-color: rgba(75, 88, 102, 0.16) !important;
+    color: var(--metal-text) !important;
+    background:
+        linear-gradient(135deg, rgba(244, 248, 251, 0.90), rgba(169, 182, 195, 0.78)) !important;
+    box-shadow: 0 12px 28px rgba(39, 50, 62, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.64) !important;
+}
+
+.menu-card:hover,
+.report-card:hover,
+.menu-card:focus-visible {
+    transform: translateY(-3px);
+    border-color: rgba(44, 62, 80, 0.32) !important;
+    background:
+        linear-gradient(135deg, rgba(250, 253, 255, 0.94), rgba(181, 193, 205, 0.86)) !important;
+    box-shadow: 0 16px 34px rgba(39, 50, 62, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.78) !important;
+}
+
+.menu-title,
+.report-card-title,
+.section-title,
+.admin-title h1,
+.agents-admin-header h2,
+.agent-editor-card h3,
+.editor-panel h2,
+.card-contador h3,
+h1,
+h2,
+h3 {
+    color: #101820 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.72) !important;
+}
+
+p,
+small,
+label,
+.field-help,
+.filter-help,
+.agents-admin-header p,
+.empty-row,
+.muted {
+    color: var(--metal-muted) !important;
+}
+
+input,
+select,
+textarea,
+.search-box,
+.input-shell,
+.input-row,
+.password-field,
+.counter-current,
+.inline-admin-1 {
+    border: 1px solid rgba(113, 130, 148, 0.45) !important;
+    border-radius: 9px !important;
+    color: var(--metal-text) !important;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(216, 224, 232, 0.70)) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82), 0 8px 18px rgba(39, 50, 62, 0.08) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 0 !important;
+    border-color: rgba(33, 112, 145, 0.46) !important;
+    box-shadow: 0 0 0 3px rgba(33, 112, 145, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.84) !important;
+}
+
+button,
+.btn,
+.toolbar-btn,
+.icon-tool,
+.agent-edit-button,
+.btn-email,
+.primary-button,
+.secondary-button,
+.ativos-filter-btn {
+    border: 1px solid rgba(94, 108, 123, 0.28) !important;
+    border-radius: 9px !important;
+    color: #15202b !important;
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.66), rgba(140, 153, 167, 0.62)) !important;
+    box-shadow: 0 8px 18px rgba(54, 65, 78, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.74) !important;
+}
+
+.btn-salvar,
+.btn-carregar,
+.btn-report-main,
+.btn-report-blue,
+.btn-report-purple,
+.btn-csv,
+.btn-definir,
+.toolbar-btn.add,
+.agent-edit-button,
+.primary-button {
+    color: #101820 !important;
+    border-color: rgba(31, 61, 90, 0.32) !important;
+    background: linear-gradient(180deg, #486174, #243746) !important;
+}
+
+button,
+.btn,
+.toolbar-btn,
+.icon-tool,
+.agent-edit-button,
+.btn-email,
+.primary-button,
+.secondary-button,
+.app-home-shortcut,
+.app-menu-toggle,
+.app-logout-button,
+.btn-sair,
+.btn-sair-topo,
+.btn-logout,
+.btn-excluir,
+.row-action.delete,
+.footer-menu button,
+.footer-menu a,
+.ativos-filter-btn,
+.app-user-display,
+#nomeUsuarioDisplay,
+.page-header #nomeUsuarioDisplay,
+.page-header #userInfo {
+    color: #101820 !important;
+    text-shadow: none !important;
+}
+
+button,
+.btn,
+.toolbar-btn,
+.icon-tool,
+.agent-edit-button,
+.btn-email,
+.primary-button,
+.secondary-button,
+.app-home-shortcut,
+.app-menu-toggle,
+.app-logout-button,
+.btn-sair,
+.btn-sair-topo,
+.btn-logout,
+.footer-menu button,
+.footer-menu a,
+.ativos-filter-btn {
+    color: #101820 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.46) !important;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(184, 195, 207, 0.84) 48%, rgba(132, 146, 160, 0.82)) !important;
+}
+
+.btn-salvar,
+.btn-carregar,
+.btn-report-main,
+.primary-button,
+.toolbar-btn.add,
+.agent-edit-button,
+#registroForm .btn-salvar {
+    color: #101820 !important;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(117, 176, 224, 0.88) 48%, rgba(49, 104, 151, 0.92)) !important;
+}
+
+.btn-confirmar,
+.btn-download,
+.btn-definir,
+.btn-report-blue,
+.btn-csv,
+.btn-disponibilidade-smartwall[data-disponivel="true"],
+.btn-salvar-editor-historico,
+.btn-motivo-confirmar {
+    color: #101820 !important;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(103, 190, 139, 0.88) 48%, rgba(44, 137, 83, 0.92)) !important;
+}
+
+.btn-devolver,
+.btn-excluir,
+.btn-excluir-x,
+.btn-sair,
+.btn-sair-topo,
+.btn-logout,
+.app-logout-button,
+.row-action.delete,
+.btn-disponibilidade-smartwall[data-disponivel="false"] {
+    color: #101820 !important;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(224, 124, 118, 0.88) 48%, rgba(170, 60, 54, 0.92)) !important;
+}
+
+.btn-encaminhar,
+.btn-report-purple,
+.btn-email,
+.btn-visualizar-registro,
+.btn-editar-historico {
+    color: #101820 !important;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(111, 198, 214, 0.88) 48%, rgba(43, 126, 150, 0.92)) !important;
+}
+
+.btn-editar-ativo,
+.btn-editar-salvar,
+.ativos-filter-btn.active,
+.btn-zerar {
+    color: #101820 !important;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(242, 207, 95, 0.90) 48%, rgba(190, 143, 37, 0.92)) !important;
+}
+
+thead th,
+table th,
+.users-table thead th,
+.agents-table th,
+.permission-table th,
+.table-custom th,
+.data-header,
+#tabelaAtivos th,
+#relatorioFinal th {
+    color: #101820 !important;
+}
+
+td,
+.users-table td,
+.agents-table td,
+.permission-table td,
+.table-custom td,
+#tabelaAtivos td,
+#relatorioFinal td,
+form td,
+#tabelaAtivos td::before,
+#relatorioFinal td::before,
+#relatorioFinal .historico-data-mobile::before {
+    color: #101820 !important;
+}
+
+#tabelaAtivos td[class*="regiao-"],
+#relatorioFinal td[class*="regiao-"],
+form td[class*="regiao-"],
+#tabelaAtivos td.regiao-geral,
+#relatorioFinal td.regiao-geral,
+form td.regiao-geral {
+    color: #101820 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.58) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.62),
+        inset 0 -1px 0 rgba(75, 88, 102, 0.14) !important;
+}
+
+button:hover,
+.btn:hover,
+.toolbar-btn:hover,
+.icon-tool:hover,
+.agent-edit-button:hover,
+.btn-email:hover,
+.primary-button:hover,
+.secondary-button:hover,
+.ativos-filter-btn:hover {
+    filter: brightness(1.04);
+}
+
+table,
+.users-table,
+.agents-table,
+.permission-table,
+.table-custom,
+#tabelaAtivos,
+#relatorioFinal,
+#tabelaPendentes,
+#relatorioTable {
+    color: var(--metal-text) !important;
+    border-color: rgba(113, 130, 148, 0.32) !important;
+    background:
+        radial-gradient(circle at 16% 8%, rgba(255, 255, 255, 0.58), transparent 28%),
+        linear-gradient(145deg, rgba(229, 234, 240, 0.96), rgba(173, 185, 198, 0.92) 50%, rgba(210, 217, 224, 0.95)) !important;
+    box-shadow: 0 12px 30px rgba(39, 50, 62, 0.12) !important;
+}
+
+thead th,
+table th,
+.users-table thead th,
+.agents-table th,
+.permission-table th,
+.table-custom th,
+.data-header {
+    color: #101820 !important;
+    border-color: rgba(75, 88, 102, 0.20) !important;
+    background: var(--metal-table-head) !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.64) !important;
+}
+
+td,
+.users-table td,
+.agents-table td,
+.permission-table td,
+.table-custom td,
+#tabelaAtivos td,
+#relatorioFinal td,
+#tabelaPendentes td,
+#relatorioTable td {
+    color: var(--metal-text) !important;
+    border-color: rgba(75, 88, 102, 0.16) !important;
+    background:
+        linear-gradient(135deg, rgba(250, 252, 254, 0.76), rgba(191, 202, 214, 0.70) 52%, rgba(229, 234, 240, 0.70)) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.64),
+        inset 0 -1px 0 rgba(75, 88, 102, 0.10) !important;
+}
+
+.status,
+.status-badge,
+.permission-badge,
+.origin-badge,
+[class*="badge"],
+[class*="alert"],
+[class*="aviso"],
+[class*="pendente"],
+[class*="andamento"],
+[class*="concluido"],
+[class*="erro"],
+[class*="error"],
+[class*="success"],
+[class*="warning"],
+.bg-admin,
+.bg-agente,
+.bg-visualizador,
+.bg-ciosp,
+.bg-cir,
+.ativos-filter-btn.active {
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    .page-header,
+    .header,
+    .header-box {
+        border-radius: 10px !important;
+    }
+
+    .admin-shell,
+    .reports-shell,
+    .panel-shell,
+    .users-panel,
+    .editor-panel,
+    .registro-panel,
+    .table-container,
+    .auth-panel {
+        border-radius: 10px !important;
+    }
+}
+
+button,
+.btn,
+.toolbar-btn,
+.icon-tool,
+.agent-edit-button,
+.btn-email,
+.primary-button,
+.secondary-button,
+.app-home-shortcut,
+.app-menu-toggle,
+.app-logout-button,
+.btn-sair,
+.btn-sair-topo,
+.btn-logout,
+.btn-excluir,
+.row-action.delete,
+.footer-menu button,
+.footer-menu a,
+.ativos-filter-btn,
+.app-user-display,
+#nomeUsuarioDisplay,
+.page-header #nomeUsuarioDisplay,
+.page-header #userInfo {
+    color: #101820 !important;
+    text-shadow: none !important;
+}
+
+body .table-container.container-rolagem #tabelaPendentes .btn-acao-tabela,
+body .table-container.container-rolagem #relatorioTable .btn-acao-tabela,
+body .btn-editar-ocorrencia,
+body .btn-encaminhar,
+body .btn-concluir,
+body .btn-view,
+body .btn-trash,
+body #areaRegistro #registroForm .btn-salvar,
+body #areaRegistro #registroForm .btn-limpar-ocorrencia,
+body .modal-content .btn-salvar,
+body .modal-content .btn-concluir,
+body .modal-content .btn-close-modal {
+    color: #101820 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.58) !important;
+    border-color: rgba(44, 62, 80, 0.26) !important;
+    box-shadow:
+        0 8px 18px rgba(54, 65, 78, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -1px 0 rgba(75, 88, 102, 0.16) !important;
+}
+
+body #areaRegistro #registroForm .btn-salvar,
+body .modal-content .btn-salvar,
+body .btn-editar-ocorrencia {
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.70), rgba(117, 176, 224, 0.88) 48%, rgba(38, 123, 196, 0.94)) !important;
+}
+
+body .btn-concluir,
+body .modal-content .btn-concluir {
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.70), rgba(103, 190, 139, 0.88) 48%, rgba(39, 174, 96, 0.94)) !important;
+}
+
+body .btn-encaminhar {
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.70), rgba(236, 169, 91, 0.90) 48%, rgba(211, 118, 25, 0.94)) !important;
+}
+
+body .btn-view {
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.74), rgba(110, 216, 226, 0.88) 48%, rgba(20, 139, 154, 0.92)) !important;
+}
+
+body .btn-trash,
+body #areaRegistro #registroForm .btn-limpar-ocorrencia {
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(224, 124, 118, 0.88) 48%, rgba(192, 57, 43, 0.94)) !important;
+}
+
+body .modal-content .btn-close-modal {
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(190, 201, 212, 0.86) 48%, rgba(111, 126, 139, 0.90)) !important;
+}
+
+#tabelaAtivos td[class*="regiao-"],
+#relatorioFinal td[class*="regiao-"],
+form td[class*="regiao-"],
+#tabelaAtivos td.regiao-geral,
+#relatorioFinal td.regiao-geral,
+form td.regiao-geral,
+#tabelaPendentes td:nth-child(7),
+#relatorioTable td:nth-child(7) {
+    color: #101820 !important;
+    background:
+        radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.60), transparent 28%),
+        linear-gradient(135deg, rgba(244, 248, 251, 0.94), rgba(178, 190, 202, 0.86) 50%, rgba(132, 146, 160, 0.84)) !important;
+    border-color: rgba(75, 88, 102, 0.22) !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.68) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.78),
+        inset 0 -1px 0 rgba(75, 88, 102, 0.16),
+        0 8px 18px rgba(39, 50, 62, 0.10) !important;
+}
+
+#tabelaAtivos td.regiao-1,
+#relatorioFinal td.regiao-1,
+form td.regiao-1,
+#tabelaPendentes td.regiao-1,
+#relatorioTable td.regiao-1,
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-1,
+body[data-theme="night"] #tabelaAtivos tbody td.regiao-1 {
+    --region-metal-color: #3b364c;
+}
+
+#tabelaAtivos td.regiao-2,
+#relatorioFinal td.regiao-2,
+form td.regiao-2,
+#tabelaPendentes td.regiao-2,
+#relatorioTable td.regiao-2,
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-2,
+body[data-theme="night"] #tabelaAtivos tbody td.regiao-2 {
+    --region-metal-color: #e4f001;
+}
+
+#tabelaAtivos td.regiao-3,
+#relatorioFinal td.regiao-3,
+form td.regiao-3,
+#tabelaPendentes td.regiao-3,
+#relatorioTable td.regiao-3,
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-3,
+body[data-theme="night"] #tabelaAtivos tbody td.regiao-3 {
+    --region-metal-color: #64ec02;
+}
+
+#tabelaAtivos td.regiao-4,
+#relatorioFinal td.regiao-4,
+form td.regiao-4,
+#tabelaPendentes td.regiao-4,
+#relatorioTable td.regiao-4,
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-4,
+body[data-theme="night"] #tabelaAtivos tbody td.regiao-4 {
+    --region-metal-color: #096acc;
+}
+
+#tabelaAtivos td.regiao-5,
+#relatorioFinal td.regiao-5,
+form td.regiao-5,
+#tabelaPendentes td.regiao-5,
+#relatorioTable td.regiao-5,
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-5,
+body[data-theme="night"] #tabelaAtivos tbody td.regiao-5 {
+    --region-metal-color: #d30000;
+}
+
+#tabelaAtivos td.regiao-geral,
+#relatorioFinal td.regiao-geral,
+form td.regiao-geral,
+#tabelaPendentes td.regiao-geral,
+#relatorioTable td.regiao-geral,
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-geral,
+body[data-theme="night"] #tabelaAtivos tbody td.regiao-geral {
+    --region-metal-color: #67479a;
+}
+
+#tabelaAtivos td[class*="regiao-"],
+#relatorioFinal td[class*="regiao-"],
+form td[class*="regiao-"],
+#tabelaAtivos td.regiao-geral,
+#relatorioFinal td.regiao-geral,
+form td.regiao-geral,
+#tabelaPendentes td[class*="regiao-"],
+#relatorioTable td[class*="regiao-"],
+#tabelaPendentes td.regiao-geral,
+#relatorioTable td.regiao-geral,
+body[data-theme="day"] #tabelaAtivos tbody td[class*="regiao-"],
+body[data-theme="night"] #tabelaAtivos tbody td[class*="regiao-"],
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-geral,
+body[data-theme="night"] #tabelaAtivos tbody td.regiao-geral {
+    color: #101820 !important;
+    background:
+        radial-gradient(circle at 14% 10%, rgba(255, 255, 255, 0.76), transparent 28%),
+        linear-gradient(135deg,
+            color-mix(in srgb, var(--region-metal-color) 22%, #ffffff) 0%,
+            color-mix(in srgb, var(--region-metal-color) 72%, #e5e7ea) 48%,
+            color-mix(in srgb, var(--region-metal-color) 90%, #4b5563) 100%) !important;
+    border-color: color-mix(in srgb, var(--region-metal-color) 62%, rgba(44, 62, 80, 0.30)) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -1px 0 rgba(44, 62, 80, 0.22),
+        0 8px 18px color-mix(in srgb, var(--region-metal-color) 24%, transparent) !important;
+}
+
+#tabelaAtivos thead th:nth-child(7),
+#headerOriginalRow .data-header:nth-child(7) {
+    color: #101820 !important;
+    background:
+        radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.62), transparent 28%),
+        linear-gradient(135deg, rgba(244, 248, 251, 0.94), rgba(178, 190, 202, 0.86) 50%, rgba(132, 146, 160, 0.84)) !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.68) !important;
+}
+
+body[data-theme="day"] #tabelaAtivos,
+body[data-theme="day"] #relatorioFinal,
+body[data-theme="night"] #tabelaAtivos,
+body[data-theme="night"] #relatorioFinal,
+#tabelaAtivos,
+#relatorioFinal {
+    background:
+        radial-gradient(circle at 16% 8%, rgba(255, 255, 255, 0.58), transparent 28%),
+        linear-gradient(145deg, rgba(229, 234, 240, 0.96), rgba(173, 185, 198, 0.92) 50%, rgba(210, 217, 224, 0.95)) !important;
+    border-color: rgba(113, 130, 148, 0.36) !important;
+    box-shadow:
+        0 14px 34px rgba(39, 50, 62, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.72) !important;
+}
+
+body[data-theme="day"] #tabelaAtivos th,
+body[data-theme="day"] #relatorioFinal th,
+body[data-theme="night"] #tabelaAtivos th,
+body[data-theme="night"] #relatorioFinal th,
+#tabelaAtivos th,
+#relatorioFinal th,
+#headerOriginalRow .data-header {
+    color: #101820 !important;
+    background:
+        radial-gradient(circle at 14% 8%, rgba(255, 255, 255, 0.72), transparent 30%),
+        linear-gradient(135deg, rgba(252, 254, 255, 0.92), rgba(190, 202, 214, 0.86) 52%, rgba(142, 156, 170, 0.86)) !important;
+    border-color: rgba(75, 88, 102, 0.20) !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.70) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.76),
+        inset 0 -1px 0 rgba(75, 88, 102, 0.18) !important;
+}
+
+body[data-theme="day"] #tabelaAtivos td,
+body[data-theme="day"] #relatorioFinal td,
+body[data-theme="night"] #tabelaAtivos td,
+body[data-theme="night"] #relatorioFinal td,
+#tabelaAtivos td,
+#relatorioFinal td {
+    color: #101820 !important;
+    background:
+        linear-gradient(135deg, rgba(250, 252, 254, 0.76), rgba(191, 202, 214, 0.70) 52%, rgba(229, 234, 240, 0.70)) !important;
+    border-color: rgba(75, 88, 102, 0.16) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.64),
+        inset 0 -1px 0 rgba(75, 88, 102, 0.10) !important;
+}
+
+#tabelaPendentes td.status-concluida,
+#relatorioTable td.status-concluida {
+    color: #14532d !important;
+    background:
+        radial-gradient(circle at 14% 10%, rgba(255, 255, 255, 0.76), transparent 28%),
+        linear-gradient(135deg, rgba(236, 253, 245, 0.94), rgba(103, 190, 139, 0.78) 50%, rgba(39, 174, 96, 0.88)) !important;
+}
+
+#tabelaPendentes td.status-encaminhada,
+#relatorioTable td.status-encaminhada {
+    color: #7c3f00 !important;
+    background:
+        radial-gradient(circle at 14% 10%, rgba(255, 255, 255, 0.76), transparent 28%),
+        linear-gradient(135deg, rgba(255, 247, 237, 0.94), rgba(236, 169, 91, 0.82) 50%, rgba(230, 126, 34, 0.90)) !important;
+}
+
+#tabelaPendentes td.status-despacho,
+#relatorioTable td.status-despacho,
+#tabelaPendentes td.status-pendente,
+#relatorioTable td.status-pendente {
+    color: #7f1d1d !important;
+    background:
+        radial-gradient(circle at 14% 10%, rgba(255, 255, 255, 0.76), transparent 28%),
+        linear-gradient(135deg, rgba(254, 242, 242, 0.94), rgba(224, 124, 118, 0.80) 50%, rgba(192, 57, 43, 0.90)) !important;
+}
+
+#tabelaPendentes td.status-concluida,
+#relatorioTable td.status-concluida,
+#tabelaPendentes td.status-encaminhada,
+#relatorioTable td.status-encaminhada,
+#tabelaPendentes td.status-despacho,
+#relatorioTable td.status-despacho,
+#tabelaPendentes td.status-pendente,
+#relatorioTable td.status-pendente {
+    border-color: rgba(75, 88, 102, 0.20) !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.62) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -1px 0 rgba(44, 62, 80, 0.18),
+        0 8px 18px rgba(39, 50, 62, 0.12) !important;
+}
+
+#relatorioFinal .status-encaminhado {
+    color: #7c3f00 !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.62) !important;
+}
+
+#relatorioFinal .status-encerrado {
+    color: #14532d !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.62) !important;
+}
