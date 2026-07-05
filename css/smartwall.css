@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     --sw-bg: #020b16;
     --sw-panel: rgba(7, 21, 36, 0.88);
     --sw-panel-strong: rgba(9, 27, 46, 0.96);
@@ -6115,6 +6115,68 @@ body[data-theme="day"] .page-header #nomeUsuarioDisplay,
 body[data-theme="night"] .page-header #nomeUsuarioDisplay {
     color: #101820 !important;
     text-shadow: none !important;
+}
+
+body[data-theme="night"] .smart-header .operator-name,
+body[data-theme="night"] .smart-header .smart-controls .app-home-shortcut,
+body[data-theme="night"] .smart-header .smart-controls .app-menu-toggle,
+body[data-theme="night"] .smart-header .smart-controls .app-home-shortcut svg,
+body[data-theme="night"] .smart-header .smart-controls .app-menu-toggle svg {
+    color: #ffffff !important;
+}
+
+body[data-theme="night"] .shift-filter,
+body[data-theme="night"] #shiftFilter {
+    border: 1px solid rgba(124, 178, 255, 0.28);
+    border-radius: 18px;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.025)),
+        rgba(3, 14, 28, 0.72);
+    box-shadow:
+        0 16px 34px rgba(0, 0, 0, 0.26),
+        0 0 20px rgba(47, 134, 255, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(16px) saturate(155%);
+    -webkit-backdrop-filter: blur(16px) saturate(155%);
+}
+
+body[data-theme="night"] .shift-filter-btn {
+    border-color: color-mix(in srgb, var(--shift-color) 48%, rgba(255, 255, 255, 0.22)) !important;
+    border-radius: 14px;
+    color: #f8fbff !important;
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.025)),
+        color-mix(in srgb, var(--shift-color) 16%, rgba(5, 18, 34, 0.82));
+    box-shadow:
+        0 10px 22px rgba(0, 0, 0, 0.22),
+        0 0 14px color-mix(in srgb, var(--shift-color) 18%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.13);
+    text-shadow: 0 1px 8px rgba(255, 255, 255, 0.10) !important;
+}
+
+body[data-theme="night"] .shift-filter-btn:hover {
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04)),
+        color-mix(in srgb, var(--shift-color) 22%, rgba(5, 18, 34, 0.86));
+    box-shadow:
+        0 14px 28px rgba(0, 0, 0, 0.28),
+        0 0 18px color-mix(in srgb, var(--shift-color) 24%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+body[data-theme="night"] .shift-filter-btn.active {
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05)),
+        color-mix(in srgb, var(--shift-color) 28%, rgba(5, 18, 34, 0.9));
+    box-shadow:
+        0 16px 30px rgba(0, 0, 0, 0.3),
+        0 0 24px color-mix(in srgb, var(--shift-color) 30%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+body[data-theme="night"] .shift-filter-icon,
+body[data-theme="night"] .shift-filter-btn strong {
+    color: #ffffff !important;
 }
 
 @media (max-height: 900px) {
