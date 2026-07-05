@@ -66,6 +66,7 @@ async function iniciarSmartwall() {
     let ultimasOcorrenciasAtivas = [];
     let ultimaContagemRegiaoAtivas = {};
     const ocorrenciasModal = new Map();
+    const zonasAtendimentoRecolhidas = new Set();
     const kpiValoresAnteriores = {
         total: null,
         andamento: null,
@@ -932,6 +933,22 @@ async function iniciarSmartwall() {
             return;
         }
 
+        const zonaToggle = event.target.closest(".region-zone-toggle[data-zone-key]");
+        if (zonaToggle) {
+            const zoneKey = zonaToggle.dataset.zoneKey;
+            if (zonasAtendimentoRecolhidas.has(zoneKey)) {
+                zonasAtendimentoRecolhidas.delete(zoneKey);
+            } else {
+                zonasAtendimentoRecolhidas.add(zoneKey);
+            }
+
+            const recolhida = zonasAtendimentoRecolhidas.has(zoneKey);
+            const row = zonaToggle.closest(".region-ranking-row");
+            row?.classList.toggle("region-ranking-row-collapsed", recolhida);
+            zonaToggle.setAttribute("aria-expanded", String(!recolhida));
+            return;
+        }
+
         if (event.target.closest("[data-close-smart-modal]")) {
             fecharModalRegistro();
         }
@@ -986,7 +1003,8 @@ async function iniciarSmartwall() {
                 ocorrencias: ocorrenciasPorRegiao?.[regiao] || 0,
                 agentesMt: agentes.mt || [],
                 agentesVt: agentes.vt || [],
-                cor: coresPainelRegiao[index] || "#2f86ff"
+                cor: coresPainelRegiao[index] || "#2f86ff",
+                zoneKey: normalizarZona(regiao)
             };
         });
         const totalGeral = linhas.reduce((acc, item) => acc + item.total, 0);
@@ -1002,6 +1020,7 @@ async function iniciarSmartwall() {
             const ocorrenciasEquipeAndamento = ocorrenciasEquipe.filter((ocorrencia) => normalizarTexto(ocorrencia?.situacao) === "EM ANDAMENTO");
             const ocorrenciasEquipeAndamentoUnicas = new Set(ocorrenciasEquipeAndamento.map((ocorrencia, indice) => ocorrencia?.id || `${getTimestamp(ocorrencia)}-${ocorrencia?.numRegistro || ocorrencia?.numeroRegistro || indice}`));
             item.temEquipeAtendendo = item.temEquipeEmAndamento || ocorrenciasEquipeAndamentoUnicas.size > 0;
+            item.recolhida = zonasAtendimentoRecolhidas.has(item.zoneKey);
         });
         const renderizarNomesEquipe = (equipes, icone, alt, cor) => {
             if (!equipes?.length) return "";
@@ -1045,12 +1064,13 @@ async function iniciarSmartwall() {
             </div>
             <div class="region-ranking-list">
                 ${linhas.map((item) => `
-                    <div class="region-ranking-row ${item.temEquipe ? "" : "region-ranking-row-empty"}" style="--legend-color: ${item.cor}">
+                    <div class="region-ranking-row ${item.temEquipe ? "" : "region-ranking-row-empty"} ${item.recolhida ? "region-ranking-row-collapsed" : ""}" style="--legend-color: ${item.cor}">
                         <div class="region-info">
-                            <div class="region-name-line">
+                            <button type="button" class="region-name-line region-zone-toggle" data-zone-key="${escapeHtml(item.zoneKey)}" aria-expanded="${item.recolhida ? "false" : "true"}" aria-label="${item.recolhida ? "Abrir" : "Recolher"} equipes da ${escapeHtml(item.zona)}">
                                 <span>ZONA</span>
                                 <strong class="region-name ${/^ZONA\s+GERAL$/i.test(item.zona) ? "region-name-general" : ""}">${escapeHtml(item.zona.replace(/^ZONA\s+/i, ""))}</strong>
-                            </div>
+                                <i class="region-zone-arrow" aria-hidden="true"></i>
+                            </button>
                             <div class="region-occurrence-cell ${item.temEquipeAtendendo ? "region-occurrence-active region-occurrence-andamento" : ""}">
                                 <strong>${item.ocorrencias}</strong>
                                 <span>${item.ocorrencias === 1 ? "ativa" : "ativas"}</span>
@@ -1223,7 +1243,10 @@ async function iniciarSmartwall() {
                     ctx.fillStyle = temaDia ? "#101820" : "#ffffff";
                     ctx.shadowColor = temaDia ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.48)";
                     ctx.shadowBlur = temaDia ? 2 : 4;
-                    fonteAjustada(String(valor), 950, Math.max(12, Math.min(18, outerRadius * 0.07)), Math.max(18, outerRadius - innerRadiusArc - 8), 8);
+                    const espessuraArco = Math.max(18, outerRadius - innerRadiusArc);
+                    const tamanhoNumeroArco = Math.max(14, Math.min(34, outerRadius * 0.105, espessuraArco * 0.72));
+                    const larguraNumeroArco = Math.max(22, espessuraArco * 0.96);
+                    fonteAjustada(String(valor), 950, tamanhoNumeroArco, larguraNumeroArco, 10);
                     ctx.fillText(String(valor), textoX, textoY);
                     ctx.shadowColor = "transparent";
                     ctx.shadowBlur = 0;
