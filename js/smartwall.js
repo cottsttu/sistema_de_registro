@@ -1283,6 +1283,10 @@ async function iniciarSmartwall() {
                     } while (tamanho > minimo);
                     return tamanho;
                 };
+                const obterFontesRotuloZona = (outerRadius) => ({
+                    zona: Math.max(16, Math.min(22, outerRadius * 0.075)),
+                    percentual: Math.max(17, Math.min(24, outerRadius * 0.082))
+                });
 
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, centroRadius, 0, Math.PI * 2);
@@ -1333,9 +1337,10 @@ async function iniciarSmartwall() {
                     const distanciaExterna = Math.max(28, Math.min(46, outerRadius * 0.16));
                     const rotuloZona = formatarRotuloZona(regiao, index);
                     const percentualZona = `${formatarPercentualZona(valor)}%`;
-                    ctx.font = "800 13px Segoe UI, sans-serif";
+                    const { zona: fontZona, percentual: fontPercentual } = obterFontesRotuloZona(outerRadius);
+                    ctx.font = `800 ${fontZona}px Segoe UI, sans-serif`;
                     const larguraRotulo = ctx.measureText(rotuloZona).width;
-                    ctx.font = "800 14px Segoe UI, sans-serif";
+                    ctx.font = `800 ${fontPercentual}px Segoe UI, sans-serif`;
                     const larguraPercentual = ctx.measureText(percentualZona).width;
                     const larguraLabel = Math.max(larguraRotulo, larguraPercentual);
                     const margemLateral = Math.max(36, larguraLabel + 8);
@@ -1436,6 +1441,7 @@ async function iniciarSmartwall() {
                         outerRadius,
                         innerRadiusArc
                     } = item;
+                    const { zona: fontZona, percentual: fontPercentual } = obterFontesRotuloZona(outerRadius);
 
                     ctx.strokeStyle = cor;
                     ctx.lineWidth = 1.35;
@@ -1448,10 +1454,10 @@ async function iniciarSmartwall() {
                     ctx.lineWidth = 4;
                     ctx.strokeStyle = temaDia ? "rgba(255, 255, 255, 0.92)" : "rgba(2, 11, 22, 0.94)";
                     ctx.fillStyle = cor;
-                    ctx.font = "800 13px Segoe UI, sans-serif";
+                    ctx.font = `800 ${fontZona}px Segoe UI, sans-serif`;
                     ctx.strokeText(rotuloZona, labelX, labelY - 9);
                     ctx.fillText(rotuloZona, labelX, labelY - 9);
-                    ctx.font = "800 14px Segoe UI, sans-serif";
+                    ctx.font = `800 ${fontPercentual}px Segoe UI, sans-serif`;
                     ctx.strokeText(percentualZona, labelX, labelY + 10);
                     ctx.fillText(percentualZona, labelX, labelY + 10);
                     ctx.textAlign = "center";

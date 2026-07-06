@@ -4829,6 +4829,708 @@ body[data-theme="day"] .region-panel .region-visual .panel-title svg {
         width: min(86%, 20rem);
     }
 }
+
+@media (min-width: 1920px) {
+    body {
+        padding: 28px;
+    }
+
+    .smartwall-shell {
+        width: min(100%, 2560px);
+        height: calc(100vh - 56px);
+        gap: 16px;
+    }
+
+    .smart-header {
+        min-height: 84px;
+        padding: 14px 24px;
+        border-radius: 18px;
+    }
+
+    .brand-block {
+        gap: 16px;
+    }
+
+    .brand-mark {
+        width: 60px;
+        height: 60px;
+    }
+
+    .brand-title {
+        font-size: clamp(1.7rem, 1.35vw, 2.65rem);
+    }
+
+    .brand-subtitle {
+        font-size: clamp(0.82rem, 0.66vw, 1rem);
+    }
+
+    .header-actions {
+        gap: 16px;
+    }
+
+    .operator-chip,
+    .clock-panel {
+        min-height: 56px;
+        padding: 10px 14px;
+        border-radius: 12px;
+    }
+
+    .operator-avatar,
+    .clock-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .operator-avatar svg,
+    .clock-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .operator-label,
+    .clock-date {
+        font-size: 0.78rem;
+    }
+
+    .operator-name {
+        font-size: 0.92rem;
+    }
+
+    .clock {
+        font-size: clamp(1.28rem, 1.1vw, 1.9rem);
+    }
+
+    .smart-controls .app-home-shortcut,
+    .smart-controls .app-menu-toggle {
+        width: 54px;
+        height: 54px;
+    }
+
+    .smart-controls .app-menu-toggle {
+        font-size: 28px;
+    }
+
+    .smart-theme-switch.theme-switch {
+        width: 92px;
+        height: 44px;
+        padding: 0 11px;
+    }
+
+    .smart-theme-switch.theme-switch::after {
+        top: 4px;
+        right: 4px;
+        width: 34px;
+        height: 34px;
+    }
+
+    body[data-theme="night"] .smart-theme-switch.theme-switch::after {
+        transform: translateX(-48px);
+    }
+
+    .smart-theme-switch .theme-icon {
+        width: 22px;
+        height: 22px;
+    }
+
+    .kpi-container {
+        width: 100%;
+        gap: 12px;
+    }
+
+    .kpi-card {
+        min-height: 78px;
+        grid-template-columns: 46px minmax(0, 1fr);
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: 14px;
+    }
+
+    .stat-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+    }
+
+    .stat-icon img,
+    .stat-icon svg {
+        width: 26px;
+        height: 26px;
+    }
+
+    .kpi-card .value {
+        font-size: clamp(1.85rem, 1.65vw, 2.75rem);
+    }
+
+    .kpi-card h3 {
+        font-size: clamp(0.68rem, 0.56vw, 0.9rem);
+    }
+
+    .fleet-value {
+        font-size: clamp(1.38rem, 1.25vw, 1.9rem);
+    }
+
+    .fleet-icon {
+        width: 1.1rem;
+        height: 1.1rem;
+    }
+
+    .main-content {
+        gap: 16px;
+        grid-template-columns: minmax(0, 1.86fr) minmax(0, 0.69fr) minmax(0, 0.75fr);
+    }
+
+    .panel-card {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .panel-heading {
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .panel-title {
+        gap: 10px;
+        font-size: clamp(1rem, 0.92vw, 1.4rem);
+    }
+
+    .panel-title svg {
+        width: 1.35rem;
+        height: 1.35rem;
+    }
+
+    .region-panel {
+        column-gap: 18px;
+        grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+    }
+
+    .region-visual {
+        border-radius: 12px;
+    }
+
+    .region-panel .panel-heading {
+        padding: 10px 12px 0;
+    }
+
+    .region-panel .panel-title {
+        font-size: clamp(1rem, 0.82vw, 1.22rem);
+    }
+
+    .region-chart-wrap {
+        width: min(100%, 64vh, 46rem);
+        padding: 0 8px 12px;
+    }
+
+    .shift-filter {
+        width: min(100%, 38rem);
+        gap: 8px;
+        margin-top: 14px;
+        padding: 12px;
+        border-radius: 18px;
+    }
+
+    .shift-filter-btn {
+        min-height: 4rem;
+        border-radius: 14px;
+    }
+
+    .shift-filter-icon,
+    .shift-filter-icon svg {
+        width: 1.2rem;
+        height: 1.2rem;
+        flex-basis: 1.2rem;
+    }
+
+    .shift-filter-btn strong {
+        font-size: 0.72rem;
+    }
+
+    .region-ranking-panel {
+        gap: 10px;
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .region-ranking-title {
+        font-size: 0.96rem;
+    }
+
+    .region-ranking-head {
+        grid-template-columns: minmax(0, 1fr) 78px;
+        padding: 0 10px 8px 48px;
+        font-size: 0.68rem;
+    }
+
+    .region-ranking-row {
+        min-height: 58px;
+        gap: 8px;
+        padding: 10px 12px;
+        font-size: 0.76rem;
+    }
+
+    .region-name {
+        font-size: calc(1.22rem + 2rem);
+    }
+
+    .region-total {
+        font-size: 1rem;
+    }
+
+    .region-percent {
+        min-width: 64px;
+        padding: 5px 7px;
+        font-size: calc(0.78rem + 2rem);
+    }
+
+    .region-zone-arrow {
+        width: calc(0.64rem + 2rem);
+        height: calc(0.64rem + 2rem);
+    }
+
+    .region-ranking-total {
+        padding: 10px 12px;
+        font-size: 0.84rem;
+    }
+
+    .type-content {
+        gap: 12px;
+    }
+
+    .type-chart-wrap {
+        min-height: 520px;
+        border-radius: 12px;
+    }
+
+    .type-legend {
+        grid-auto-rows: minmax(66px, 1fr);
+    }
+
+    .type-legend-item {
+        min-height: 66px;
+        grid-template-columns: 40px minmax(0, 1fr) 76px;
+        gap: 10px;
+        padding: 10px 12px;
+    }
+
+    .type-legend-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .type-legend-icon img {
+        width: 22px;
+        height: 22px;
+    }
+
+    .type-legend-name {
+        font-size: 0.76rem;
+    }
+
+    .type-legend-count {
+        font-size: 1.95rem;
+    }
+
+    .type-legend-percent {
+        font-size: 0.7rem;
+    }
+
+    .type-total-card {
+        min-height: 42px;
+        padding: 8px 14px;
+        border-radius: 14px;
+    }
+
+    .type-total-card span {
+        font-size: 0.76rem;
+    }
+
+    .type-total-card strong {
+        font-size: 1.08rem;
+    }
+
+    .list-container {
+        gap: 10px;
+    }
+
+    .list-item {
+        min-height: 66px;
+        grid-template-columns: 14px 96px minmax(0, 1fr);
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 12px;
+    }
+
+    .status-dot {
+        width: 12px;
+        height: 12px;
+    }
+
+    .item-reg {
+        font-size: 0.84rem;
+    }
+
+    .item-tipo {
+        font-size: 0.76rem;
+    }
+
+    .item-hora {
+        padding: 6px 9px;
+        font-size: 0.76rem;
+    }
+
+    .item-zona {
+        padding: 6px 8px;
+        font-size: 0.64rem;
+    }
+}
+
+@media (min-width: 3200px) {
+    body {
+        padding: 36px;
+    }
+
+    .smartwall-shell {
+        width: min(100%, 3200px);
+        height: calc(100vh - 72px);
+        gap: 20px;
+    }
+
+    .smart-header {
+        min-height: 96px;
+        padding: 18px 30px;
+        border-radius: 22px;
+    }
+
+    .brand-block {
+        gap: 20px;
+    }
+
+    .brand-mark {
+        width: 72px;
+        height: 72px;
+    }
+
+    .brand-title {
+        font-size: clamp(2rem, 1.2vw, 3rem);
+    }
+
+    .brand-subtitle {
+        font-size: clamp(0.92rem, 0.58vw, 1.1rem);
+    }
+
+    .operator-chip,
+    .clock-panel {
+        min-height: 64px;
+        padding: 12px 16px;
+        border-radius: 14px;
+    }
+
+    .operator-avatar,
+    .clock-icon {
+        width: 44px;
+        height: 44px;
+    }
+
+    .operator-avatar svg,
+    .clock-icon svg {
+        width: 26px;
+        height: 26px;
+    }
+
+    .operator-label,
+    .clock-date {
+        font-size: 0.86rem;
+    }
+
+    .operator-name {
+        font-size: 1rem;
+    }
+
+    .clock {
+        font-size: clamp(1.5rem, 1vw, 2.1rem);
+    }
+
+    .smart-controls .app-home-shortcut,
+    .smart-controls .app-menu-toggle {
+        width: 60px;
+        height: 60px;
+    }
+
+    .smart-controls .app-menu-toggle {
+        font-size: 32px;
+    }
+
+    .smart-theme-switch.theme-switch {
+        width: 104px;
+        height: 50px;
+        padding: 0 13px;
+    }
+
+    .smart-theme-switch.theme-switch::after {
+        top: 5px;
+        right: 5px;
+        width: 40px;
+        height: 40px;
+    }
+
+    body[data-theme="night"] .smart-theme-switch.theme-switch::after {
+        transform: translateX(-54px);
+    }
+
+    .smart-theme-switch .theme-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .kpi-container {
+        gap: 14px;
+    }
+
+    .kpi-card {
+        min-height: 92px;
+        grid-template-columns: 54px minmax(0, 1fr);
+        gap: 14px;
+        padding: 14px 18px;
+        border-radius: 16px;
+    }
+
+    .stat-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 14px;
+    }
+
+    .stat-icon img,
+    .stat-icon svg {
+        width: 30px;
+        height: 30px;
+    }
+
+    .kpi-card .value {
+        font-size: clamp(2.1rem, 1.55vw, 3rem);
+    }
+
+    .kpi-card h3 {
+        font-size: clamp(0.76rem, 0.5vw, 0.98rem);
+    }
+
+    .fleet-value {
+        font-size: clamp(1.55rem, 1.15vw, 2.15rem);
+    }
+
+    .fleet-icon {
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+
+    .main-content {
+        gap: 20px;
+        grid-template-columns: minmax(0, 1.9fr) minmax(0, 0.66fr) minmax(0, 0.74fr);
+    }
+
+    .panel-card {
+        padding: 24px;
+        border-radius: 24px;
+    }
+
+    .panel-heading {
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .panel-title {
+        gap: 12px;
+        font-size: clamp(1.18rem, 0.86vw, 1.55rem);
+    }
+
+    .panel-title svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .region-panel {
+        column-gap: 22px;
+    }
+
+    .region-panel .panel-heading {
+        padding: 12px 14px 0;
+    }
+
+    .region-panel .panel-title {
+        font-size: clamp(1.12rem, 0.8vw, 1.34rem);
+    }
+
+    .region-visual,
+    .region-ranking-panel,
+    .type-chart-wrap {
+        border-radius: 14px;
+    }
+
+    .region-chart-wrap {
+        width: min(100%, 68vh, 52rem);
+        padding: 0 10px 14px;
+    }
+
+    .shift-filter {
+        width: min(100%, 42rem);
+        gap: 10px;
+        margin-top: 16px;
+        padding: 14px;
+        border-radius: 20px;
+    }
+
+    .shift-filter-btn {
+        min-height: 4.5rem;
+        border-radius: 16px;
+    }
+
+    .shift-filter-icon,
+    .shift-filter-icon svg {
+        width: 1.35rem;
+        height: 1.35rem;
+        flex-basis: 1.35rem;
+    }
+
+    .shift-filter-btn strong {
+        font-size: 0.82rem;
+    }
+
+    .region-ranking-panel {
+        gap: 12px;
+        padding: 14px;
+    }
+
+    .region-ranking-title {
+        font-size: 1.05rem;
+    }
+
+    .region-ranking-head {
+        grid-template-columns: minmax(0, 1fr) 88px;
+        padding: 0 12px 10px 54px;
+        font-size: 0.74rem;
+    }
+
+    .region-ranking-row {
+        min-height: 66px;
+        gap: 10px;
+        padding: 12px 14px;
+        font-size: 0.82rem;
+    }
+
+    .region-name {
+        font-size: calc(1.38rem + 2rem);
+    }
+
+    .region-percent {
+        min-width: 72px;
+        padding: 6px 8px;
+        font-size: calc(0.88rem + 2rem);
+    }
+
+    .region-zone-arrow {
+        width: calc(0.78rem + 2rem);
+        height: calc(0.78rem + 2rem);
+    }
+
+    .region-total {
+        font-size: 1.08rem;
+    }
+
+    .region-ranking-total {
+        padding: 12px 14px;
+        font-size: 0.9rem;
+    }
+
+    .type-content {
+        gap: 14px;
+    }
+
+    .type-chart-wrap {
+        min-height: 620px;
+    }
+
+    .type-legend {
+        grid-auto-rows: minmax(74px, 1fr);
+    }
+
+    .type-legend-item {
+        min-height: 74px;
+        grid-template-columns: 44px minmax(0, 1fr) 84px;
+        gap: 12px;
+        padding: 12px 14px;
+    }
+
+    .type-legend-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .type-legend-icon img {
+        width: 24px;
+        height: 24px;
+    }
+
+    .type-legend-name {
+        font-size: 0.84rem;
+    }
+
+    .type-legend-count {
+        font-size: 2.2rem;
+    }
+
+    .type-legend-percent {
+        font-size: 0.76rem;
+    }
+
+    .type-total-card {
+        min-height: 48px;
+        padding: 10px 16px;
+        border-radius: 16px;
+    }
+
+    .type-total-card span {
+        font-size: 0.82rem;
+    }
+
+    .type-total-card strong {
+        font-size: 1.18rem;
+    }
+
+    .list-container {
+        gap: 12px;
+    }
+
+    .list-item {
+        min-height: 74px;
+        grid-template-columns: 16px 108px minmax(0, 1fr);
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 14px;
+    }
+
+    .status-dot {
+        width: 13px;
+        height: 13px;
+    }
+
+    .item-reg {
+        font-size: 0.92rem;
+    }
+
+    .item-tipo {
+        font-size: 0.82rem;
+    }
+
+    .item-hora {
+        padding: 7px 10px;
+        font-size: 0.82rem;
+    }
+
+    .item-zona {
+        padding: 7px 9px;
+        font-size: 0.7rem;
+    }
+}
 body {
     min-height: 100dvh;
     padding: clamp(0.5rem, 1.2vw, 1.5rem);
