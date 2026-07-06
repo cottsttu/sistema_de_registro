@@ -367,11 +367,16 @@ button,
 .btn-sair-topo,
 .btn-logout,
 .app-logout-button,
-.row-action.delete,
-.btn-disponibilidade-smartwall[data-disponivel="false"] {
+.row-action.delete {
     color: #101820 !important;
     background:
         linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(224, 124, 118, 0.88) 48%, rgba(170, 60, 54, 0.92)) !important;
+}
+
+.btn-disponibilidade-smartwall[data-disponivel="false"] {
+    color: #101820 !important;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(170, 178, 186, 0.88) 48%, rgba(108, 117, 125, 0.92)) !important;
 }
 
 .btn-encaminhar,

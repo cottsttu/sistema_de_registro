@@ -35,8 +35,8 @@
         'ocorrencias.html': 'Ocorrências',
         'relatorio_geral.html': 'Relatórios',
         'observacoes.html': 'Observações',
-        'gestao_usuarios.html': 'Cadastros',
-        'admin.html': 'Permissões',
+        'gestao_usuarios.html': 'Permissoes',
+        'admin.html': 'Cadastros',
         'auditoria.html': 'Auditoria',
         'estatisticas.html': 'Estatísticas',
         'smartwall.html': 'Smartwall'
@@ -62,8 +62,8 @@
         smartwall: 'smartwall.html',
         relatorios: 'relatorio_geral.html',
         observacoes: 'observacoes.html',
-        usuarios: 'gestao_usuarios.html',
-        permissoes: 'admin.html',
+        usuarios: 'admin.html',
+        permissoes: 'gestao_usuarios.html',
         auditoria: 'auditoria.html',
         estatisticas: 'estatisticas.html'
     };

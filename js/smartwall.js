@@ -191,6 +191,15 @@ async function iniciarSmartwall() {
         return contagem;
     }
 
+    function ocorrenciaTemEquipeMtOuVt(ocorrencia) {
+        const origemEquipe = ocorrencia?.equipe || ocorrencia?.veiculo || ocorrencia?.codigoEquipe;
+        return extrairCodigosEquipe(origemEquipe, "MT").length > 0 || extrairCodigosEquipe(origemEquipe, "VT").length > 0;
+    }
+
+    function calcularContagemRegiaoComEquipe(registros) {
+        return calcularContagemRegiao(registros.filter(ocorrenciaTemEquipeMtOuVt));
+    }
+
     function calcularContagemTipo(registros) {
         return registros.reduce((acc, ocorrencia) => {
             const tipoBase = getTipoBase(ocorrencia);
@@ -306,6 +315,17 @@ async function iniciarSmartwall() {
         return "tipo-padrao";
     }
 
+    function getClasseZonaAtendimento(ocorrencia) {
+        const zona = normalizarZona(getZona(ocorrencia));
+        const numero = zona.match(/\b([1-5])\b/)?.[1];
+        const origemEquipe = ocorrencia?.equipe || ocorrencia?.veiculo || ocorrencia?.codigoEquipe;
+        const temMt = extrairCodigosEquipe(origemEquipe, "MT").length > 0;
+        const temVt = extrairCodigosEquipe(origemEquipe, "VT").length > 0;
+        const classeZona = numero ? `zona-atendimento-${numero}` : zona === "GERAL" ? "zona-atendimento-geral" : "zona-atendimento-sem-regiao";
+        const classeEquipe = temMt && temVt ? "equipe-mt equipe-vt" : temMt ? "equipe-mt" : temVt ? "equipe-vt" : "equipe-sem-equipe";
+        return `${classeZona} ${classeEquipe}`;
+    }
+
     function atualizarDashboard(docsHoje, docsPendentes, docsAtivosAgentes, docsHistoricoAgentes) {
         ultimosDocsHoje = docsHoje;
         ultimosDocsAtivosAgentes = docsAtivosAgentes;
@@ -323,21 +343,21 @@ async function iniciarSmartwall() {
         const qtdDespacho = ativas.filter((ocorrencia) => STATUS_DESPACHO.has(normalizarTexto(ocorrencia.situacao))).length;
         const qtdAndamento = ativas.filter((ocorrencia) => STATUS_EM_ANDAMENTO.has(normalizarTexto(ocorrencia.situacao))).length;
 
-        const frotaAtiva = calcularFrotaOcorrencias(ativas);
         const docsAtivosAgentesTurno = docsAtivosAgentes;
         const hojeTurno = filtrarPorTurnoAtendimento(hoje);
         const ativasTurno = filtrarPorTurnoAtendimento(ativas);
         const ativasHojeTurno = ativasTurno.filter((ocorrencia) => ocorrencia.data_filtro === dataFiltro);
         const contagemTipo = calcularContagemTipo(hojeTurno);
         const contagemRegiaoHoje = calcularContagemRegiao(hojeTurno);
-        const contagemRegiaoAtivas = calcularContagemRegiao(ativasTurno);
+        const contagemRegiaoAtivas = calcularContagemRegiaoComEquipe(ativasTurno);
         const frotaAtivaPorRegiao = calcularFrotaOcorrenciasPorRegiao(ativasTurno);
         const frotaOcorrenciasHoje = calcularFrotaOcorrencias(hojeTurno);
         const frotaOcorrenciasHojePorRegiao = calcularFrotaOcorrenciasPorRegiaoPeriodo(hojeTurno);
         const agentesPorRegiao = calcularAgentesPorRegiao(docsAtivosAgentesTurno, ativasTurno);
+        const frotaDisponivelPainel = calcularFrotaDisponivelPainel(agentesPorRegiao);
 
         atualizarResumoAtendimento(ativasHojeTurno.length);
-        atualizarIndicadoresKpi(hoje.length, qtdDespacho, qtdAndamento, concluidasHoje.length, frotaAtiva);
+        atualizarIndicadoresKpi(hoje.length, qtdDespacho, qtdAndamento, concluidasHoje.length, frotaDisponivelPainel);
         atualizarListaAtivas(ativasHojeTurno.filter((ocorrencia) => ocorrencia.data_filtro === dataFiltro));
         atualizarGraficos(
             contagemRegiaoAtivas,
@@ -353,7 +373,6 @@ async function iniciarSmartwall() {
     }
 
     function atualizarIndicadoresKpi(total, despacho, andamento, concluidas, frota) {
-        const totalFrota = (frota?.mt || 0) + (frota?.vt || 0);
         const pares = [
             ["kpiTotal", total],
             ["kpiDespacho", despacho],
@@ -366,14 +385,7 @@ async function iniciarSmartwall() {
             if (el) el.textContent = String(valor ?? 0);
         });
 
-        const frotaEl = document.getElementById("kpiVtrs");
-        if (frotaEl) {
-            frotaEl.innerHTML = `
-                <span class="fleet-value fleet-mt"><img class="fleet-icon" src="src/mt_png.png" alt="MT"><span class="fleet-count">${frota?.mt || 0}</span></span>
-                <span class="fleet-value fleet-vt"><img class="fleet-icon" src="src/vt_png.png" alt="VT"><span class="fleet-count">${frota?.vt || 0}</span></span>
-            `;
-            frotaEl.setAttribute("aria-label", `${totalFrota} viaturas em atendimento`);
-        }
+        atualizarKpiFrota(frota);
 
         const acionarAlertaKpi = (id) => {
             const card = document.getElementById(id)?.closest(".kpi-card");
@@ -398,6 +410,18 @@ async function iniciarSmartwall() {
         kpiValoresAnteriores.despacho = despacho;
         kpiValoresAnteriores.andamento = andamento;
         kpiValoresAnteriores.concluidas = concluidas;
+    }
+
+    function atualizarKpiFrota(frota) {
+        const totalFrota = (frota?.mt || 0) + (frota?.vt || 0);
+        const frotaEl = document.getElementById("kpiVtrs");
+        if (frotaEl) {
+            frotaEl.innerHTML = `
+                <span class="fleet-value fleet-mt"><img class="fleet-icon" src="src/mt_png.png" alt="MT"><span class="fleet-count">${frota?.mt || 0}</span></span>
+                <span class="fleet-value fleet-vt"><img class="fleet-icon" src="src/vt_png.png" alt="VT"><span class="fleet-count">${frota?.vt || 0}</span></span>
+            `;
+            frotaEl.setAttribute("aria-label", `${totalFrota} motos e viaturas disponiveis em campo`);
+        }
         kpiValoresAnteriores.frota = totalFrota;
     }
 
@@ -470,6 +494,19 @@ async function iniciarSmartwall() {
         });
 
         return base;
+    }
+
+    function equipeContabilizavelPainel(equipe) {
+        const disponivelSmartwall = Array.isArray(equipe) ? true : equipe?.disponivelSmartwall !== false;
+        return disponivelSmartwall;
+    }
+
+    function calcularFrotaDisponivelPainel(agentesPorRegiao) {
+        return Object.values(agentesPorRegiao || {}).reduce((acc, regiao) => {
+            acc.mt += (regiao?.mt || []).filter(equipeContabilizavelPainel).length;
+            acc.vt += (regiao?.vt || []).filter(equipeContabilizavelPainel).length;
+            return acc;
+        }, { mt: 0, vt: 0 });
     }
 
     function calcularFrotaOcorrencias(ocorrenciasAtivas) {
@@ -567,8 +604,8 @@ async function iniciarSmartwall() {
                         tipo,
                         zona: atual?.zona || getZona(item),
                         nomes: [...new Set([...(atual?.nomes || []), ...nomes])],
-                        disponivelSmartwall,
-                        motivoIndisponibilidadeSmartwall
+                        disponivelSmartwall: atual ? atual.disponivelSmartwall !== false && disponivelSmartwall : disponivelSmartwall,
+                        motivoIndisponibilidadeSmartwall: motivoIndisponibilidadeSmartwall || atual?.motivoIndisponibilidadeSmartwall || ""
                     });
                 });
             });
@@ -681,9 +718,10 @@ async function iniciarSmartwall() {
             if (statusClass === "encaminhada") kpiValoresAnteriores.encaminhadas.add(modalId);
             const horaEnvio = formatarHoraComSegundos(ocorrencia.horaEnvio);
             const tipoClass = getClasseTipoLista(ocorrencia);
+            const zonaClass = getClasseZonaAtendimento(ocorrencia);
 
             divLista.insertAdjacentHTML("beforeend", `
-                <button type="button" class="list-item ${statusClass} ${tipoClass} ${alertaEncaminhada ? "list-alert" : ""}" data-modal-id="${escapeHtml(modalId)}">
+                <button type="button" class="list-item ${statusClass} ${tipoClass} ${zonaClass} ${alertaEncaminhada ? "list-alert" : ""}" data-modal-id="${escapeHtml(modalId)}">
                     <span class="status-dot" aria-hidden="true"></span>
                     <span class="item-hora">${escapeHtml(horaEnvio)}</span>
                     <span class="item-tipo">${escapeHtml(ocorrencia.ocorrencia || "Sem natureza")}</span>
@@ -908,10 +946,12 @@ async function iniciarSmartwall() {
             const hojeTurno = filtrarPorTurnoAtendimento(ultimosDocsHoje);
             const ativosAgentesTurno = ultimosDocsAtivosAgentes;
             const ocorrenciasAtivasTurno = filtrarPorTurnoAtendimento(ultimasOcorrenciasAtivas);
+            const agentesPorRegiaoTurno = calcularAgentesPorRegiao(ativosAgentesTurno, ocorrenciasAtivasTurno);
             const frotaAtivaPorRegiao = calcularFrotaOcorrenciasPorRegiao(ocorrenciasAtivasTurno);
-            const contagemRegiaoAtivas = calcularContagemRegiao(ocorrenciasAtivasTurno);
+            const contagemRegiaoAtivas = calcularContagemRegiaoComEquipe(ocorrenciasAtivasTurno);
             ultimaContagemRegiaoAtivas = contagemRegiaoAtivas;
             atualizarResumoAtendimento(ocorrenciasAtivasTurno.length);
+            atualizarKpiFrota(calcularFrotaDisponivelPainel(agentesPorRegiaoTurno));
             atualizarListaAtivas(ocorrenciasAtivasTurno.filter((ocorrencia) => ocorrencia.data_filtro === dataFiltro));
             atualizarGraficos(
                 contagemRegiaoAtivas,
@@ -922,7 +962,7 @@ async function iniciarSmartwall() {
                 calcularFrotaOcorrenciasPorRegiaoPeriodo(hojeTurno),
                 hojeTurno,
                 criarMapaNomesAgentes(ultimosDocsAtivosAgentes, ultimosDocsHistoricoAgentes),
-                calcularAgentesPorRegiao(ativosAgentesTurno, ocorrenciasAtivasTurno)
+                agentesPorRegiaoTurno
             );
             return;
         }
@@ -990,19 +1030,22 @@ async function iniciarSmartwall() {
         const legend = document.getElementById("regionRankingPanel");
         if (!legend) return;
         const linhas = labels.map((regiao, index) => {
-            const frota = frotaPorRegiao[regiao] || { mt: 0, vt: 0 };
-            const total = (frota.mt || 0) + (frota.vt || 0);
             const agentes = agentesPorRegiao?.[regiao] || { mt: [], vt: [] };
+            const agentesMt = agentes.mt || [];
+            const agentesVt = agentes.vt || [];
+            const totalMtPainel = agentesMt.filter(equipeContabilizavelPainel).length;
+            const totalVtPainel = agentesVt.filter(equipeContabilizavelPainel).length;
+            const total = totalMtPainel + totalVtPainel;
             return {
                 regiao,
                 zona: nomeZona(regiao, index),
                 numero: index + 1,
                 total,
-                mt: frota.mt || 0,
-                vt: frota.vt || 0,
+                mt: totalMtPainel,
+                vt: totalVtPainel,
                 ocorrencias: ocorrenciasPorRegiao?.[regiao] || 0,
-                agentesMt: agentes.mt || [],
-                agentesVt: agentes.vt || [],
+                agentesMt,
+                agentesVt,
                 cor: coresPainelRegiao[index] || "#2f86ff",
                 zoneKey: normalizarZona(regiao)
             };
@@ -1024,6 +1067,8 @@ async function iniciarSmartwall() {
         });
         const renderizarNomesEquipe = (equipes, icone, alt, cor) => {
             if (!equipes?.length) return "";
+            const nomesRenderizados = new Set();
+            const codigosRenderizados = new Set();
             return equipes.map((equipe) => {
                 const nomes = Array.isArray(equipe) ? equipe : equipe.nomes;
                 const ocorrencias = Array.isArray(equipe) ? [] : equipe.ocorrencias || [];
@@ -1032,8 +1077,13 @@ async function iniciarSmartwall() {
                 const codigoEquipe = Array.isArray(equipe) ? "" : equipe.codigo || "";
                 const statusEquipe = Array.isArray(equipe) ? "" : equipe.atendimentoStatus || "";
                 const nomesUnicos = [...new Set((nomes || []).filter(Boolean))];
-                const nomesExibidos = nomesUnicos.length ? nomesUnicos : [codigoEquipe].filter(Boolean);
                 const classeStatus = statusEquipe === "andamento" ? "region-agent-group-andamento" : "region-agent-group-despacho";
+                const chaveCodigo = normalizarCodigoEquipe(codigoEquipe);
+                const codigoDuplicado = chaveCodigo && codigosRenderizados.has(chaveCodigo);
+                if (chaveCodigo && !codigoDuplicado) codigosRenderizados.add(chaveCodigo);
+                const nomesAgentes = nomesUnicos.filter((nome) => !chaveCodigo || normalizarCodigoEquipe(nome) !== chaveCodigo);
+                const aguardandoNomeAgente = "AGUARDANDO O NOME DO AGENTE";
+                const nomesExibidos = nomesAgentes.length ? nomesAgentes : [aguardandoNomeAgente];
                 if (!nomesExibidos.length) return "";
                 return `
                 <span class="region-agent-group ${classeStatus} ${ocorrencias.length ? "region-agent-group-active" : ""}" style="--agent-color: ${cor}">
@@ -1041,7 +1091,15 @@ async function iniciarSmartwall() {
                     <span>
                         ${codigoEquipe ? `<span class="region-agent-code">${escapeHtml(codigoEquipe)}</span>` : ""}
                         ${nomesExibidos.map((nome) => {
-                            const nomeCurto = formatarNomeEquipe(nome);
+                            const chaveNome = normalizarTexto(nome);
+                            const nomeAguardando = nome === aguardandoNomeAgente;
+                            const nomeDuplicado = nomeAguardando || (!nomesAgentes.length && codigoDuplicado) || (chaveNome && nomesRenderizados.has(chaveNome));
+                            if (chaveNome && !nomeDuplicado) nomesRenderizados.add(chaveNome);
+                            const nomeExibido = nomeDuplicado ? aguardandoNomeAgente : nome;
+                            const nomeCurto = nomeDuplicado ? nomeExibido : formatarNomeEquipe(nome);
+                            if (nomeDuplicado) {
+                                return `<span class="region-agent-name region-agent-name-duplicated" title="${escapeHtml(nomeExibido)}">${escapeHtml(nomeCurto)}</span>`;
+                            }
                             return disponivelSmartwall
                                 ? `<span class="region-agent-name region-agent-name-available" title="${escapeHtml(nome)}">${escapeHtml(nomeCurto)}</span>`
                                 : `<button type="button" class="region-agent-name region-agent-name-unavailable region-agent-name-reason" data-agent-name="${escapeHtml(nome)}" data-reason="${escapeHtml(motivoIndisponibilidadeSmartwall)}" data-codigo="${escapeHtml(codigoEquipe)}" title="${escapeHtml(nome)}">${escapeHtml(nomeCurto)}</button>`;
@@ -1053,7 +1111,7 @@ async function iniciarSmartwall() {
         };
         legend.innerHTML = `
             <div class="region-ranking-title">
-                <span>viaturas em atendimento</span>
+                <span>motos e viaturas disponiveis em campo</span>
                 <img src="src/live_png.png" alt="Ao vivo">
             </div>
             <div class="region-ranking-head">
@@ -1219,26 +1277,46 @@ async function iniciarSmartwall() {
                     const textoY = centerY + Math.sin(angle) * textoRadius;
                     const startX = centerX + Math.cos(angle) * (outerRadius - 2);
                     const startY = centerY + Math.sin(angle) * (outerRadius - 2);
-                    const turnX = centerX + Math.cos(angle) * (outerRadius + 18);
-                    const turnY = centerY + Math.sin(angle) * (outerRadius + 18);
                     const ladoDireito = Math.cos(angle) >= 0;
-                    const labelX = Math.min(Math.max(turnX + (ladoDireito ? 24 : -24), 44), largura - 44);
-                    const labelY = Math.min(Math.max(turnY, 18), altura - 22);
+                    const distanciaExterna = Math.max(20, Math.min(34, outerRadius * 0.12));
+                    const rotuloZona = formatarRotuloZona(regiao, index);
+                    const percentualZona = `${formatarPercentualZona(valor)}%`;
+                    ctx.font = "800 13px Segoe UI, sans-serif";
+                    const larguraRotulo = ctx.measureText(rotuloZona).width;
+                    ctx.font = "800 14px Segoe UI, sans-serif";
+                    const larguraPercentual = ctx.measureText(percentualZona).width;
+                    const larguraLabel = Math.max(larguraRotulo, larguraPercentual);
+                    const margemLateral = 44;
+                    const espacoLateral = ladoDireito
+                        ? largura - (centerX + outerRadius) - margemLateral
+                        : centerX - outerRadius - margemLateral;
+                    const usarAreaSuperior = espacoLateral < larguraLabel + 18;
+                    const turnX = centerX + Math.cos(angle) * (outerRadius + distanciaExterna * 0.28);
+                    const turnY = centerY + Math.sin(angle) * (outerRadius + distanciaExterna * 0.28);
+                    const labelRadius = outerRadius + distanciaExterna;
+                    const labelXBase = centerX + Math.cos(angle) * labelRadius + (ladoDireito ? distanciaExterna * 0.18 : -distanciaExterna * 0.18);
+                    const labelYBase = centerY + Math.sin(angle) * labelRadius;
+                    const topoDisponivel = Math.max(18, centerY - outerRadius - 16);
+                    const passoSuperior = Math.max(15, Math.min(22, topoDisponivel / Math.max(1, meta.data.length)));
+                    const labelXSuperior = centerX + (ladoDireito ? 1 : -1) * Math.min(Math.max(outerRadius * 0.34, larguraLabel * 0.72), Math.max(28, centerX - margemLateral));
+                    const labelX = Math.min(Math.max(usarAreaSuperior ? labelXSuperior : labelXBase, margemLateral), largura - margemLateral);
+                    const labelY = usarAreaSuperior
+                        ? Math.min(Math.max(topoDisponivel - (index % meta.data.length) * passoSuperior, 18), altura - 22)
+                        : Math.min(Math.max(labelYBase, 18), altura - 22);
 
                     ctx.strokeStyle = cor;
-                    ctx.lineWidth = 2;
+                    ctx.lineWidth = 1.35;
                     ctx.beginPath();
                     ctx.moveTo(startX, startY);
-                    ctx.lineTo(turnX, turnY);
-                    ctx.lineTo(labelX + (ladoDireito ? -6 : 6), labelY);
+                    ctx.lineTo(labelX + (ladoDireito ? -4 : 4), labelY);
                     ctx.stroke();
 
                     ctx.textAlign = ladoDireito ? "left" : "right";
                     ctx.fillStyle = cor;
-                    ctx.font = "950 11px Segoe UI, sans-serif";
-                    ctx.fillText(formatarRotuloZona(regiao, index), labelX, labelY - 6);
-                    ctx.font = "950 12px Segoe UI, sans-serif";
-                    ctx.fillText(`${formatarPercentualZona(valor)}%`, labelX, labelY + 8);
+                    ctx.font = "800 13px Segoe UI, sans-serif";
+                    ctx.fillText(rotuloZona, labelX, labelY - 6);
+                    ctx.font = "800 14px Segoe UI, sans-serif";
+                    ctx.fillText(percentualZona, labelX, labelY + 8);
                     ctx.textAlign = "center";
                     ctx.fillStyle = temaDia ? "#101820" : "#ffffff";
                     ctx.shadowColor = temaDia ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.48)";

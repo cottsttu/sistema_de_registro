@@ -22,9 +22,13 @@
         if (cargo === "admin" || nivel === "admin") return true;
         const permissaoModulo = dadosUsuario?.permissoes?.[modulo];
         if (!permissaoModulo || typeof permissaoModulo !== "object") return false;
-        return permissaoModulo?.[acao] === true
-            || permissaoModulo?.[acao] === "true"
-            || (acao !== "habilitado" && permissaoModulo?.habilitado === true);
+        if (acao === "habilitado") {
+            return permissaoModulo?.habilitado === true
+                || permissaoModulo?.habilitado === "true"
+                || permissaoModulo?.visualizar === true
+                || permissaoModulo?.visualizar === "true";
+        }
+        return permissaoModulo?.[acao] === true || permissaoModulo?.[acao] === "true";
     }
 
     function temPermissaoAdministrativaModulo(dadosUsuario, modulo) {
@@ -47,6 +51,9 @@
     let agentesEmUso = new Set();
     let nomeUsuarioLogado = "ANÔNIMO"; 
     let usuarioEhAdmin = false; 
+    let usuarioPodeCriar = false;
+    let usuarioPodeEditar = false;
+    let usuarioPodeExcluir = false;
     let isVisualizador = false;
     const listarAgentesCondutoresUrl = "https://us-central1-sttu-registros.cloudfunctions.net/listarAgentesCondutoresHttp";
     let filtroAtivos = "todos";
@@ -71,7 +78,10 @@
                     // 1. DEFINE SE É ADMIN
                     const cargoUsuario = String(dados.cargo || "").toLowerCase();
                     const nivelAcesso = String(dados.nivel_acesso || "").toLowerCase();
-                    usuarioEhAdmin = temPermissaoAdministrativaModulo(dados, "agentes"); 
+                    usuarioPodeCriar = temPermissaoModulo(dados, "agentes", "criar");
+                    usuarioPodeEditar = temPermissaoModulo(dados, "agentes", "editar");
+                    usuarioPodeExcluir = temPermissaoModulo(dados, "agentes", "excluir");
+                    usuarioEhAdmin = usuarioPodeEditar || usuarioPodeExcluir; 
                     
                     document.getElementById('nomeUsuarioDisplay').innerText = "Olá, " + nomeUsuarioLogado;
 
@@ -89,13 +99,14 @@
                     }
 
                     // --- BLOQUEIO PARA VISUALIZADOR (ESTRATÉGIA NUCLEAR) ---
-                    if (cargoUsuario === 'visualizador' || nivelAcesso === 'leitura') {
-                        isVisualizador = true;
-                        console.log("🔒 Modo Apenas Leitura Ativado");
-
-                        // 1. DESTRUIR ÁREA DE REGISTRO
+                    if (!usuarioPodeCriar) {
                         const areaRegistro = document.getElementById('areaRegistro');
                         if (areaRegistro) areaRegistro.remove();
+                    }
+
+                    if (!usuarioPodeCriar && !usuarioPodeEditar && !usuarioPodeExcluir) {
+                        isVisualizador = true;
+                        console.log("🔒 Modo Apenas Leitura Ativado");
 
                         // 2. INJETAR CSS PARA ESCONDER AÇÕES NA TABELA
                         const styleBlock = document.createElement('style');
@@ -303,7 +314,7 @@
     }
 
     function abrirEditorHistoricoAgente(id, dados) {
-        if (!usuarioEhAdmin || !id) return;
+        if (!usuarioPodeEditar || !id) return;
 
         let modal = document.getElementById('modalEditorHistoricoAgente');
         if (!modal) {
@@ -876,6 +887,7 @@
     }
 
     async function salvarNoFirebase(colecao, dados) {
+        if (!usuarioPodeCriar) return;
         try {
             await addDoc(collection(db, colecao), {
                 ...dados,
@@ -888,6 +900,7 @@
     }
 
     async function devolverVeiculo(dados, horaFim) {
+        if (!usuarioPodeEditar) return;
         const dadosHistorico = {...dados, horaFim, tipo: 'ENCERRAMENTO'};
         delete dadosHistorico.id; 
         delete dadosHistorico.timestamp; 
@@ -934,7 +947,7 @@
         cellAcao.className = 'acao-botoes';
         cellAcao.appendChild(criarBotaoVisualizarRegistro(dadosDisplay, "Histórico de Atividade"));
         
-        if (usuarioEhAdmin) {
+        if (usuarioPodeExcluir) {
             const btnExcluir = document.createElement('button');
             btnExcluir.type = 'button';
             btnExcluir.innerHTML = '&#10006;'; // X Symbol
@@ -945,7 +958,9 @@
                 excluirItemHistorico(dados.id);
             };
             cellAcao.appendChild(btnExcluir);
+        }
 
+        if (usuarioPodeEditar) {
             const btnEditar = document.createElement('button');
             btnEditar.type = 'button';
             btnEditar.className = 'btn btn-editar-historico';
@@ -960,7 +975,7 @@
     }
 
     async function excluirItemHistorico(id) {
-        if (!usuarioEhAdmin) return;
+        if (!usuarioPodeExcluir) return;
         
         if (confirm("ATENÇÃO ADMIN:\n\nDeseja realmente excluir este registro do histórico permanentemente?")) {
             try {
@@ -997,12 +1012,12 @@
             actionCell.className = 'acao-botoes';
             actionCell.appendChild(criarBotaoVisualizarRegistro(dados, "Veículo em Operação"));
 
-            if (isVeiculoMtOuVt(dados.veiculo)) {
+            if (usuarioPodeEditar && isVeiculoMtOuVt(dados.veiculo)) {
                 actionCell.appendChild(criarBotaoDisponibilidadeSmartwall(dados));
             }
             
             // --- AQUI VEM O BLOQUEIO: Só cria botões se NÃO for visualizador
-            if (!isVisualizador) {
+            if (usuarioPodeEditar) {
                 const actionRow = document.createElement('div');
                 actionRow.className = 'acao-botoes-row';
 
@@ -1131,7 +1146,7 @@
 
                 actionCell.appendChild(actionRow);
 
-                if (usuarioEhAdmin) {
+                if (usuarioPodeEditar) {
                     const btnEditar = document.createElement('button');
                     btnEditar.innerHTML = 'EDITAR';
                     btnEditar.className = 'btn btn-editar-ativo';
@@ -1300,6 +1315,7 @@
     if (elForm) {
         elForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            if (!usuarioPodeCriar) return;
             const v = document.getElementById('veiculo').value;
             const z = document.getElementById('zona').value;
             const pb = document.getElementById('pontoBase').value.trim();
@@ -1512,7 +1528,7 @@
 
     // --- FUNÇÃO DE AUDITORIA (ADICIONE NO FINAL DO SCRIPT) ---
     async function registrarLogAuditoria(acao, detalhes) {
-        if (isVisualizador) return;
+        if (!usuarioPodeCriar && !usuarioPodeEditar && !usuarioPodeExcluir) return;
         try {
             await addDoc(collection(db, "logs_auditoria"), {
                 usuario: nomeUsuarioLogado || "DESCONHECIDO",

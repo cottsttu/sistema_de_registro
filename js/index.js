@@ -285,15 +285,19 @@ async function iniciarIndex() {
                 document.getElementById("msgBoasVindas").innerText = "Modo de Visualização (Smartwall).";
             }
 
-            if (cargo === "ciosp") {
+            if (cargo === "ciosp" && !paginasPersonalizadas) {
                 localStorage.setItem("sttu-index-role", "ciosp");
                 document.documentElement.dataset.indexRole = "ciosp";
                 document.querySelector("h1").innerText = "Painel CIOSP";
+            } else if (cargo === "ciosp") {
+                document.querySelector("h1").innerText = "Painel CIOSP";
             }
 
-            if (cargo === "cir") {
+            if (cargo === "cir" && !paginasPersonalizadas) {
                 localStorage.setItem("sttu-index-role", "ciosp");
                 document.documentElement.dataset.indexRole = "ciosp";
+                document.querySelector("h1").innerText = "Painel CIR";
+            } else if (cargo === "cir") {
                 document.querySelector("h1").innerText = "Painel CIR";
             }
 

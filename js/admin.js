@@ -30,9 +30,13 @@
         if (cargo === "admin" || nivel === "admin") return true;
         const permissaoModulo = dadosUsuario?.permissoes?.[modulo];
         if (!permissaoModulo || typeof permissaoModulo !== "object") return false;
-        return permissaoModulo?.[acao] === true
-            || permissaoModulo?.[acao] === "true"
-            || (acao !== "habilitado" && permissaoModulo?.habilitado === true);
+        if (acao === "habilitado") {
+            return permissaoModulo?.habilitado === true
+                || permissaoModulo?.habilitado === "true"
+                || permissaoModulo?.visualizar === true
+                || permissaoModulo?.visualizar === "true";
+        }
+        return permissaoModulo?.[acao] === true || permissaoModulo?.[acao] === "true";
     }
 
     document.getElementById('btnSair')?.addEventListener('click', () => {

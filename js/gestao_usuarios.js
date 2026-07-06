@@ -29,9 +29,13 @@ async function iniciarGestaoUsuarios() {
         if (cargo === "admin" || nivel === "admin") return true;
         const permissaoModulo = dadosUsuario?.permissoes?.[modulo];
         if (!permissaoModulo || typeof permissaoModulo !== "object") return false;
-        return permissaoModulo?.[acao] === true
-            || permissaoModulo?.[acao] === "true"
-            || (acao !== "habilitado" && permissaoModulo?.habilitado === true);
+        if (acao === "habilitado") {
+            return permissaoModulo?.habilitado === true
+                || permissaoModulo?.habilitado === "true"
+                || permissaoModulo?.visualizar === true
+                || permissaoModulo?.visualizar === "true";
+        }
+        return permissaoModulo?.[acao] === true || permissaoModulo?.[acao] === "true";
     }
 
     const modulos = [
@@ -296,8 +300,8 @@ async function iniciarGestaoUsuarios() {
         card.querySelectorAll("input[name='cargoUsuario']").forEach((input) => {
             input.addEventListener("change", () => {
                 estadoEdicao.cargo = input.value;
-                if (input.value === "visualizador") estadoEdicao.nivel_acesso = "leitura";
                 if (input.value === "admin") estadoEdicao.nivel_acesso = "total";
+                if (input.value !== "admin") estadoEdicao.nivel_acesso = calcularNivelAcesso(estadoEdicao.permissoes);
                 perfilAtual = "personalizado";
                 marcarAlteracoes(true);
                 renderizarDetalhe(usuario);
@@ -360,13 +364,18 @@ async function iniciarGestaoUsuarios() {
                 }
 
                 if (acao === "habilitado" && input.checked) {
-                    acoes.forEach((item) => estadoEdicao.permissoes[modulo][item.id] = true);
+                    estadoEdicao.permissoes[modulo].visualizar = true;
+                    estadoEdicao.permissoes[modulo].criar = true;
+                    estadoEdicao.permissoes[modulo].editar = false;
+                    estadoEdicao.permissoes[modulo].excluir = false;
                 }
 
                 if (acao === "visualizar" && !input.checked) {
-                    acoes
-                        .filter((item) => !["habilitado", "visualizar"].includes(item.id))
-                        .forEach((item) => estadoEdicao.permissoes[modulo][item.id] = false);
+                    acoes.forEach((item) => estadoEdicao.permissoes[modulo][item.id] = false);
+                }
+
+                if (acao === "visualizar" && input.checked) {
+                    estadoEdicao.permissoes[modulo].habilitado = true;
                 }
 
                 if (!["habilitado", "visualizar"].includes(acao) && input.checked) {
@@ -465,8 +474,7 @@ async function iniciarGestaoUsuarios() {
         const cargo = normalizarValor(usuario.cargo);
         const nivel = normalizarValor(usuario.nivel_acesso);
         if (cargo === "admin" || nivel === "admin") return montarPermissoes(true);
-        if (cargo === "ciosp" || cargo === "cir") return montarPermissoesPorModulo({ocorrencias: ["visualizar"]});
-        if (cargo === "visualizador" || nivel === "leitura") return perfis.leitura.montar();
+        if (cargo === "ciosp" || cargo === "cir" || cargo === "visualizador" || nivel === "leitura") return perfis.operador.montar();
         return perfis.operador.montar();
     }
 

@@ -26,9 +26,13 @@
         if (cargo === "admin" || nivel === "admin") return true;
         const permissaoModulo = dadosUsuario?.permissoes?.[modulo];
         if (!permissaoModulo || typeof permissaoModulo !== "object") return false;
-        return permissaoModulo?.[acao] === true
-            || permissaoModulo?.[acao] === "true"
-            || (acao !== "habilitado" && permissaoModulo?.habilitado === true);
+        if (acao === "habilitado") {
+            return permissaoModulo?.habilitado === true
+                || permissaoModulo?.habilitado === "true"
+                || permissaoModulo?.visualizar === true
+                || permissaoModulo?.visualizar === "true";
+        }
+        return permissaoModulo?.[acao] === true || permissaoModulo?.[acao] === "true";
     }
 
     function temPermissaoAdministrativaModulo(dadosUsuario, modulo) {
@@ -50,6 +54,9 @@
     let veiculosOcupados = new Set();
     let nomeUsuarioLogado = "ANÔNIMO"; 
     let usuarioEhAdmin = false; 
+    let usuarioPodeCriar = false;
+    let usuarioPodeEditar = false;
+    let usuarioPodeExcluir = false;
     let isVisualizador = false;
     
     // Lista unificada
@@ -101,7 +108,10 @@
                     const dados = docSnap.data();
                     
                     nomeUsuarioLogado = dados.nome || "Usuário";
-                    usuarioEhAdmin = temPermissaoAdministrativaModulo(dados, "ocorrencias"); 
+                    usuarioPodeCriar = temPermissaoModulo(dados, "ocorrencias", "criar");
+                    usuarioPodeEditar = temPermissaoModulo(dados, "ocorrencias", "editar");
+                    usuarioPodeExcluir = temPermissaoModulo(dados, "ocorrencias", "excluir");
+                    usuarioEhAdmin = usuarioPodeEditar || usuarioPodeExcluir; 
                     
                     // Se já tiver dados carregados, renderiza novamente com as permissões corretas
                     if(listaGlobalOcorrencias.length > 0) {
@@ -118,11 +128,14 @@
                         if (btnRel) btnRel.style.display = 'none';
                     }
 
-                    if (dados.cargo === 'visualizador' || dados.nivel_acesso === 'leitura') {
-                        isVisualizador = true;
-                        
+                    if (!usuarioPodeCriar) {
                         const areaRegistro = document.getElementById('areaRegistro');
                         if (areaRegistro) areaRegistro.remove();
+                    }
+
+                    if (!usuarioPodeCriar && !usuarioPodeEditar && !usuarioPodeExcluir) {
+                        isVisualizador = true;
+                        
                         const modalEncaminhar = document.getElementById('modalEncaminhar');
                         if (modalEncaminhar) modalEncaminhar.remove();
 
@@ -143,7 +156,9 @@
                         isVisualizador = false;
                     }
 
-                    if (dados.cargo === 'ciosp') {
+                    const usaPermissoesPersonalizadas = dados.permissoes && typeof dados.permissoes === "object";
+
+                    if (!usaPermissoesPersonalizadas && dados.cargo === 'ciosp') {
                         const btnCsv = document.getElementById('btnDownloadCSV');
                         if(btnCsv) btnCsv.style.display = 'none';
                         const linkAgentes = document.getElementById('btnNavAgentes');
@@ -154,7 +169,7 @@
                         if(linkRel) linkRel.style.display = 'none';
                     }
                     
-                      if (dados.cargo === 'cir') {
+                      if (!usaPermissoesPersonalizadas && dados.cargo === 'cir') {
                         const btnCsv = document.getElementById('btnDownloadCSV');
                         if(btnCsv) btnCsv.style.display = 'none';
                         const linkAgentes = document.getElementById('btnNavAgentes');
@@ -165,7 +180,7 @@
                         if(linkRel) linkRel.style.display = 'none';
                     }
 
-                    if (dados.cargo === 'agente' && !usuarioEhAdmin) {
+                    if (!usaPermissoesPersonalizadas && dados.cargo === 'agente' && !usuarioEhAdmin) {
                         const btnCsv = document.getElementById('btnDownloadCSV');
                         if(btnCsv) btnCsv.style.display = 'none';
                         const btnRel = document.getElementById('btnNavRelatorios');
@@ -334,7 +349,7 @@
     });
 
     window.verificarRegrasObrigatoriedade = function() {
-        if (isVisualizador) return;
+        if (!usuarioPodeCriar) return;
         const ocorrencia = document.getElementById('ocorrencia').value;
         const situacao = document.getElementById('situacao').value;
         const inputHoraEnvio = document.getElementById('horaEnvio');
@@ -698,7 +713,7 @@
             cellHist.appendChild(divWrapper);
 
             // --- AÇÕES PARA TABELA DE PENDENTES ---
-            if (!isVisualizador && !statusFinalizado) {
+            if (usuarioPodeEditar && !statusFinalizado) {
                 const acCell = row.insertCell();
                 acCell.className = 'col-acao';
                 acCell.style.display = 'flex';
@@ -750,13 +765,15 @@
                 btnPdf.onclick = () => window.gerarPdfOcorrencia(d);
                 cellDel.appendChild(btnPdf);
 
-                if (usuarioEhAdmin) {
+                if (usuarioPodeEditar) {
                     const btnEditar = document.createElement('button');
                     btnEditar.className = 'btn btn-editar-ocorrencia btn-acao-tabela';
                     btnEditar.innerText = 'EDITAR';
                     btnEditar.onclick = () => window.abrirModalEditarOcorrencia(id, d);
                     cellDel.appendChild(btnEditar);
+                }
 
+                if (usuarioPodeExcluir) {
                     const btnDel = document.createElement('button');
                     btnDel.className = 'btn-trash';
                     btnDel.innerHTML = '✕';
@@ -856,7 +873,7 @@
     };
 
     window.abrirModalEncaminhar = (id, dados) => {
-        if (isVisualizador) return;
+        if (!usuarioPodeEditar) return;
         document.getElementById('editId').value = id;
         document.getElementById('editSolicitante').value = dados.solicitante || "";
         document.getElementById('editSobrenome').value = dados.sobrenome || "";
@@ -876,7 +893,7 @@
     };
 
     window.abrirModalEditarOcorrencia = (id, dados) => {
-        if (!usuarioEhAdmin) {
+        if (!usuarioPodeEditar) {
             alert("⛔ Acesso Negado: Apenas administradores podem editar ocorrências concluídas.");
             return;
         }
@@ -902,7 +919,7 @@
     window.fecharModal = () => document.getElementById('modalEncaminhar').style.display = 'none';
 
     window.confirmarEncaminhamento = async () => {
-        if (isVisualizador) return;
+        if (!usuarioPodeEditar) return;
         const id = document.getElementById('editId').value;
         const novaHora = getHoraAtual();
         const docRef = doc(db, "ocorrencias_sttu", id);
@@ -945,7 +962,7 @@
     let conclusaoPendente = null;
 
     window.concluirOcorrencia = (id, dadosAntigos) => {
-        if (isVisualizador) return;
+        if (!usuarioPodeEditar) return;
         conclusaoPendente = {id, dadosAntigos};
         const inputId = document.getElementById('concluirId');
         const textarea = document.getElementById('concluirResultado');
@@ -968,7 +985,7 @@
     };
 
     window.confirmarConclusaoOcorrencia = async () => {
-        if (isVisualizador || !conclusaoPendente) return;
+        if (!usuarioPodeEditar || !conclusaoPendente) return;
 
         const {id, dadosAntigos} = conclusaoPendente;
         const textarea = document.getElementById('concluirResultado');
@@ -995,7 +1012,7 @@
     };
 
     window.excluirOcorrencia = async (id, numRegistro) => {
-        if (!usuarioEhAdmin) {
+        if (!usuarioPodeExcluir) {
             alert("⛔ Acesso Negado: Apenas administradores podem excluir registros.");
             return;
         }
@@ -1017,7 +1034,7 @@
     const elForm = document.getElementById('registroForm');
     if (elForm) {
         elForm.onsubmit = async (e) => {
-            if (isVisualizador) { e.preventDefault(); return; }
+            if (!usuarioPodeCriar) { e.preventDefault(); return; }
             e.preventDefault();
             
             const solicitante = document.getElementById('solicitante').value.trim();
@@ -1114,7 +1131,7 @@
     }
 
     async function registrarLogAuditoria(acao, detalhes) {
-        if (isVisualizador) return;
+        if (!usuarioPodeCriar && !usuarioPodeEditar && !usuarioPodeExcluir) return;
         try {
             await addDoc(collection(db, "logs_auditoria"), {
                 usuario: nomeUsuarioLogado || "DESCONHECIDO",

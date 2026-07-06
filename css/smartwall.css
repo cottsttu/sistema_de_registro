@@ -4345,6 +4345,7 @@ body[data-theme="day"] .region-panel .region-occurrence-andamento strong {
 .list-item.zona-atendimento-1 {
     --zona-bg: rgba(59, 54, 76, 0.92);
     --zona-bg-strong: #3b364c;
+    --zona-rgb: 59, 54, 76;
     --zona-border: rgba(99, 93, 122, 0.82);
     --zona-text: #ffffff;
     --zona-time-bg: rgba(255, 255, 255, 0.18);
@@ -4353,6 +4354,7 @@ body[data-theme="day"] .region-panel .region-occurrence-andamento strong {
 .list-item.zona-atendimento-2 {
     --zona-bg: rgba(255, 204, 0, 0.82);
     --zona-bg-strong: #ffcc00;
+    --zona-rgb: 255, 204, 0;
     --zona-border: rgba(255, 246, 134, 0.92);
     --zona-text: #101820;
     --zona-time-bg: rgba(16, 24, 32, 0.12);
@@ -4361,6 +4363,7 @@ body[data-theme="day"] .region-panel .region-occurrence-andamento strong {
 .list-item.zona-atendimento-3 {
     --zona-bg: rgba(85, 200, 10, 0.84);
     --zona-bg-strong: #55c80a;
+    --zona-rgb: 85, 200, 10;
     --zona-border: rgba(168, 255, 102, 0.82);
     --zona-text: #071525;
     --zona-time-bg: rgba(7, 21, 37, 0.12);
@@ -4369,6 +4372,7 @@ body[data-theme="day"] .region-panel .region-occurrence-andamento strong {
 .list-item.zona-atendimento-4 {
     --zona-bg: rgba(17, 136, 255, 0.84);
     --zona-bg-strong: #1188ff;
+    --zona-rgb: 17, 136, 255;
     --zona-border: rgba(119, 190, 255, 0.82);
     --zona-text: #ffffff;
     --zona-time-bg: rgba(255, 255, 255, 0.18);
@@ -4377,6 +4381,7 @@ body[data-theme="day"] .region-panel .region-occurrence-andamento strong {
 .list-item.zona-atendimento-5 {
     --zona-bg: rgba(229, 6, 6, 0.84);
     --zona-bg-strong: #e50606;
+    --zona-rgb: 229, 6, 6;
     --zona-border: rgba(255, 112, 112, 0.82);
     --zona-text: #ffffff;
     --zona-time-bg: rgba(255, 255, 255, 0.18);
@@ -4385,6 +4390,7 @@ body[data-theme="day"] .region-panel .region-occurrence-andamento strong {
 .list-item.zona-atendimento-geral {
     --zona-bg: rgba(141, 85, 217, 0.82);
     --zona-bg-strong: #8d55d9;
+    --zona-rgb: 141, 85, 217;
     --zona-border: rgba(186, 146, 255, 0.72);
     --zona-text: #ffffff;
     --zona-time-bg: rgba(255, 255, 255, 0.18);
@@ -4393,6 +4399,112 @@ body[data-theme="day"] .region-panel .region-occurrence-andamento strong {
 .list-item.zona-atendimento-sem-regiao {
     --zona-bg: rgba(88, 108, 128, 0.68);
     --zona-bg-strong: rgba(44, 60, 78, 0.88);
+    --zona-rgb: 88, 108, 128;
+    --zona-border: rgba(156, 176, 198, 0.58);
+    --zona-text: #ffffff;
+    --zona-time-bg: rgba(255, 255, 255, 0.14);
+}
+
+.list-item.equipe-vt.zona-atendimento-1 {
+    --zona-bg: rgba(128, 96, 178, 0.86);
+    --zona-bg-strong: #8060b2;
+    --zona-rgb: 128, 96, 178;
+    --zona-border: rgba(176, 146, 226, 0.82);
+    --zona-text: #ffffff;
+}
+
+.list-item.equipe-mt.zona-atendimento-1 {
+    --zona-bg: rgba(75, 50, 116, 0.9);
+    --zona-bg-strong: #4b3274;
+    --zona-rgb: 75, 50, 116;
+    --zona-border: rgba(132, 102, 176, 0.82);
+    --zona-text: #ffffff;
+}
+
+.list-item.equipe-vt.zona-atendimento-2 {
+    --zona-bg: rgba(85, 78, 108, 0.9);
+    --zona-bg-strong: #554e6c;
+    --zona-rgb: 85, 78, 108;
+    --zona-border: rgba(132, 123, 158, 0.82);
+    --zona-text: #ffffff;
+}
+
+.list-item.equipe-mt.zona-atendimento-2 {
+    --zona-bg: rgba(41, 38, 57, 0.92);
+    --zona-bg-strong: #292639;
+    --zona-rgb: 41, 38, 57;
+    --zona-border: rgba(89, 82, 120, 0.82);
+    --zona-text: #ffffff;
+}
+
+.list-item.equipe-vt.zona-atendimento-3 {
+    --zona-bg: rgba(242, 255, 59, 0.84);
+    --zona-bg-strong: #f2ff3b;
+    --zona-rgb: 242, 255, 59;
+    --zona-border: rgba(250, 255, 150, 0.82);
+    --zona-text: #101820;
+}
+
+.list-item.equipe-mt.zona-atendimento-3 {
+    --zona-bg: rgba(170, 179, 0, 0.88);
+    --zona-bg-strong: #aab300;
+    --zona-rgb: 170, 179, 0;
+    --zona-border: rgba(224, 236, 58, 0.82);
+    --zona-text: #101820;
+}
+
+.list-item.equipe-vt.zona-atendimento-4 {
+    --zona-bg: rgba(35, 135, 232, 0.86);
+    --zona-bg-strong: #2387e8;
+    --zona-rgb: 35, 135, 232;
+    --zona-border: rgba(124, 194, 255, 0.82);
+    --zona-text: #ffffff;
+}
+
+.list-item.equipe-mt.zona-atendimento-4 {
+    --zona-bg: rgba(6, 74, 145, 0.9);
+    --zona-bg-strong: #064a91;
+    --zona-rgb: 6, 74, 145;
+    --zona-border: rgba(59, 133, 210, 0.82);
+    --zona-text: #ffffff;
+}
+
+.list-item.equipe-vt.zona-atendimento-5 {
+    --zona-bg: rgba(255, 42, 42, 0.86);
+    --zona-bg-strong: #ff2a2a;
+    --zona-rgb: 255, 42, 42;
+    --zona-border: rgba(255, 132, 132, 0.82);
+    --zona-text: #ffffff;
+}
+
+.list-item.equipe-mt.zona-atendimento-5 {
+    --zona-bg: rgba(143, 0, 0, 0.92);
+    --zona-bg-strong: #8f0000;
+    --zona-rgb: 143, 0, 0;
+    --zona-border: rgba(220, 62, 62, 0.82);
+    --zona-text: #ffffff;
+}
+
+.list-item.equipe-vt.zona-atendimento-geral {
+    --zona-bg: rgba(178, 125, 255, 0.84);
+    --zona-bg-strong: #b27dff;
+    --zona-rgb: 178, 125, 255;
+    --zona-border: rgba(207, 176, 255, 0.82);
+    --zona-text: #ffffff;
+}
+
+.list-item.equipe-mt.zona-atendimento-geral {
+    --zona-bg: rgba(96, 39, 165, 0.9);
+    --zona-bg-strong: #6027a5;
+    --zona-rgb: 96, 39, 165;
+    --zona-border: rgba(151, 100, 215, 0.82);
+    --zona-text: #ffffff;
+}
+
+.list-item.equipe-sem-equipe {
+    --zona-bg: rgba(88, 108, 128, 0.68);
+    --zona-bg-strong: rgba(44, 60, 78, 0.88);
+    --zona-rgb: 88, 108, 128;
     --zona-border: rgba(156, 176, 198, 0.58);
     --zona-text: #ffffff;
     --zona-time-bg: rgba(255, 255, 255, 0.14);
@@ -5499,6 +5611,35 @@ body[data-theme="day"] .active-list-section .list-item,
     --occurrence-rgb: 124, 255, 31;
 }
 
+body[data-theme="night"] .active-list-section .list-item[class*="zona-atendimento-"] {
+    --occurrence-color: color-mix(in srgb, rgb(var(--zona-rgb)) 78%, #ffffff);
+    --occurrence-rgb: var(--zona-rgb);
+    border-color: color-mix(in srgb, rgb(var(--zona-rgb)) 62%, transparent) !important;
+    background:
+        radial-gradient(circle at 7% 50%, rgba(var(--zona-rgb), 0.28), transparent 24%),
+        linear-gradient(90deg, rgba(var(--zona-rgb), 0.22), rgba(4, 19, 35, 0.74) 54%, rgba(4, 19, 35, 0.48)) !important;
+    box-shadow:
+        0 16px 40px rgba(0, 0, 0, 0.3),
+        0 0 26px rgba(var(--zona-rgb), 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+body[data-theme="night"] .active-list-section .list-item[class*="zona-atendimento-"]:hover,
+body[data-theme="night"] .active-list-section .list-item[class*="zona-atendimento-"]:focus-visible {
+    border-color: color-mix(in srgb, rgb(var(--zona-rgb)) 86%, transparent) !important;
+    background:
+        radial-gradient(circle at 7% 50%, rgba(var(--zona-rgb), 0.32), transparent 26%),
+        linear-gradient(90deg, rgba(var(--zona-rgb), 0.26), rgba(5, 24, 43, 0.78) 55%, rgba(5, 24, 43, 0.54)) !important;
+    box-shadow:
+        0 18px 42px rgba(0, 0, 0, 0.34),
+        0 0 28px rgba(var(--zona-rgb), 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.13);
+}
+
+body[data-theme="night"] .active-list-section .list-item[class*="zona-atendimento-"] .item-tipo {
+    color: #f8fbff !important;
+}
+
 .active-list-section .status-dot {
     width: clamp(0.58rem, 0.78vw, 0.82rem);
     height: clamp(0.58rem, 0.78vw, 0.82rem);
@@ -5651,6 +5792,54 @@ body[data-theme="day"] .active-list-section .item-hora,
 body[data-theme="day"] .active-list-section .list-item[class*="zona-atendimento-"] .item-hora {
     color: var(--occurrence-color) !important;
     background: rgba(var(--occurrence-rgb), 0.09);
+}
+
+body[data-theme="day"] .active-list-section .list-item[class*="zona-atendimento-"] {
+    border-color: var(--zona-border) !important;
+    color: var(--zona-text) !important;
+    background: linear-gradient(135deg, var(--zona-bg), var(--zona-bg-strong)) !important;
+    box-shadow:
+        0 12px 28px rgba(39, 50, 62, 0.18),
+        0 0 18px rgba(var(--zona-rgb), 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+body[data-theme="day"] .active-list-section .list-item[class*="zona-atendimento-"]:hover,
+body[data-theme="day"] .active-list-section .list-item[class*="zona-atendimento-"]:focus-visible {
+    background: linear-gradient(135deg, var(--zona-bg), var(--zona-bg-strong)) !important;
+    box-shadow:
+        0 16px 34px rgba(39, 50, 62, 0.24),
+        0 0 24px rgba(var(--zona-rgb), 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.34);
+}
+
+body[data-theme="day"] .active-list-section .list-item[class*="zona-atendimento-"] .status-dot {
+    border-color: color-mix(in srgb, var(--zona-border) 78%, transparent);
+    background: radial-gradient(circle, var(--zona-text) 0 34%, rgba(var(--zona-rgb), 0.2) 36% 100%);
+    box-shadow:
+        0 0 7px rgba(var(--zona-rgb), 0.58),
+        0 0 0 clamp(0.13rem, 0.28vw, 0.24rem) rgba(var(--zona-rgb), 0.1),
+        inset 0 0 14px rgba(var(--zona-rgb), 0.16);
+}
+
+body[data-theme="day"] .active-list-section .list-item[class*="zona-atendimento-"] .item-tipo,
+body[data-theme="day"] .active-list-section .list-item[class*="zona-atendimento-"] .item-hora {
+    color: var(--zona-text) !important;
+    text-shadow: none;
+}
+
+body[data-theme="day"] .active-list-section .list-item[class*="zona-atendimento-"] .item-tipo {
+    border-left-color: color-mix(in srgb, var(--zona-text) 34%, transparent);
+}
+
+body[data-theme="day"] .active-list-section .list-item[class*="zona-atendimento-"] .item-hora {
+    border-color: color-mix(in srgb, var(--zona-border) 76%, transparent);
+    background: var(--zona-time-bg);
+}
+
+body[data-theme="day"] .active-list-section .list-item[class*="zona-atendimento-"] .item-action {
+    border-color: var(--zona-text);
+    filter: drop-shadow(0 0 8px rgba(var(--zona-rgb), 0.54));
 }
 
 @media (max-width: 640px) {
@@ -6468,6 +6657,15 @@ body[data-theme="day"] .region-panel button.region-agent-name.region-agent-name-
     text-shadow: none !important;
 }
 
+body .region-panel .region-agent-name-duplicated,
+body[data-theme="night"] .region-panel .region-agent-name-duplicated,
+body[data-theme="day"] .region-panel .region-agent-name-duplicated {
+    color: #ff243d !important;
+    text-transform: uppercase !important;
+    animation: none !important;
+    text-shadow: none !important;
+}
+
 @media (min-width: 1181px) {
     body {
         overflow: hidden;
@@ -6805,4 +7003,89 @@ body[data-theme="night"] .region-panel .region-agent-group > span,
 body[data-theme="day"] .region-panel .region-agent-group > span {
     min-height: max-content;
     overflow: visible;
+}
+
+body .region-panel .region-fleet-panel .region-agent-name.region-agent-name-duplicated,
+body[data-theme="night"] .region-panel .region-fleet-panel .region-agent-name.region-agent-name-duplicated,
+body[data-theme="day"] .region-panel .region-fleet-panel .region-agent-name.region-agent-name-duplicated,
+body .region-panel .region-agent-group-active .region-agent-name.region-agent-name-duplicated,
+body[data-theme="night"] .region-panel .region-agent-group-active .region-agent-name.region-agent-name-duplicated,
+body[data-theme="day"] .region-panel .region-agent-group-active .region-agent-name.region-agent-name-duplicated,
+body .region-panel .region-agent-group-despacho .region-agent-name.region-agent-name-duplicated,
+body[data-theme="night"] .region-panel .region-agent-group-despacho .region-agent-name.region-agent-name-duplicated,
+body[data-theme="day"] .region-panel .region-agent-group-despacho .region-agent-name.region-agent-name-duplicated,
+body .region-panel .region-agent-group-andamento .region-agent-name.region-agent-name-duplicated,
+body[data-theme="night"] .region-panel .region-agent-group-andamento .region-agent-name.region-agent-name-duplicated,
+body[data-theme="day"] .region-panel .region-agent-group-andamento .region-agent-name.region-agent-name-duplicated {
+    color: #ff0000 !important;
+    text-transform: uppercase !important;
+    animation: none !important;
+    text-shadow: none !important;
+}
+
+body .region-panel .region-ranking-total,
+body[data-theme="night"] .region-panel .region-ranking-total,
+body[data-theme="day"] .region-panel .region-ranking-total {
+    grid-template-columns: 54px 74px minmax(92px, 1fr) minmax(92px, 1fr) !important;
+}
+
+body .region-panel .region-total-label,
+body[data-theme="night"] .region-panel .region-total-label,
+body[data-theme="day"] .region-panel .region-total-label {
+    grid-column: 1 / 3;
+    grid-row: 1;
+    justify-self: center;
+}
+
+body .region-panel .region-total-vt,
+body[data-theme="night"] .region-panel .region-total-vt,
+body[data-theme="day"] .region-panel .region-total-vt {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: center;
+}
+
+body .region-panel .region-total-mt,
+body[data-theme="night"] .region-panel .region-total-mt,
+body[data-theme="day"] .region-panel .region-total-mt {
+    grid-column: 4;
+    grid-row: 1;
+    justify-self: center;
+}
+
+body[data-theme="night"] .region-panel .region-fleet-panel .region-agent-name,
+body[data-theme="night"] .region-panel .region-fleet-panel .region-agent-code,
+body[data-theme="night"] .region-panel .region-fleet-panel .region-agent-name-available,
+body[data-theme="night"] .region-panel .region-fleet-panel .region-agent-name-unavailable,
+body[data-theme="night"] .region-panel .region-fleet-panel button.region-agent-name.region-agent-name-unavailable,
+body[data-theme="night"] .region-panel .region-fleet-panel .region-agent-group-active .region-agent-name,
+body[data-theme="night"] .region-panel .region-fleet-panel .region-agent-group-active .region-agent-code,
+body[data-theme="night"] .region-panel .region-fleet-panel .region-agent-group-despacho .region-agent-name,
+body[data-theme="night"] .region-panel .region-fleet-panel .region-agent-group-despacho .region-agent-code,
+body[data-theme="night"] .region-panel .region-fleet-panel .region-agent-group-andamento .region-agent-name,
+body[data-theme="night"] .region-panel .region-fleet-panel .region-agent-group-andamento .region-agent-code {
+    text-shadow: none !important;
+}
+
+body .region-panel .region-agent-group-active,
+body[data-theme="night"] .region-panel .region-agent-group-active,
+body[data-theme="day"] .region-panel .region-agent-group-active {
+    padding: 2px !important;
+    border: 2px solid #0f8f3a !important;
+    border-radius: 5px !important;
+    background: rgba(15, 143, 58, 0.22) !important;
+    animation: attendingTeamBorderBlink 0.75s ease-in-out infinite !important;
+}
+
+@keyframes attendingTeamBorderBlink {
+    0%,
+    100% {
+        border-color: #0f8f3a;
+        box-shadow: 0 0 0 1px rgba(15, 143, 58, 0.82), 0 0 14px rgba(15, 143, 58, 0.68);
+    }
+
+    50% {
+        border-color: #146b34;
+        box-shadow: 0 0 0 1px rgba(20, 107, 52, 0.9), 0 0 20px rgba(20, 107, 52, 0.78);
+    }
 }

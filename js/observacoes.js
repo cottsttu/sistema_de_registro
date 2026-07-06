@@ -23,9 +23,13 @@
         if (cargo === "admin" || nivel === "admin") return true;
         const permissaoModulo = dadosUsuario?.permissoes?.[modulo];
         if (!permissaoModulo || typeof permissaoModulo !== "object") return false;
-        return permissaoModulo?.[acao] === true
-            || permissaoModulo?.[acao] === "true"
-            || (acao !== "habilitado" && permissaoModulo?.habilitado === true);
+        if (acao === "habilitado") {
+            return permissaoModulo?.habilitado === true
+                || permissaoModulo?.habilitado === "true"
+                || permissaoModulo?.visualizar === true
+                || permissaoModulo?.visualizar === "true";
+        }
+        return permissaoModulo?.[acao] === true || permissaoModulo?.[acao] === "true";
     }
 
     function temPermissaoAdministrativaModulo(dadosUsuario, modulo) {
@@ -51,6 +55,9 @@
     let nomeUsuarioLogado = "ANÔNIMO";
     let isVisualizador = false;
     let isAdmin = false;
+    let usuarioPodeCriar = false;
+    let usuarioPodeEditar = false;
+    let usuarioPodeExcluir = false;
     let maletasRegistradasHoje = new Set();
     let registrosObservacoesHoje = [];
 
@@ -223,16 +230,21 @@
                     const nivel = dados.nivel_acesso || 'total';
                     const cargo = dados.cargo || '';
                     
-                    isAdmin = temPermissaoAdministrativaModulo(dados, "observacoes");
-                    isVisualizador = (nivel === 'leitura' || cargo === 'visualizador') && cargo !== 'admin';
+                    usuarioPodeCriar = temPermissaoModulo(dados, "observacoes", "criar");
+                    usuarioPodeEditar = temPermissaoModulo(dados, "observacoes", "editar");
+                    usuarioPodeExcluir = temPermissaoModulo(dados, "observacoes", "excluir");
+                    isAdmin = usuarioPodeEditar || usuarioPodeExcluir;
+                    isVisualizador = !usuarioPodeCriar && !usuarioPodeEditar && !usuarioPodeExcluir && cargo !== 'admin';
                     renderizarRegistrosObservacoes(registrosObservacoesHoje);
+
+                    if (!usuarioPodeCriar) {
+                        const areaInputs = document.querySelector('.input-section');
+                        if(areaInputs) areaInputs.remove();
+                    }
 
                     if (isVisualizador) {
                         console.log("🔒 MODO APENAS LEITURA ATIVADO (NUCLEAR)");
                         
-                        const areaInputs = document.querySelector('.input-section');
-                        if(areaInputs) areaInputs.remove();
-
                         const areaModal = document.getElementById('modalDevolucao');
                         if(areaModal) areaModal.remove();
 
@@ -342,14 +354,14 @@
 
             item.innerHTML = html;
 
-            if ((data.requerBaixa && !data.baixa && !isVisualizador) || isAdmin) {
+            if ((data.requerBaixa && !data.baixa && usuarioPodeEditar) || isAdmin) {
                 const btnContainer = document.createElement('div');
                 btnContainer.className = 'registro-acoes';
                 btnContainer.style.display = 'flex';
                 btnContainer.style.flexDirection = 'column';
                 btnContainer.style.gap = '5px';
                 
-                if (data.requerBaixa && !data.baixa && !isVisualizador) {
+                if (data.requerBaixa && !data.baixa && usuarioPodeEditar) {
                     const btnBaixa = document.createElement('button');
                     btnBaixa.className = 'btn btn-baixa';
                     btnBaixa.innerText = 'DAR BAIXA / DEVOLVER';
@@ -364,18 +376,19 @@
                     btnContainer.appendChild(btnBaixaFalta);
                 }
 
-                if (isAdmin) {
+                if (usuarioPodeEditar) {
                     const btnEditar = document.createElement('button');
                     btnEditar.className = 'btn btn-editar-registro';
                     btnEditar.innerText = 'EDITAR';
                     btnEditar.onclick = () => window.editarRegistroObservacao(id, data.texto || "");
+                    btnContainer.appendChild(btnEditar);
+                }
 
+                if (usuarioPodeExcluir) {
                     const btnExcluir = document.createElement('button');
                     btnExcluir.className = 'btn btn-excluir-registro';
                     btnExcluir.innerText = 'EXCLUIR';
                     btnExcluir.onclick = () => window.excluirRegistroObservacao(id);
-
-                    btnContainer.appendChild(btnEditar);
                     btnContainer.appendChild(btnExcluir);
                 }
                 
@@ -412,7 +425,7 @@
     }
 
     async function salvarObservacao(texto, requerBaixa = false, extras = {}) {
-        if (isVisualizador) return alert("Acesso Negado: Modo Visualizador.");
+        if (!usuarioPodeCriar) return alert("Acesso Negado.");
 
         try {
             const dados = {
@@ -434,7 +447,7 @@
     }
 
     async function registrarLogAuditoria(acao, detalhes) {
-        if (isVisualizador) return; 
+        if (!usuarioPodeCriar && !usuarioPodeEditar && !usuarioPodeExcluir) return; 
         try {
             await addDoc(collection(db, "logs_auditoria"), {
                 usuario: nomeUsuarioLogado || "DESCONHECIDO",
@@ -446,7 +459,7 @@
     }
 
     window.editarRegistroObservacao = async (idDoc, textoAtual) => {
-        if (!isAdmin) return alert("Acesso negado.");
+        if (!usuarioPodeEditar) return alert("Acesso negado.");
         const novoTexto = prompt("Edite o texto do registro:", textoAtual);
         if (novoTexto === null) return;
 
@@ -467,7 +480,7 @@
     };
 
     window.excluirRegistroObservacao = async (idDoc) => {
-        if (!isAdmin) return alert("Acesso negado.");
+        if (!usuarioPodeExcluir) return alert("Acesso negado.");
         const confirmar = confirm("Tem certeza que deseja excluir este registro permanentemente?");
         if (!confirmar) return;
 
@@ -481,7 +494,7 @@
     };
 
     window.darBaixaNoFirebase = async (idDoc) => {
-        if (isVisualizador) return alert("Acesso Negado.");
+        if (!usuarioPodeEditar) return alert("Acesso Negado.");
         const conferente = prompt("POR FAVOR, DIGITE O NOME DO AGENTE QUE ESTÁ CONFERINDO A DEVOLUÇÃO:");
         if (!conferente || conferente.trim() === "") return;
 
@@ -496,7 +509,7 @@
 
     // --- NOVA FUNÇÃO DO MODAL (ATUALIZADA) ---
     window.abrirModalFalta = (id, texto) => {
-        if (isVisualizador) return alert("Acesso Negado.");
+        if (!usuarioPodeEditar) return alert("Acesso Negado.");
         document.getElementById('id-devolucao-atual').value = id;
 
         // Função hiper-resistente que ignora pontuações e espaços para achar o número exato
@@ -532,7 +545,7 @@
     window.fecharModal = () => document.getElementById('modalDevolucao').style.display = 'none';
 
     window.confirmarBaixaComFalta = async () => {
-        if (isVisualizador) return alert("Acesso Negado.");
+        if (!usuarioPodeEditar) return alert("Acesso Negado.");
         const idDoc = document.getElementById('id-devolucao-atual').value;
         const conferente = document.getElementById('dev-responsavel').value.trim().toUpperCase();
         if (!conferente) return alert("Informe quem conferiu.");
@@ -561,7 +574,7 @@
 
     document.querySelectorAll('.btn-linha').forEach(btn => {
         btn.onclick = () => {
-            if (isVisualizador) return;
+            if (!usuarioPodeCriar) return;
             if (btn.classList.contains('ok')) { btn.classList.remove('ok'); btn.classList.add('nok'); }
             else if (btn.classList.contains('nok')) { btn.classList.remove('nok'); }
             else { btn.classList.add('ok'); }
@@ -569,7 +582,7 @@
     });
 
     document.getElementById('turno-select').addEventListener('change', async function() {
-        if (isVisualizador) return;
+        if (!usuarioPodeCriar) return;
         const turno = this.value;
         const btn = document.getElementById('btn-registrar-inicio');
 
@@ -604,7 +617,7 @@
     });
 
     document.getElementById('btn-registrar-inicio').onclick = async () => {
-        if (isVisualizador) return;
+        if (!usuarioPodeCriar) return;
         const btn = document.getElementById('btn-registrar-inicio');
         btn.disabled = true;
 
@@ -695,7 +708,7 @@
     };
 
     document.getElementById('btn-registrar-maleta').onclick = async () => {
-        if (isVisualizador) return;
+        if (!usuarioPodeCriar) return;
         const nomeAgente = document.getElementById('agente-turno-nome').value.trim().toUpperCase();
         if (!nomeAgente) { alert("Preencha o Nome do Agente no topo primeiro."); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
 
@@ -773,7 +786,7 @@
     };
 
     document.getElementById('btn-registrar-afastamento').onclick = () => {
-        if (isVisualizador) return;
+        if (!usuarioPodeCriar) return;
         const nomeLista = document.getElementById('afast-lista-agentes').value;
         const nomeDigitado = document.getElementById('afast-nome').value.trim();
         const nomeFinal = nomeLista || nomeDigitado;
@@ -788,7 +801,7 @@
     };
 
     document.getElementById('btn-registrar-remocao').onclick = () => {
-    if (isVisualizador) return;
+    if (!usuarioPodeCriar) return;
 
     // Coleta de todos os campos
     const placa = document.getElementById('rem-placa').value.trim().toUpperCase();
@@ -824,19 +837,19 @@
 };
     
     document.getElementById('btn-registrar-inspetor').onclick = () => {
-        if (isVisualizador) return;
+        if (!usuarioPodeCriar) return;
         const relato = document.getElementById('texto-inspetor').value.trim();
         if (relato) { salvarObservacao(`RELATO DO INSPETOR: ${relato}`); document.getElementById('texto-inspetor').value = ""; }
     };
 
     document.getElementById('btn-registrar-obs-geral').onclick = () => {
-        if (isVisualizador) return;
+        if (!usuarioPodeCriar) return;
         const obs = document.getElementById('texto-obs-geral').value.trim();
         if (obs) { salvarObservacao(`OBSERVAÇÃO GERAL: ${obs}`); document.getElementById('texto-obs-geral').value = ""; }
     };
 
     document.getElementById('btn-registrar-cones').onclick = () => {
-        if (isVisualizador) return;
+        if (!usuarioPodeCriar) return;
         const equipe = document.getElementById('cone-equipe').value;
         const local = document.getElementById('cone-local').value.trim().toUpperCase();
         let col = parseInt(document.getElementById('cone-colocado').value) || 0;
@@ -855,7 +868,7 @@
     };
 
     document.getElementById('btn-registrar-complementar').onclick = () => {
-        if (isVisualizador) return;
+        if (!usuarioPodeCriar) return;
         const nome = document.getElementById('comp-nome').value.trim().toUpperCase();
         const funcao = document.getElementById('comp-funcao').value.trim().toUpperCase();
         if (nome && funcao) {
