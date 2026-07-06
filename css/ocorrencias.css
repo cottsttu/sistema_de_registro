@@ -506,6 +506,17 @@ body[data-theme="night"] input[type="time"] {
     color: #f6feff;
 }
 
+body[data-theme="night"] select option,
+body[data-theme="night"] select optgroup {
+    color: #ffffff;
+    background-color: #0b1b24;
+}
+
+body[data-theme="night"] select option:checked {
+    color: #ffffff;
+    background-color: #123141;
+}
+
 body[data-theme="night"] input::placeholder,
 body[data-theme="night"] textarea::placeholder {
     color: rgba(226, 246, 250, 0.62);
@@ -540,6 +551,15 @@ body[data-theme="night"] .modal-content {
 body[data-theme="night"] .modal-header,
 body[data-theme="night"] .form-group label {
     color: #f2fbff;
+}
+
+body[data-theme="night"] #concluirResultado {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+body[data-theme="night"] #concluirResultado::placeholder {
+    color: #000000;
 }
 
 body[data-theme="night"] .lista-historico li {
