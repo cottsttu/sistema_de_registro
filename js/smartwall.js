@@ -1189,7 +1189,7 @@ async function iniciarSmartwall() {
             canvas.clientWidth || canvas.parentElement?.clientWidth || 420,
             canvas.clientHeight || canvas.parentElement?.clientHeight || 420
         );
-        const paddingGrafico = Math.round(Math.max(14, Math.min(56, dimensaoGrafico * 0.105)));
+        const paddingGrafico = Math.round(Math.max(32, Math.min(82, dimensaoGrafico * 0.18)));
         if (myChartRegioes) myChartRegioes.destroy();
         renderizarRankingGraficoRegiao(labelsResumo, frotaAtivaPorRegiao, agentesAtivosPorRegiao, dadosRegiaoAtivas);
 
@@ -1262,9 +1262,9 @@ async function iniciarSmartwall() {
                     return;
                 }
 
-                meta.data.forEach((arc, index) => {
+                const labelsExternos = meta.data.map((arc, index) => {
                     const valor = chart.data.datasets[0].data[index] || 0;
-                    if (!valor) return;
+                    if (!valor) return null;
                     const regiao = chart.data.labels[index];
                     const cor = chart.data.datasets[0].backgroundColor[index] || "#ffffff";
                     const startAngle = Number.isFinite(arc.startAngle) ? arc.startAngle : -Math.PI / 2;
@@ -1278,7 +1278,7 @@ async function iniciarSmartwall() {
                     const startX = centerX + Math.cos(angle) * (outerRadius - 2);
                     const startY = centerY + Math.sin(angle) * (outerRadius - 2);
                     const ladoDireito = Math.cos(angle) >= 0;
-                    const distanciaExterna = Math.max(20, Math.min(34, outerRadius * 0.12));
+                    const distanciaExterna = Math.max(28, Math.min(46, outerRadius * 0.16));
                     const rotuloZona = formatarRotuloZona(regiao, index);
                     const percentualZona = `${formatarPercentualZona(valor)}%`;
                     ctx.font = "800 13px Segoe UI, sans-serif";
@@ -1286,7 +1286,7 @@ async function iniciarSmartwall() {
                     ctx.font = "800 14px Segoe UI, sans-serif";
                     const larguraPercentual = ctx.measureText(percentualZona).width;
                     const larguraLabel = Math.max(larguraRotulo, larguraPercentual);
-                    const margemLateral = 44;
+                    const margemLateral = Math.max(36, larguraLabel + 8);
                     const espacoLateral = ladoDireito
                         ? largura - (centerX + outerRadius) - margemLateral
                         : centerX - outerRadius - margemLateral;
@@ -1299,24 +1299,102 @@ async function iniciarSmartwall() {
                     const topoDisponivel = Math.max(18, centerY - outerRadius - 16);
                     const passoSuperior = Math.max(15, Math.min(22, topoDisponivel / Math.max(1, meta.data.length)));
                     const labelXSuperior = centerX + (ladoDireito ? 1 : -1) * Math.min(Math.max(outerRadius * 0.34, larguraLabel * 0.72), Math.max(28, centerX - margemLateral));
-                    const labelX = Math.min(Math.max(usarAreaSuperior ? labelXSuperior : labelXBase, margemLateral), largura - margemLateral);
+                    const limiteEsquerdo = ladoDireito ? 8 : larguraLabel + 8;
+                    const limiteDireito = ladoDireito ? largura - larguraLabel - 8 : largura - 8;
+                    const labelX = Math.min(Math.max(usarAreaSuperior ? labelXSuperior : labelXBase, limiteEsquerdo), limiteDireito);
                     const labelY = usarAreaSuperior
                         ? Math.min(Math.max(topoDisponivel - (index % meta.data.length) * passoSuperior, 18), altura - 22)
                         : Math.min(Math.max(labelYBase, 18), altura - 22);
+
+                    return {
+                        valor,
+                        cor,
+                        startX,
+                        startY,
+                        ladoDireito,
+                        rotuloZona,
+                        percentualZona,
+                        textoX,
+                        textoY,
+                        labelX,
+                        labelY,
+                        larguraLabel,
+                        outerRadius,
+                        innerRadiusArc
+                    };
+                }).filter(Boolean);
+
+                const distribuirLabels = (items) => {
+                    if (!items.length) return;
+                    const alturaLabel = 29;
+                    const espacoMinimo = 11;
+                    const minGap = alturaLabel + espacoMinimo;
+                    const margemVertical = Math.max(22, alturaLabel / 2 + 6);
+                    const topo = margemVertical;
+                    const base = altura - margemVertical;
+                    items.sort((a, b) => a.labelY - b.labelY);
+                    items.forEach((item, index) => {
+                        const anterior = items[index - 1];
+                        item.labelY = Math.min(Math.max(item.labelY, topo), base);
+                        if (anterior && item.labelY - anterior.labelY < minGap) {
+                            item.labelY = anterior.labelY + minGap;
+                        }
+                    });
+                    const excesso = items[items.length - 1].labelY - base;
+                    if (excesso > 0) {
+                        items.forEach((item) => {
+                            item.labelY -= excesso;
+                        });
+                    }
+                    for (let index = items.length - 2; index >= 0; index -= 1) {
+                        const proximo = items[index + 1];
+                        if (proximo.labelY - items[index].labelY < minGap) {
+                            items[index].labelY = proximo.labelY - minGap;
+                        }
+                    }
+                    items.forEach((item) => {
+                        item.labelY = Math.min(Math.max(item.labelY, topo), base);
+                    });
+                };
+
+                distribuirLabels(labelsExternos.filter((item) => item.ladoDireito));
+                distribuirLabels(labelsExternos.filter((item) => !item.ladoDireito));
+
+                labelsExternos.forEach((item) => {
+                    const {
+                        valor,
+                        cor,
+                        startX,
+                        startY,
+                        ladoDireito,
+                        rotuloZona,
+                        percentualZona,
+                        textoX,
+                        textoY,
+                        labelX,
+                        labelY,
+                        larguraLabel,
+                        outerRadius,
+                        innerRadiusArc
+                    } = item;
 
                     ctx.strokeStyle = cor;
                     ctx.lineWidth = 1.35;
                     ctx.beginPath();
                     ctx.moveTo(startX, startY);
-                    ctx.lineTo(labelX + (ladoDireito ? -4 : 4), labelY);
+                    ctx.lineTo(labelX + (ladoDireito ? -7 : 7), labelY);
                     ctx.stroke();
 
                     ctx.textAlign = ladoDireito ? "left" : "right";
+                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = temaDia ? "rgba(255, 255, 255, 0.92)" : "rgba(2, 11, 22, 0.94)";
                     ctx.fillStyle = cor;
                     ctx.font = "800 13px Segoe UI, sans-serif";
-                    ctx.fillText(rotuloZona, labelX, labelY - 6);
+                    ctx.strokeText(rotuloZona, labelX, labelY - 9);
+                    ctx.fillText(rotuloZona, labelX, labelY - 9);
                     ctx.font = "800 14px Segoe UI, sans-serif";
-                    ctx.fillText(percentualZona, labelX, labelY + 8);
+                    ctx.strokeText(percentualZona, labelX, labelY + 10);
+                    ctx.fillText(percentualZona, labelX, labelY + 10);
                     ctx.textAlign = "center";
                     ctx.fillStyle = temaDia ? "#101820" : "#ffffff";
                     ctx.shadowColor = temaDia ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.48)";

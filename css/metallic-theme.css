@@ -889,3 +889,196 @@ body[data-theme="night"] .theme-switch .theme-icon {
 body[data-theme="night"] .theme-switch .theme-icon.sun {
     color: #101820 !important;
 }
+
+body[data-theme="night"] .table-container,
+body[data-theme="night"] .table-container.container-rolagem {
+    border-color: rgba(85, 246, 255, 0.20) !important;
+    color: #f2fbff !important;
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)),
+        rgba(7, 20, 29, 0.92) !important;
+    box-shadow: 0 0 22px rgba(85, 246, 255, 0.08), 0 12px 36px rgba(0, 0, 0, 0.38) !important;
+}
+
+body[data-theme="night"] table,
+body[data-theme="night"] #tabelaAtivos,
+body[data-theme="night"] #relatorioFinal,
+body[data-theme="night"] #tabelaPendentes,
+body[data-theme="night"] #relatorioTable,
+body[data-theme="night"] .table-container.container-rolagem table {
+    color: #f2fbff !important;
+    border-color: rgba(85, 246, 255, 0.18) !important;
+    background: rgba(8, 23, 31, 0.88) !important;
+    box-shadow: inset 0 0 18px rgba(85, 246, 255, 0.04) !important;
+}
+
+body[data-theme="night"] thead th,
+body[data-theme="night"] table th,
+body[data-theme="night"] .data-header,
+body[data-theme="night"] #tabelaAtivos th,
+body[data-theme="night"] #relatorioFinal th,
+body[data-theme="night"] #tabelaPendentes th,
+body[data-theme="night"] #relatorioTable th,
+body[data-theme="night"] #headerOriginalRow .data-header,
+body[data-theme="night"] .container-rolagem th {
+    color: #e7fbff !important;
+    border-color: rgba(85, 246, 255, 0.22) !important;
+    background: rgba(15, 43, 55, 0.96) !important;
+    text-shadow: none !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
+}
+
+body[data-theme="night"] td,
+body[data-theme="night"] #tabelaAtivos td,
+body[data-theme="night"] #relatorioFinal td,
+body[data-theme="night"] #tabelaPendentes td,
+body[data-theme="night"] #relatorioTable td,
+body[data-theme="night"] form td,
+body[data-theme="night"] #tabelaAtivos td::before,
+body[data-theme="night"] #relatorioFinal td::before,
+body[data-theme="night"] #relatorioFinal .historico-data-mobile::before {
+    color: #f2fbff !important;
+    border-color: rgba(85, 246, 255, 0.18) !important;
+    background: rgba(8, 23, 31, 0.58) !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+body[data-theme="night"] #tabelaAtivos th {
+    color: #ffe36a !important;
+    border-color: rgba(255, 216, 55, 0.72) !important;
+    background: rgba(42, 35, 6, 0.76) !important;
+    box-shadow: inset 0 0 10px rgba(255, 216, 55, 0.16) !important;
+}
+
+body[data-theme="night"] #tabelaAtivos td[class*="regiao-"],
+body[data-theme="night"] #relatorioFinal td[class*="regiao-"],
+body[data-theme="night"] form td[class*="regiao-"],
+body[data-theme="night"] #tabelaAtivos td.regiao-geral,
+body[data-theme="night"] #relatorioFinal td.regiao-geral,
+body[data-theme="night"] form td.regiao-geral,
+body[data-theme="night"] #tabelaPendentes td[class*="regiao-"],
+body[data-theme="night"] #relatorioTable td[class*="regiao-"],
+body[data-theme="night"] #tabelaPendentes td.regiao-geral,
+body[data-theme="night"] #relatorioTable td.regiao-geral {
+    text-align: center;
+    font-weight: bold;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+body[data-theme="night"] #tabelaAtivos td.regiao-1,
+body[data-theme="night"] #relatorioFinal td.regiao-1,
+body[data-theme="night"] form td.regiao-1,
+body[data-theme="night"] #tabelaPendentes td.regiao-1,
+body[data-theme="night"] #relatorioTable td.regiao-1 {
+    color: #ffffff !important;
+    background: #3b364c !important;
+}
+
+body[data-theme="night"] #tabelaAtivos td.regiao-2,
+body[data-theme="night"] #relatorioFinal td.regiao-2,
+body[data-theme="night"] form td.regiao-2,
+body[data-theme="night"] #tabelaPendentes td.regiao-2,
+body[data-theme="night"] #relatorioTable td.regiao-2 {
+    color: #111111 !important;
+    background: #e4f001 !important;
+}
+
+body[data-theme="night"] #tabelaAtivos td.regiao-3,
+body[data-theme="night"] #relatorioFinal td.regiao-3,
+body[data-theme="night"] form td.regiao-3,
+body[data-theme="night"] #tabelaPendentes td.regiao-3,
+body[data-theme="night"] #relatorioTable td.regiao-3 {
+    color: #111111 !important;
+    background: #64ec02 !important;
+}
+
+body[data-theme="night"] #tabelaAtivos td.regiao-4,
+body[data-theme="night"] #relatorioFinal td.regiao-4,
+body[data-theme="night"] form td.regiao-4,
+body[data-theme="night"] #tabelaPendentes td.regiao-4,
+body[data-theme="night"] #relatorioTable td.regiao-4 {
+    color: #ffffff !important;
+    background: #096acc !important;
+}
+
+body[data-theme="night"] #tabelaAtivos td.regiao-5,
+body[data-theme="night"] #relatorioFinal td.regiao-5,
+body[data-theme="night"] form td.regiao-5,
+body[data-theme="night"] #tabelaPendentes td.regiao-5,
+body[data-theme="night"] #relatorioTable td.regiao-5 {
+    color: #ffffff !important;
+    background: #d30000 !important;
+}
+
+body[data-theme="night"] #tabelaAtivos td.regiao-geral,
+body[data-theme="night"] #relatorioFinal td.regiao-geral,
+body[data-theme="night"] form td.regiao-geral,
+body[data-theme="night"] #tabelaPendentes td.regiao-geral,
+body[data-theme="night"] #relatorioTable td.regiao-geral {
+    color: #ffffff !important;
+    background: #67479a !important;
+}
+
+body[data-theme="night"] #areaRegistro #registroForm .registro-panel {
+    color: #f4fbff !important;
+    border-color: rgba(85, 246, 255, 0.42) !important;
+    background:
+        radial-gradient(circle at 0 0, rgba(20, 164, 204, 0.16), transparent 31%),
+        linear-gradient(145deg, rgba(8, 30, 44, 0.94), rgba(4, 17, 27, 0.98)) !important;
+    box-shadow:
+        inset 0 1px 30px rgba(85, 246, 255, 0.07),
+        0 0 18px rgba(85, 246, 255, 0.14),
+        0 20px 46px rgba(0, 0, 0, 0.28) !important;
+}
+
+body[data-theme="night"] #areaRegistro #registroForm .registro-section {
+    border-color: rgba(144, 220, 238, 0.24) !important;
+    background: rgba(255, 255, 255, 0.035) !important;
+    box-shadow: inset 0 1px 20px rgba(255, 255, 255, 0.04) !important;
+}
+
+body[data-theme="night"] #areaRegistro #registroForm .registro-hero h2,
+body[data-theme="night"] #areaRegistro #registroForm .registro-hero p,
+body[data-theme="night"] #areaRegistro #registroForm .registro-field label,
+body[data-theme="night"] #areaRegistro #registroForm .qtc-label,
+body[data-theme="night"] #areaRegistro #registroForm .subtipo-label {
+    color: #ffffff !important;
+    text-shadow: none !important;
+}
+
+body[data-theme="night"] #areaRegistro #registroForm .registro-hero-icon {
+    color: #86f7ff !important;
+    border-color: rgba(85, 246, 255, 0.52) !important;
+    background: rgba(12, 106, 139, 0.44) !important;
+    box-shadow: inset 0 0 18px rgba(85, 246, 255, 0.18), 0 0 18px rgba(85, 246, 255, 0.24) !important;
+}
+
+body[data-theme="night"] #areaRegistro #registroForm .registro-panel input[type="text"],
+body[data-theme="night"] #areaRegistro #registroForm .registro-panel input[type="tel"],
+body[data-theme="night"] #areaRegistro #registroForm .registro-panel select,
+body[data-theme="night"] #areaRegistro #registroForm .registro-panel textarea,
+body[data-theme="night"] #areaRegistro #registroForm .registro-panel .hora-atual {
+    color: #ffffff !important;
+    border-color: rgba(85, 246, 255, 0.78) !important;
+    background: rgba(2, 17, 29, 0.70) !important;
+    box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.18) !important;
+}
+
+body[data-theme="night"] #areaRegistro #registroForm .registro-panel #numRegistro {
+    color: #cbd9ff !important;
+    border-color: rgba(44, 121, 255, 0.58) !important;
+    background: rgba(6, 34, 82, 0.58) !important;
+}
+
+body[data-theme="night"] #areaRegistro #registroForm .registro-panel input::placeholder,
+body[data-theme="night"] #areaRegistro #registroForm .registro-panel textarea::placeholder {
+    color: rgba(255, 255, 255, 0.72) !important;
+}
+
+body[data-theme="night"] #areaRegistro #registroForm .registro-panel .subtipo-container,
+body[data-theme="night"] #areaRegistro #registroForm .registro-panel .qtc-container {
+    border-color: rgba(85, 246, 255, 0.34) !important;
+    background: rgba(7, 34, 48, 0.74) !important;
+}
