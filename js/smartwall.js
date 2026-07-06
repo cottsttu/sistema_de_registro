@@ -57,6 +57,7 @@ async function iniciarSmartwall() {
     vtIconImg.addEventListener("load", () => myChartRegioes?.update("none"));
     mtIconImg.src = "src/mt_png.png";
     vtIconImg.src = "src/vt_png.png";
+    let tvDisplayFrame = null;
     let myChartRegioes = null;
     let myChartTipos = null;
     let turnoAtendimentoAtual = getTurnoAtualKey();
@@ -83,6 +84,43 @@ async function iniciarSmartwall() {
     Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
     Chart.defaults.font.weight = "700";
     Chart.defaults.animation = false;
+
+    function obterViewportEfetivo() {
+        const largura = window.innerWidth || document.documentElement.clientWidth || 0;
+        const altura = window.innerHeight || document.documentElement.clientHeight || 0;
+        const dpr = window.devicePixelRatio || 1;
+        return {
+            largura,
+            altura,
+            dpr,
+            larguraEfetiva: Math.round(largura * dpr),
+            alturaEfetiva: Math.round(altura * dpr)
+        };
+    }
+
+    function atualizarModoDisplaySmartwall() {
+        const { largura, altura, dpr, larguraEfetiva, alturaEfetiva } = obterViewportEfetivo();
+        const paisagem = largura >= altura;
+        const areaEfetiva = larguraEfetiva * alturaEfetiva;
+        const tv4k = paisagem && larguraEfetiva >= 3200 && alturaEfetiva >= 1600 && areaEfetiva >= 5000000;
+        const tvFhd = paisagem && !tv4k && larguraEfetiva >= 1800 && alturaEfetiva >= 980 && dpr <= 1.5;
+        const modoAtual = tv4k ? "tv-4k" : tvFhd ? "tv-fhd" : "default";
+
+        if (document.body.dataset.smartwallDisplay === modoAtual) return;
+        document.body.dataset.smartwallDisplay = modoAtual;
+    }
+
+    function agendarAtualizacaoModoDisplaySmartwall() {
+        if (tvDisplayFrame !== null) return;
+        tvDisplayFrame = window.requestAnimationFrame(() => {
+            tvDisplayFrame = null;
+            atualizarModoDisplaySmartwall();
+        });
+    }
+
+    atualizarModoDisplaySmartwall();
+    window.addEventListener("resize", agendarAtualizacaoModoDisplaySmartwall);
+    window.addEventListener("orientationchange", agendarAtualizacaoModoDisplaySmartwall);
 
     function atualizarTemaGraficos() {
         if (myChartRegioes) {

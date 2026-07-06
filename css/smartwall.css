@@ -7803,6 +7803,191 @@ body[data-theme="day"] .region-panel .region-agent-group > span {
     overflow: visible;
 }
 
+body[data-smartwall-display="tv-fhd"],
+body[data-smartwall-display="tv-4k"] {
+    padding: clamp(1rem, 1.5vw, 2.25rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .smartwall-shell,
+body[data-smartwall-display="tv-4k"] .smartwall-shell {
+    width: min(100%, 100vw);
+    height: calc(100vh - clamp(1rem, 1.5vw, 2.5rem));
+    gap: clamp(0.6rem, 0.9vw, 1.25rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .smart-header,
+body[data-smartwall-display="tv-4k"] .smart-header {
+    min-height: clamp(4.8rem, 4.6vw, 6.25rem);
+    padding: clamp(0.8rem, 1.05vw, 1.25rem) clamp(1rem, 1.4vw, 1.8rem);
+    border-radius: clamp(0.9rem, 1vw, 1.2rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .brand-mark,
+body[data-smartwall-display="tv-4k"] .brand-mark {
+    width: clamp(3.2rem, 3.2vw, 4.5rem);
+    height: clamp(3.2rem, 3.2vw, 4.5rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .brand-title {
+    font-size: clamp(1.45rem, 1.15vw, 2.1rem);
+}
+
+body[data-smartwall-display="tv-4k"] .brand-title {
+    font-size: clamp(1.8rem, 1.1vw, 2.65rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .brand-subtitle {
+    font-size: clamp(0.72rem, 0.64vw, 0.94rem);
+}
+
+body[data-smartwall-display="tv-4k"] .brand-subtitle {
+    font-size: clamp(0.84rem, 0.56vw, 1.06rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .header-actions,
+body[data-smartwall-display="tv-4k"] .header-actions {
+    gap: clamp(0.55rem, 0.8vw, 1rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .operator-chip,
+body[data-smartwall-display="tv-fhd"] .clock-panel,
+body[data-smartwall-display="tv-4k"] .operator-chip,
+body[data-smartwall-display="tv-4k"] .clock-panel {
+    min-height: clamp(3.1rem, 3vw, 4rem);
+    padding: clamp(0.45rem, 0.6vw, 0.8rem) clamp(0.7rem, 0.9vw, 1rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .kpi-container,
+body[data-smartwall-display="tv-4k"] .kpi-container {
+    gap: clamp(0.45rem, 0.65vw, 0.85rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .kpi-card,
+body[data-smartwall-display="tv-4k"] .kpi-card {
+    min-height: clamp(4rem, 4.2vw, 5.8rem);
+    padding: clamp(0.45rem, 0.7vw, 0.75rem) clamp(0.8rem, 1vw, 1.1rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .kpi-card h3,
+body[data-smartwall-display="tv-4k"] .kpi-card h3 {
+    font-size: clamp(0.66rem, 0.58vw, 0.9rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .main-content,
+body[data-smartwall-display="tv-4k"] .main-content {
+    gap: clamp(0.6rem, 0.9vw, 1.2rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .panel-card,
+body[data-smartwall-display="tv-4k"] .panel-card {
+    padding: clamp(0.75rem, 1vw, 1.25rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .panel-title,
+body[data-smartwall-display="tv-4k"] .panel-title {
+    font-size: clamp(0.92rem, 0.88vw, 1.2rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .region-panel,
+body[data-smartwall-display="tv-4k"] .region-panel {
+    column-gap: clamp(0.75rem, 1vw, 1.25rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .region-chart-wrap,
+body[data-smartwall-display="tv-4k"] .region-chart-wrap {
+    width: min(100%, 60vh, 40rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .shift-filter,
+body[data-smartwall-display="tv-4k"] .shift-filter {
+    width: min(100%, 38rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .region-ranking-panel,
+body[data-smartwall-display="tv-4k"] .region-ranking-panel {
+    padding: clamp(0.6rem, 0.8vw, 1rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .region-name {
+    font-size: 1.18rem;
+}
+
+body[data-smartwall-display="tv-4k"] .region-name {
+    font-size: 1.38rem;
+}
+
+body[data-smartwall-display="tv-fhd"] .region-percent {
+    min-width: 64px;
+    padding: 5px 7px;
+    font-size: 0.84rem;
+}
+
+body[data-smartwall-display="tv-4k"] .region-percent {
+    min-width: 72px;
+    padding: 6px 8px;
+    font-size: 0.96rem;
+}
+
+body[data-smartwall-display="tv-fhd"] .region-zone-arrow {
+    width: 0.72rem;
+    height: 0.72rem;
+}
+
+body[data-smartwall-display="tv-4k"] .region-zone-arrow {
+    width: 0.88rem;
+    height: 0.88rem;
+}
+
+body[data-smartwall-display="tv-fhd"] .type-content,
+body[data-smartwall-display="tv-4k"] .type-content {
+    gap: clamp(0.45rem, 0.7vw, 0.9rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .type-chart-wrap {
+    min-height: 32rem;
+}
+
+body[data-smartwall-display="tv-4k"] .type-chart-wrap {
+    min-height: 38rem;
+}
+
+body[data-smartwall-display="tv-fhd"] .type-legend-item {
+    min-height: 60px;
+}
+
+body[data-smartwall-display="tv-4k"] .type-legend-item {
+    min-height: 68px;
+}
+
+body[data-smartwall-display="tv-fhd"] .type-legend-name,
+body[data-smartwall-display="tv-4k"] .type-legend-name {
+    font-size: clamp(0.72rem, 0.62vw, 0.9rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .type-legend-percent {
+    font-size: 0.78rem;
+}
+
+body[data-smartwall-display="tv-4k"] .type-legend-percent {
+    font-size: 0.9rem;
+}
+
+body[data-smartwall-display="tv-fhd"] .list-item,
+body[data-smartwall-display="tv-4k"] .list-item {
+    min-height: clamp(3.9rem, 4.2vw, 5rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .item-reg,
+body[data-smartwall-display="tv-fhd"] .item-tipo,
+body[data-smartwall-display="tv-fhd"] .item-hora,
+body[data-smartwall-display="tv-fhd"] .item-zona,
+body[data-smartwall-display="tv-4k"] .item-reg,
+body[data-smartwall-display="tv-4k"] .item-tipo,
+body[data-smartwall-display="tv-4k"] .item-hora,
+body[data-smartwall-display="tv-4k"] .item-zona {
+    font-size: clamp(0.68rem, 0.75vw, 0.95rem);
+}
+
 body .region-panel .region-fleet-panel .region-agent-name.region-agent-name-duplicated,
 body[data-theme="night"] .region-panel .region-fleet-panel .region-agent-name.region-agent-name-duplicated,
 body[data-theme="day"] .region-panel .region-fleet-panel .region-agent-name.region-agent-name-duplicated,
