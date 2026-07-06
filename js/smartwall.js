@@ -343,7 +343,7 @@ async function iniciarSmartwall() {
         const qtdDespacho = ativas.filter((ocorrencia) => STATUS_DESPACHO.has(normalizarTexto(ocorrencia.situacao))).length;
         const qtdAndamento = ativas.filter((ocorrencia) => STATUS_EM_ANDAMENTO.has(normalizarTexto(ocorrencia.situacao))).length;
 
-        const docsAtivosAgentesTurno = docsAtivosAgentes;
+        const docsAtivosAgentesTurno = filtrarPorTurnoAtendimento(docsAtivosAgentes);
         const hojeTurno = filtrarPorTurnoAtendimento(hoje);
         const ativasTurno = filtrarPorTurnoAtendimento(ativas);
         const ativasHojeTurno = ativasTurno.filter((ocorrencia) => ocorrencia.data_filtro === dataFiltro);
@@ -353,7 +353,8 @@ async function iniciarSmartwall() {
         const frotaAtivaPorRegiao = calcularFrotaOcorrenciasPorRegiao(ativasTurno);
         const frotaOcorrenciasHoje = calcularFrotaOcorrencias(hojeTurno);
         const frotaOcorrenciasHojePorRegiao = calcularFrotaOcorrenciasPorRegiaoPeriodo(hojeTurno);
-        const agentesPorRegiao = calcularAgentesPorRegiao(docsAtivosAgentesTurno, ativasTurno);
+        const docsHistoricoTurno = filtrarPorTurnoAtendimento(docsHistoricoAgentes);
+        const agentesPorRegiao = calcularAgentesPorRegiao(docsAtivosAgentesTurno, ativasTurno, docsHistoricoTurno);
         const frotaDisponivelPainel = calcularFrotaDisponivelPainel(agentesPorRegiao);
 
         atualizarResumoAtendimento(ativasHojeTurno.length);
@@ -571,7 +572,7 @@ async function iniciarSmartwall() {
         ]));
     }
 
-    function calcularAgentesPorRegiao(docsAtivosAgentes, ocorrenciasAtivas = []) {
+    function calcularAgentesPorRegiao(docsAtivosAgentes, ocorrenciasAtivas = [], docsHistoricoAgentes = []) {
         const ocorrenciasPorEquipe = new Map();
         const codigosEmOcorrencia = new Set();
         ocorrenciasAtivas.forEach((ocorrencia) => {
@@ -590,6 +591,39 @@ async function iniciarSmartwall() {
 
         const base = Object.fromEntries(regioesBase.map((regiao) => [regiao, { mt: [], vt: [] }]));
         const equipesAtivasPorCodigo = new Map();
+        const equipesPainelPorChave = new Map();
+
+        const registrarEquipePainel = (tipo, codigo, zona, dados = {}) => {
+            if (!base[zona]) return;
+            const chave = `${tipo}:${codigo}`;
+            const existente = equipesPainelPorChave.get(chave);
+            const nomes = [...new Set([...(existente?.nomes || []), ...(dados.nomes || [])])];
+
+            if (existente) {
+                existente.nomes = nomes;
+                existente.disponivelSmartwall = existente.disponivelSmartwall !== false && dados.disponivelSmartwall !== false;
+                existente.motivoIndisponibilidadeSmartwall = dados.motivoIndisponibilidadeSmartwall || existente.motivoIndisponibilidadeSmartwall || "";
+                existente.ocorrencias = [...new Set([...(existente.ocorrencias || []), ...(dados.ocorrencias || [])])];
+                existente.atendimentoStatus = existente.atendimentoStatus === "andamento" || dados.atendimentoStatus === "andamento"
+                    ? "andamento"
+                    : existente.atendimentoStatus || dados.atendimentoStatus || "historico";
+                existente.historicoSmartwall = Boolean(existente.historicoSmartwall && dados.historicoSmartwall);
+                return;
+            }
+
+            const equipe = {
+                codigo,
+                nomes,
+                disponivelSmartwall: dados.disponivelSmartwall !== false,
+                motivoIndisponibilidadeSmartwall: dados.motivoIndisponibilidadeSmartwall || "",
+                ocorrencias: dados.ocorrencias || [],
+                atendimentoStatus: dados.atendimentoStatus || "historico",
+                historicoSmartwall: Boolean(dados.historicoSmartwall)
+            };
+            const destino = tipo === "MT" ? base[zona].mt : base[zona].vt;
+            destino.push(equipe);
+            equipesPainelPorChave.set(chave, equipe);
+        };
 
         docsAtivosAgentes.forEach((item) => {
             const nomes = [...new Set(extrairAgentes(item))];
@@ -615,9 +649,7 @@ async function iniciarSmartwall() {
         equipesAtivasPorCodigo.forEach((equipeAtiva, codigo) => {
             const zona = equipeAtiva.zona;
             if (!base[zona] || codigosEmOcorrencia.has(codigo)) return;
-            const destino = equipeAtiva.tipo === "MT" ? base[zona].mt : base[zona].vt;
-            destino.push({
-                codigo,
+            registrarEquipePainel(equipeAtiva.tipo, codigo, zona, {
                 nomes: equipeAtiva.nomes || [],
                 disponivelSmartwall: equipeAtiva.disponivelSmartwall !== false,
                 motivoIndisponibilidadeSmartwall: equipeAtiva.motivoIndisponibilidadeSmartwall || "",
@@ -637,8 +669,7 @@ async function iniciarSmartwall() {
                 const chave = `VT:${codigo}`;
                 if (codigosRegistrados.has(chave)) return;
                 const equipeAtiva = equipesAtivasPorCodigo.get(codigo) || {};
-                base[zona].vt.push({
-                    codigo,
+                registrarEquipePainel("VT", codigo, zona, {
                     nomes: equipeAtiva.nomes || [],
                     disponivelSmartwall: equipeAtiva.disponivelSmartwall !== false,
                     motivoIndisponibilidadeSmartwall: equipeAtiva.motivoIndisponibilidadeSmartwall || "",
@@ -652,8 +683,7 @@ async function iniciarSmartwall() {
                 const chave = `MT:${codigo}`;
                 if (codigosRegistrados.has(chave)) return;
                 const equipeAtiva = equipesAtivasPorCodigo.get(codigo) || {};
-                base[zona].mt.push({
-                    codigo,
+                registrarEquipePainel("MT", codigo, zona, {
                     nomes: equipeAtiva.nomes || [],
                     disponivelSmartwall: equipeAtiva.disponivelSmartwall !== false,
                     motivoIndisponibilidadeSmartwall: equipeAtiva.motivoIndisponibilidadeSmartwall || "",
@@ -661,6 +691,23 @@ async function iniciarSmartwall() {
                     atendimentoStatus
                 });
                 codigosRegistrados.add(chave);
+            });
+        });
+
+        docsHistoricoAgentes.forEach((item) => {
+            const zona = getZona(item);
+            if (!base[zona]) return;
+            const nomes = [...new Set(extrairAgentes(item))];
+            ["VT", "MT"].forEach((tipo) => {
+                extrairCodigosEquipe(item?.veiculo || item?.equipe || item?.codigoEquipe, tipo).forEach((codigo) => {
+                    registrarEquipePainel(tipo, codigo, zona, {
+                        nomes,
+                        disponivelSmartwall: true,
+                        ocorrencias: [],
+                        atendimentoStatus: "historico",
+                        historicoSmartwall: true
+                    });
+                });
             });
         });
 
@@ -944,9 +991,10 @@ async function iniciarSmartwall() {
             turnoAtendimentoAtual = filtroTurno.dataset.shift;
             renderizarFiltroTurnos();
             const hojeTurno = filtrarPorTurnoAtendimento(ultimosDocsHoje);
-            const ativosAgentesTurno = ultimosDocsAtivosAgentes;
+            const ativosAgentesTurno = filtrarPorTurnoAtendimento(ultimosDocsAtivosAgentes);
+            const historicoAgentesTurno = filtrarPorTurnoAtendimento(ultimosDocsHistoricoAgentes);
             const ocorrenciasAtivasTurno = filtrarPorTurnoAtendimento(ultimasOcorrenciasAtivas);
-            const agentesPorRegiaoTurno = calcularAgentesPorRegiao(ativosAgentesTurno, ocorrenciasAtivasTurno);
+            const agentesPorRegiaoTurno = calcularAgentesPorRegiao(ativosAgentesTurno, ocorrenciasAtivasTurno, historicoAgentesTurno);
             const frotaAtivaPorRegiao = calcularFrotaOcorrenciasPorRegiao(ocorrenciasAtivasTurno);
             const contagemRegiaoAtivas = calcularContagemRegiaoComEquipe(ocorrenciasAtivasTurno);
             ultimaContagemRegiaoAtivas = contagemRegiaoAtivas;
@@ -1077,7 +1125,11 @@ async function iniciarSmartwall() {
                 const codigoEquipe = Array.isArray(equipe) ? "" : equipe.codigo || "";
                 const statusEquipe = Array.isArray(equipe) ? "" : equipe.atendimentoStatus || "";
                 const nomesUnicos = [...new Set((nomes || []).filter(Boolean))];
-                const classeStatus = statusEquipe === "andamento" ? "region-agent-group-andamento" : "region-agent-group-despacho";
+                const classeStatus = statusEquipe === "andamento"
+                    ? "region-agent-group-andamento"
+                    : statusEquipe === "historico"
+                        ? "region-agent-group-history"
+                        : "region-agent-group-despacho";
                 const chaveCodigo = normalizarCodigoEquipe(codigoEquipe);
                 const codigoDuplicado = chaveCodigo && codigosRenderizados.has(chaveCodigo);
                 if (chaveCodigo && !codigoDuplicado) codigosRenderizados.add(chaveCodigo);
