@@ -1350,13 +1350,20 @@ async function iniciarSmartwall() {
                     const labelYBase = centerY + Math.sin(angle) * labelRadius;
                     const topoDisponivel = Math.max(18, centerY - outerRadius - 16);
                     const passoSuperior = Math.max(15, Math.min(22, topoDisponivel / Math.max(1, meta.data.length)));
+                    const numeroZona = Number(String(rotuloZona).match(/\d+/)?.[0] || 0);
+                    const posicaoAbaixoDonut = centerY + outerRadius + Math.max(18, outerRadius * 0.14);
+                    const deslocamentoBaixo = numeroZona === 4 ? outerRadius * 0.18 : numeroZona === 5 ? outerRadius * 0.32 : 0;
                     const labelXSuperior = centerX + (ladoDireito ? 1 : -1) * Math.min(Math.max(outerRadius * 0.34, larguraLabel * 0.72), Math.max(28, centerX - margemLateral));
                     const limiteEsquerdo = ladoDireito ? 8 : larguraLabel + 8;
                     const limiteDireito = ladoDireito ? largura - larguraLabel - 8 : largura - 8;
                     const labelX = Math.min(Math.max(usarAreaSuperior ? labelXSuperior : labelXBase, limiteEsquerdo), limiteDireito);
                     const labelY = usarAreaSuperior
-                        ? Math.min(Math.max(topoDisponivel - (index % meta.data.length) * passoSuperior, 18), altura - 22)
-                        : Math.min(Math.max(labelYBase, 18), altura - 22);
+                        ? (numeroZona >= 4
+                            ? Math.min(Math.max(posicaoAbaixoDonut + ((numeroZona === 5) ? passoSuperior * 1.05 : 0), 18), altura - 22)
+                            : Math.min(Math.max(topoDisponivel - (index % meta.data.length) * passoSuperior, 18), altura - 22))
+                        : (numeroZona >= 4
+                            ? Math.min(Math.max(posicaoAbaixoDonut + ((numeroZona === 5) ? passoSuperior * 1.05 : 0) + deslocamentoBaixo, 18), altura - 22)
+                            : Math.min(Math.max(labelYBase, 18), altura - 22));
 
                     return {
                         valor,

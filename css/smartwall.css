@@ -409,6 +409,8 @@ body[data-theme="night"] .fleet-icon {
 
 .main-content {
     min-height: 0;
+    height: 100%;
+    max-height: 100%;
     display: grid;
     grid-template-columns: minmax(560px, 1.82fr) minmax(260px, 0.68fr) minmax(285px, 0.72fr);
     gap: 12px;
@@ -3012,6 +3014,8 @@ body[data-theme="day"] .smart-history-team-card + .smart-history-team-card {
 
     .main-content {
         overflow: visible;
+        height: auto;
+        max-height: none;
     }
 
     .region-panel {
@@ -3242,6 +3246,8 @@ body[data-theme="day"] .smart-history-team-card + .smart-history-team-card {
         width: 100%;
         max-width: 100%;
         min-width: 0;
+        height: auto;
+        max-height: none;
         display: flex;
         flex-direction: column;
         gap: 12px;
@@ -3417,8 +3423,52 @@ body[data-theme="day"] .smart-history-team-card + .smart-history-team-card {
 }
 
 .shift-filter-btn.active {
-    background: color-mix(in srgb, var(--shift-color) 14%, #ffffff);
-    box-shadow: 0 10px 22px color-mix(in srgb, var(--shift-color) 28%, transparent);
+    border-color: color-mix(in srgb, var(--shift-color) 98%, #ffffff);
+    background:
+        linear-gradient(145deg, color-mix(in srgb, var(--shift-color) 48%, #ffffff), color-mix(in srgb, var(--shift-color) 28%, #ffffff));
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--shift-color) 62%, transparent) inset,
+        0 0 20px color-mix(in srgb, var(--shift-color) 72%, transparent),
+        0 0 34px color-mix(in srgb, var(--shift-color) 38%, transparent),
+        0 14px 30px color-mix(in srgb, var(--shift-color) 44%, transparent);
+    animation: shiftActiveBlink 0.8s steps(1, end) infinite;
+}
+
+body[data-theme="day"] .shift-filter-btn.active {
+    border-color: color-mix(in srgb, var(--shift-color) 72%, #071126) !important;
+    color: #f8fbff !important;
+    background:
+        linear-gradient(145deg, color-mix(in srgb, var(--shift-color) 26%, #071126), color-mix(in srgb, var(--shift-color) 14%, #101820));
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--shift-color) 72%, transparent) inset,
+        0 0 22px color-mix(in srgb, var(--shift-color) 64%, transparent),
+        0 0 38px color-mix(in srgb, var(--shift-color) 32%, transparent),
+        0 14px 30px rgba(0, 0, 0, 0.22);
+}
+
+body[data-theme="day"] .shift-filter-btn.active .shift-filter-icon,
+body[data-theme="day"] .shift-filter-btn.active strong {
+    color: #ffffff !important;
+    text-shadow: none !important;
+}
+
+@keyframes shiftActiveBlink {
+    0%,
+    49% {
+        box-shadow:
+            0 0 0 1px color-mix(in srgb, var(--shift-color) 62%, transparent) inset,
+            0 0 18px color-mix(in srgb, var(--shift-color) 72%, transparent),
+            0 0 34px color-mix(in srgb, var(--shift-color) 38%, transparent),
+            0 14px 30px color-mix(in srgb, var(--shift-color) 44%, transparent);
+    }
+
+    50%,
+    100% {
+        box-shadow:
+            0 0 0 1px color-mix(in srgb, var(--shift-color) 18%, transparent) inset,
+            0 0 2px color-mix(in srgb, var(--shift-color) 20%, transparent),
+            0 10px 22px color-mix(in srgb, var(--shift-color) 18%, transparent);
+    }
 }
 
 .shift-filter-icon {
@@ -6349,12 +6399,37 @@ body[data-theme="night"] .shift-filter-btn:hover {
 
 body[data-theme="night"] .shift-filter-btn.active {
     background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05)),
-        color-mix(in srgb, var(--shift-color) 28%, rgba(5, 18, 34, 0.9));
+        linear-gradient(145deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.10)),
+        color-mix(in srgb, var(--shift-color) 56%, rgba(5, 18, 34, 0.92));
+    border-color: color-mix(in srgb, var(--shift-color) 96%, rgba(255, 255, 255, 0.38)) !important;
     box-shadow:
-        0 16px 30px rgba(0, 0, 0, 0.3),
-        0 0 24px color-mix(in srgb, var(--shift-color) 30%, transparent),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        0 0 0 1px color-mix(in srgb, var(--shift-color) 72%, transparent) inset,
+        0 0 26px color-mix(in srgb, var(--shift-color) 86%, transparent),
+        0 0 40px color-mix(in srgb, var(--shift-color) 48%, transparent),
+        0 16px 34px rgba(0, 0, 0, 0.36),
+        inset 0 1px 0 rgba(255, 255, 255, 0.34);
+    animation: shiftActiveBlinkNight 0.8s steps(1, end) infinite;
+}
+
+@keyframes shiftActiveBlinkNight {
+    0%,
+    49% {
+        box-shadow:
+            0 0 0 1px color-mix(in srgb, var(--shift-color) 72%, transparent) inset,
+            0 0 26px color-mix(in srgb, var(--shift-color) 86%, transparent),
+            0 0 40px color-mix(in srgb, var(--shift-color) 48%, transparent),
+            0 16px 34px rgba(0, 0, 0, 0.36),
+            inset 0 1px 0 rgba(255, 255, 255, 0.34);
+    }
+
+    50%,
+    100% {
+        box-shadow:
+            0 0 0 1px color-mix(in srgb, var(--shift-color) 18%, transparent) inset,
+            0 0 2px color-mix(in srgb, var(--shift-color) 20%, transparent),
+            0 10px 22px rgba(0, 0, 0, 0.26),
+            inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
 }
 
 body[data-theme="night"] .shift-filter-icon,
@@ -6957,16 +7032,37 @@ body .region-panel .region-ranking-list,
 body[data-theme="night"] .region-panel .region-ranking-list,
 body[data-theme="day"] .region-panel .region-ranking-list {
     overflow-y: auto;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(132, 171, 214, 0.8) rgba(6, 20, 36, 0.55);
     -ms-overflow-style: none;
 }
 
 body .region-panel .region-ranking-list::-webkit-scrollbar,
 body[data-theme="night"] .region-panel .region-ranking-list::-webkit-scrollbar,
 body[data-theme="day"] .region-panel .region-ranking-list::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-    display: none;
+    width: 10px;
+    height: 10px;
+}
+
+body .region-panel .region-ranking-list::-webkit-scrollbar-track,
+body[data-theme="night"] .region-panel .region-ranking-list::-webkit-scrollbar-track,
+body[data-theme="day"] .region-panel .region-ranking-list::-webkit-scrollbar-track {
+    background: rgba(6, 20, 36, 0.55);
+    border-radius: 999px;
+}
+
+body .region-panel .region-ranking-list::-webkit-scrollbar-thumb,
+body[data-theme="night"] .region-panel .region-ranking-list::-webkit-scrollbar-thumb,
+body[data-theme="day"] .region-panel .region-ranking-list::-webkit-scrollbar-thumb {
+    border: 2px solid rgba(6, 20, 36, 0.55);
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(132, 171, 214, 0.95), rgba(47, 134, 255, 0.9));
+}
+
+body .region-panel .region-ranking-list::-webkit-scrollbar-thumb:hover,
+body[data-theme="night"] .region-panel .region-ranking-list::-webkit-scrollbar-thumb:hover,
+body[data-theme="day"] .region-panel .region-ranking-list::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(166, 199, 235, 1), rgba(73, 149, 255, 1));
 }
 
 body .region-panel .region-ranking-row,
