@@ -476,24 +476,32 @@ body[data-theme="night"] .col-hist {
     color: #d7edf2;
 }
 
-body[data-theme="night"] .status-concluida {
-    background-color: #e8f5e9 !important;
+body[data-theme="night"] #tabelaPendentes td.status-concluida,
+body[data-theme="night"] #relatorioTable td.status-concluida {
+    background: #e8f5e9 !important;
     color: #2e7d32 !important;
+    box-shadow: none !important;
 }
 
-body[data-theme="night"] .status-pendente {
-    background-color: #ffebee !important;
+body[data-theme="night"] #tabelaPendentes td.status-pendente,
+body[data-theme="night"] #relatorioTable td.status-pendente {
+    background: #ffebee !important;
     color: #c62828 !important;
+    box-shadow: none !important;
 }
 
-body[data-theme="night"] .status-encaminhada {
-    background-color: #fff3e0 !important;
+body[data-theme="night"] #tabelaPendentes td.status-encaminhada,
+body[data-theme="night"] #relatorioTable td.status-encaminhada {
+    background: #fff3e0 !important;
     color: #e67e22 !important;
+    box-shadow: none !important;
 }
 
-body[data-theme="night"] .status-despacho {
-    background-color: #fff3e0 !important;
+body[data-theme="night"] #tabelaPendentes td.status-despacho,
+body[data-theme="night"] #relatorioTable td.status-despacho {
+    background: #fff3e0 !important;
     color: #c0392b !important;
+    box-shadow: none !important;
 }
 
 body[data-theme="night"] input[type="text"],
