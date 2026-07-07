@@ -988,8 +988,65 @@ body[data-theme="night"] .permission-check {
     accent-color: #60a5fa;
 }
 
+body[data-theme="night"] .users-panel,
+body[data-theme="night"] .users-sidebar {
+    color: #000000;
+}
+
+body[data-theme="night"] .users-panel h2,
+body[data-theme="night"] .users-panel .new-user-link,
+body[data-theme="night"] .users-panel .search-field input,
+body[data-theme="night"] .users-panel .users-tools select,
+body[data-theme="night"] .users-panel .search-field span,
+body[data-theme="night"] .users-panel .user-item,
+body[data-theme="night"] .users-panel .user-name,
+body[data-theme="night"] .users-panel .user-role,
+body[data-theme="night"] .users-panel .user-email,
+body[data-theme="night"] .users-panel .last-access,
+body[data-theme="night"] .users-panel .user-matricula,
+body[data-theme="night"] .users-panel .connection-dot,
+body[data-theme="night"] .users-panel .empty-state {
+    color: #000000;
+}
+
+body[data-theme="night"] .selected-user-card {
+    box-shadow: none;
+}
+
+body[data-theme="night"] .selected-user-main h3,
+body[data-theme="night"] .selected-user-main p,
+body[data-theme="night"] .section-title h2,
+body[data-theme="night"] .section-title p,
+body[data-theme="night"] .section-title #statusAlteracoes,
+body[data-theme="night"] .profile-row strong,
+body[data-theme="night"] .detail-label {
+    color: #ffffff !important;
+    text-shadow: none !important;
+}
+
 body[data-theme="night"] .empty-state {
     color: #94a3b8;
+}
+
+body[data-theme="night"] #buscaUsuarios {
+    color: #000000 !important;
+    caret-color: #000000 !important;
+}
+
+body[data-theme="night"] #buscaUsuarios::placeholder {
+    color: #000000 !important;
+    opacity: 1;
+}
+
+body[data-theme="night"] .profile-row .role-option,
+body[data-theme="night"] .profile-row .role-option span,
+body[data-theme="night"] .profile-row .role-option.admin,
+body[data-theme="night"] .profile-row .role-option.agente,
+body[data-theme="night"] .profile-row .role-option.ciosp,
+body[data-theme="night"] .profile-row .role-option.visualizador,
+body[data-theme="night"] .profile-row .role-option.is-selected {
+    color: #ffffff !important;
+    text-shadow: none !important;
 }
 
 @media (max-width: 1180px) {
