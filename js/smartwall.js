@@ -25,7 +25,7 @@ async function iniciarSmartwall() {
     const regioesPainel = ["REGI\u00c3O 1", "REGI\u00c3O 2", "REGI\u00c3O 3", "REGI\u00c3O 4", "REGI\u00c3O 5", "GERAL"];
     const regioesBase = regioesPainel;
     const coresRegiao = ["#67479a", "#3b364c", "#e4f001", "#64ec02", "#096acc", "#d30000"];
-    const coresPainelRegiao = ["#6f42c1", "#ffcc00", "#55c80a", "#1188ff", "#e50606", "#8d55d9"];
+    const coresPainelRegiao = ["#6f42c1", "#ffe87a", "#55c80a", "#1188ff", "#e50606", "#d98200"];
     const coresRegiaoVt = ["#8060b2", "#554e6c", "#f2ff3b", "#80ff28", "#2387e8", "#ff2a2a"];
     const coresRegiaoMt = ["#4b3274", "#292639", "#aab300", "#43aa00", "#064a91", "#8f0000"];
     const coresTipo = ["#2f86ff", "#ffbd1a", "#64d637", "#ff4c5d", "#9d55ff"];
@@ -1325,6 +1325,7 @@ async function iniciarSmartwall() {
                     zona: Math.max(16, Math.min(22, outerRadius * 0.075)),
                     percentual: Math.max(17, Math.min(24, outerRadius * 0.082))
                 });
+                const limitar = (valor, minimo, maximo) => Math.min(Math.max(valor, minimo), maximo);
 
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, centroRadius, 0, Math.PI * 2);
@@ -1366,13 +1367,15 @@ async function iniciarSmartwall() {
                     const angle = (startAngle + endAngle) / 2;
                     const outerRadius = arc.outerRadius || Math.min(largura, altura) * 0.32;
                     const innerRadiusArc = arc.innerRadius || innerRadius;
+                    const direcaoX = Math.cos(angle);
+                    const direcaoY = Math.sin(angle);
                     const textoRadius = innerRadiusArc + ((outerRadius - innerRadiusArc) * 0.54);
-                    const textoX = centerX + Math.cos(angle) * textoRadius;
-                    const textoY = centerY + Math.sin(angle) * textoRadius;
-                    const startX = centerX + Math.cos(angle) * (outerRadius - 2);
-                    const startY = centerY + Math.sin(angle) * (outerRadius - 2);
-                    const ladoDireito = Math.cos(angle) >= 0;
-                    const distanciaExterna = Math.max(28, Math.min(46, outerRadius * 0.16));
+                    const textoX = centerX + direcaoX * textoRadius;
+                    const textoY = centerY + direcaoY * textoRadius;
+                    const startX = centerX + direcaoX * (outerRadius - 2);
+                    const startY = centerY + direcaoY * (outerRadius - 2);
+                    const ladoDireito = direcaoX >= 0;
+                    const distanciaExterna = Math.max(36, Math.min(62, outerRadius * 0.2));
                     const rotuloZona = formatarRotuloZona(regiao, index);
                     const percentualZona = `${formatarPercentualZona(valor)}%`;
                     const { zona: fontZona, percentual: fontPercentual } = obterFontesRotuloZona(outerRadius);
@@ -1381,38 +1384,25 @@ async function iniciarSmartwall() {
                     ctx.font = `800 ${fontPercentual}px Segoe UI, sans-serif`;
                     const larguraPercentual = ctx.measureText(percentualZona).width;
                     const larguraLabel = Math.max(larguraRotulo, larguraPercentual);
-                    const margemLateral = Math.max(36, larguraLabel + 8);
-                    const espacoLateral = ladoDireito
-                        ? largura - (centerX + outerRadius) - margemLateral
-                        : centerX - outerRadius - margemLateral;
-                    const usarAreaSuperior = espacoLateral < larguraLabel + 18;
-                    const turnX = centerX + Math.cos(angle) * (outerRadius + distanciaExterna * 0.28);
-                    const turnY = centerY + Math.sin(angle) * (outerRadius + distanciaExterna * 0.28);
                     const labelRadius = outerRadius + distanciaExterna;
-                    const labelXBase = centerX + Math.cos(angle) * labelRadius + (ladoDireito ? distanciaExterna * 0.18 : -distanciaExterna * 0.18);
-                    const labelYBase = centerY + Math.sin(angle) * labelRadius;
-                    const topoDisponivel = Math.max(18, centerY - outerRadius - 16);
-                    const passoSuperior = Math.max(15, Math.min(22, topoDisponivel / Math.max(1, meta.data.length)));
-                    const numeroZona = Number(String(rotuloZona).match(/\d+/)?.[0] || 0);
-                    const posicaoAbaixoDonut = centerY + outerRadius + Math.max(18, outerRadius * 0.14);
-                    const deslocamentoBaixo = numeroZona === 4 ? outerRadius * 0.18 : numeroZona === 5 ? outerRadius * 0.32 : 0;
-                    const labelXSuperior = centerX + (ladoDireito ? 1 : -1) * Math.min(Math.max(outerRadius * 0.34, larguraLabel * 0.72), Math.max(28, centerX - margemLateral));
-                    const limiteEsquerdo = ladoDireito ? 8 : larguraLabel + 8;
-                    const limiteDireito = ladoDireito ? largura - larguraLabel - 8 : largura - 8;
-                    const labelX = Math.min(Math.max(usarAreaSuperior ? labelXSuperior : labelXBase, limiteEsquerdo), limiteDireito);
-                    const labelY = usarAreaSuperior
-                        ? (numeroZona >= 4
-                            ? Math.min(Math.max(posicaoAbaixoDonut + ((numeroZona === 5) ? passoSuperior * 1.05 : 0), 18), altura - 22)
-                            : Math.min(Math.max(topoDisponivel - (index % meta.data.length) * passoSuperior, 18), altura - 22))
-                        : (numeroZona >= 4
-                            ? Math.min(Math.max(posicaoAbaixoDonut + ((numeroZona === 5) ? passoSuperior * 1.05 : 0) + deslocamentoBaixo, 18), altura - 22)
-                            : Math.min(Math.max(labelYBase, 18), altura - 22));
+                    const labelXBase = centerX + direcaoX * labelRadius;
+                    const labelYBase = centerY + direcaoY * labelRadius;
+                    const margemLateral = Math.max(42, larguraLabel + 10);
+                    const limiteEsquerdo = ladoDireito ? 8 : margemLateral;
+                    const limiteDireito = ladoDireito ? largura - margemLateral : largura - 8;
+                    const labelX = limitar(labelXBase, limiteEsquerdo, limiteDireito);
+                    const labelY = labelYBase;
+                    const elbowRadius = outerRadius + Math.max(14, distanciaExterna * 0.45);
+                    const elbowX = centerX + direcaoX * elbowRadius;
+                    const elbowY = centerY + direcaoY * elbowRadius;
 
                     return {
                         valor,
                         cor,
                         startX,
                         startY,
+                        elbowX,
+                        elbowY,
                         ladoDireito,
                         rotuloZona,
                         percentualZona,
@@ -1429,19 +1419,18 @@ async function iniciarSmartwall() {
                 const distribuirLabels = (items) => {
                     if (!items.length) return;
                     const alturaLabel = 29;
-                    const espacoMinimo = 11;
+                    const referenciaOuterRadius = items[0]?.outerRadius || 0;
+                    const espacoMinimo = Math.max(10, referenciaOuterRadius * 0.06);
                     const minGap = alturaLabel + espacoMinimo;
                     const margemVertical = Math.max(22, alturaLabel / 2 + 6);
                     const topo = margemVertical;
                     const base = altura - margemVertical;
                     items.sort((a, b) => a.labelY - b.labelY);
-                    items.forEach((item, index) => {
+                    items[0].labelY = limitar(items[0].labelY, topo, base);
+                    for (let index = 1; index < items.length; index += 1) {
                         const anterior = items[index - 1];
-                        item.labelY = Math.min(Math.max(item.labelY, topo), base);
-                        if (anterior && item.labelY - anterior.labelY < minGap) {
-                            item.labelY = anterior.labelY + minGap;
-                        }
-                    });
+                        items[index].labelY = Math.max(items[index].labelY, anterior.labelY + minGap);
+                    }
                     const excesso = items[items.length - 1].labelY - base;
                     if (excesso > 0) {
                         items.forEach((item) => {
@@ -1455,7 +1444,7 @@ async function iniciarSmartwall() {
                         }
                     }
                     items.forEach((item) => {
-                        item.labelY = Math.min(Math.max(item.labelY, topo), base);
+                        item.labelY = limitar(item.labelY, topo, base);
                     });
                 };
 
@@ -1468,6 +1457,8 @@ async function iniciarSmartwall() {
                         cor,
                         startX,
                         startY,
+                        elbowX,
+                        elbowY,
                         ladoDireito,
                         rotuloZona,
                         percentualZona,
@@ -1485,6 +1476,7 @@ async function iniciarSmartwall() {
                     ctx.lineWidth = 1.35;
                     ctx.beginPath();
                     ctx.moveTo(startX, startY);
+                    ctx.lineTo(elbowX, elbowY);
                     ctx.lineTo(labelX + (ladoDireito ? -7 : 7), labelY);
                     ctx.stroke();
 

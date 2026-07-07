@@ -4402,10 +4402,10 @@ body[data-theme="day"] .region-panel .region-occurrence-andamento strong {
 }
 
 .list-item.zona-atendimento-2 {
-    --zona-bg: rgba(255, 204, 0, 0.82);
-    --zona-bg-strong: #ffcc00;
-    --zona-rgb: 255, 204, 0;
-    --zona-border: rgba(255, 246, 134, 0.92);
+    --zona-bg: rgba(255, 232, 122, 0.86);
+    --zona-bg-strong: #ffe87a;
+    --zona-rgb: 255, 232, 122;
+    --zona-border: rgba(255, 243, 179, 0.94);
     --zona-text: #101820;
     --zona-time-bg: rgba(16, 24, 32, 0.12);
 }
