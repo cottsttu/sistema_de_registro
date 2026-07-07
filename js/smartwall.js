@@ -1482,7 +1482,7 @@ async function iniciarSmartwall() {
 
                     ctx.textAlign = ladoDireito ? "left" : "right";
                     ctx.lineWidth = 4;
-                    ctx.strokeStyle = temaDia ? "rgba(255, 255, 255, 0.92)" : "rgba(2, 11, 22, 0.94)";
+                    ctx.strokeStyle = temaDia ? "rgba(0, 0, 0, 0.92)" : "rgba(2, 11, 22, 0.94)";
                     ctx.fillStyle = cor;
                     ctx.font = `800 ${fontZona}px Segoe UI, sans-serif`;
                     ctx.strokeText(rotuloZona, labelX, labelY - 9);
