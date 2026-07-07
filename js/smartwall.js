@@ -279,19 +279,38 @@ async function iniciarSmartwall() {
     atualizarRelogio();
     setInterval(atualizarRelogio, 1000);
 
-    function agendarAtualizacaoMeiaNoite() {
+    function agendarAtualizacaoSmartwall() {
         const agora = new Date();
-        const proximaMeiaNoite = new Date(agora);
-        proximaMeiaNoite.setDate(proximaMeiaNoite.getDate() + 1);
-        proximaMeiaNoite.setHours(0, 0, 0, 0);
+        const marcosRecarregamento = [0, 6, 12, 18];
+        let agendado = false;
 
-        const tempoAteMeiaNoite = proximaMeiaNoite.getTime() - agora.getTime();
-        setTimeout(() => {
-            window.location.reload();
-        }, tempoAteMeiaNoite);
+        for (const hora of marcosRecarregamento) {
+            const marco = new Date(agora);
+            marco.setHours(hora, 0, 0, 0);
+
+            if (marco.getTime() > agora.getTime()) {
+                const tempoAteMarco = marco.getTime() - agora.getTime();
+                setTimeout(() => {
+                    window.location.reload();
+                }, tempoAteMarco);
+                agendado = true;
+                break;
+            }
+        }
+
+        if (!agendado) {
+            const proximoDia = new Date(agora);
+            proximoDia.setDate(proximoDia.getDate() + 1);
+            proximoDia.setHours(0, 0, 0, 0);
+
+            const tempoAteProximoDia = proximoDia.getTime() - agora.getTime();
+            setTimeout(() => {
+                window.location.reload();
+            }, tempoAteProximoDia);
+        }
     }
 
-    agendarAtualizacaoMeiaNoite();
+    agendarAtualizacaoSmartwall();
 
     function calcularTempoAberto(horaEnvio) {
         if (!horaEnvio || !horaEnvio.includes(":")) return "Tempo desconhecido";
