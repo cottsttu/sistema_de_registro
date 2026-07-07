@@ -938,10 +938,6 @@
             cell.innerHTML = conteudo;
         });
 
-        const cellDataMobile = row.insertCell();
-        cellDataMobile.className = 'historico-data-mobile';
-        cellDataMobile.innerText = dadosDisplay.dataRelatorio || dataHoje || "-";
-
         // --- COLUNA DE AÇÃO (EXCLUIR) ---
         const cellAcao = row.insertCell();
         cellAcao.className = 'acao-botoes';
@@ -1440,6 +1436,14 @@
         gerarListaVeiculos();
         carregarAgentes();
         const consultaCompacta = window.matchMedia ? window.matchMedia("(max-width: 900px)") : null;
+        const consultaAccordionMobile = window.matchMedia ? window.matchMedia("(max-width: 600px)") : null;
+        const sincronizarAccordionMobile = () => {
+            document.querySelectorAll('.mobile-agentes-accordion').forEach((details) => {
+                details.open = !consultaAccordionMobile?.matches;
+            });
+        };
+        sincronizarAccordionMobile();
+        consultaAccordionMobile?.addEventListener?.("change", sincronizarAccordionMobile);
         consultaCompacta?.addEventListener?.("change", () => {
             renderizarTabelaAtivos();
             renderizarTabelaHistorico();

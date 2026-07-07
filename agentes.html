@@ -7,7 +7,7 @@
     <link rel="preload" as="image" href="src/imagem_fundo_branco.png" fetchpriority="high">
     <link rel="preload" as="image" href="src/imagem_de_fundo_login_editada.jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="css/agentes.css?v=20260702-2">
+    <link rel="stylesheet" href="css/agentes.css?v=20260707-22">
     <link rel="stylesheet" href="css/app-menu.css?v=20260626-1">
     <link rel="stylesheet" href="css/metallic-theme.css?v=20260704-1">
 </head>
@@ -191,39 +191,51 @@
         </form>
     </div>
 
-    <div class="section-title section-title-filter">
-        <span>Veículos em Operação (Sincronizado)</span>
-        <div class="ativos-filter" role="group" aria-label="Filtrar veículos em operação">
-            <button type="button" class="ativos-filter-btn active" data-filtro-ativos="todos" aria-pressed="true">Todos</button>
-            <button type="button" class="ativos-filter-btn" data-filtro-ativos="mt" aria-pressed="false">MT</button>
-            <button type="button" class="ativos-filter-btn" data-filtro-ativos="vt" aria-pressed="false">VT</button>
-            <button type="button" class="ativos-filter-btn" data-filtro-ativos="outros" aria-pressed="false">Outros</button>
+    <details class="mobile-agentes-accordion mobile-agentes-accordion-ativos" open>
+        <summary class="section-title mobile-accordion-summary">
+            <span class="mobile-accordion-title">Veículos em Operação (Sincronizado)</span>
+            <i class="fa-solid fa-chevron-down mobile-accordion-chevron" aria-hidden="true"></i>
+        </summary>
+        <div class="mobile-accordion-body">
+            <div class="ativos-filter" role="group" aria-label="Filtrar veículos em operação">
+                <button type="button" class="ativos-filter-btn active" data-filtro-ativos="todos" aria-pressed="true">Todos</button>
+                <button type="button" class="ativos-filter-btn" data-filtro-ativos="mt" aria-pressed="false">MT</button>
+                <button type="button" class="ativos-filter-btn" data-filtro-ativos="vt" aria-pressed="false">VT</button>
+                <button type="button" class="ativos-filter-btn" data-filtro-ativos="outros" aria-pressed="false">Outros</button>
+            </div>
+            <table id="tabelaAtivos">
+                <tbody></tbody>
+            </table>
         </div>
-    </div>
-    <table id="tabelaAtivos">
-        <tbody></tbody>
-    </table>
+    </details>
 
-    <div class="section-title">Hist&oacute;rico de Atividades Encerradas</div>
-    <table id="relatorioFinal">
-        <thead>
-            <tr>
-                <th>VEÍCULO</th>
-                <th>AGENTE</th>
-                <th>HT</th>
-                <th>ASE</th>
-                <th>FUNÇÃO</th>
-                <th>MALETAS</th>
-                <th>REGIÃO</th>
-                <th>HORA INÍCIO</th>
-                <th>HORA FIM</th>
-                <th>TIPO REGISTRO</th>
-                <th>PONTO BASE</th>
-                <th>AÇÃO</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <details class="mobile-agentes-accordion mobile-agentes-accordion-historico" open>
+        <summary class="section-title mobile-accordion-summary">
+            <span class="mobile-accordion-title">Hist&oacute;rico de Atividades Encerradas</span>
+            <i class="fa-solid fa-chevron-down mobile-accordion-chevron" aria-hidden="true"></i>
+        </summary>
+        <div class="mobile-accordion-body">
+            <table id="relatorioFinal">
+                <thead>
+                    <tr>
+                        <th>VEÍCULO</th>
+                        <th>AGENTE</th>
+                        <th>HT</th>
+                        <th>ASE</th>
+                        <th>FUNÇÃO</th>
+                        <th>MALETAS</th>
+                        <th>REGIÃO</th>
+                        <th>HORA INÍCIO</th>
+                        <th>HORA FIM</th>
+                        <th>TIPO REGISTRO</th>
+                        <th>PONTO BASE</th>
+                        <th>AÇÃO</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </details>
 </main>
 
 <script src="js/theme-switch.js"></script>

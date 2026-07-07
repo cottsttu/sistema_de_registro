@@ -405,6 +405,16 @@
         text-shadow: 0 0 10px rgba(85, 246, 255, 0.18);
     }
 
+    body[data-theme="day"] .section-title.section-title-filter > span {
+        color: #ffffff !important;
+        text-shadow: none;
+    }
+
+    body[data-theme="day"] #tabelaAtivos + .section-title {
+        color: #ffffff !important;
+        text-shadow: none;
+    }
+
     .ativos-filter-btn {
         box-shadow: none;
         transition: background-color 0.2s, border-color 0.2s, color 0.2s;
@@ -418,6 +428,42 @@
     .status-encaminhado { color: #ffb36a; font-weight: bold; }
     .status-encerrado { color: #57e46b; font-weight: bold; }
     .condutor-destaque { color: #4fb5ff; font-weight: bold; }
+
+    #relatorioFinal td.status-encaminhado {
+        background: linear-gradient(180deg, #ffe6c8 0%, #ffd39b 100%) !important;
+        color: #7a3f00 !important;
+        border-color: rgba(122, 63, 0, 0.18) !important;
+    }
+
+    #relatorioFinal td.status-encerrado {
+        background: linear-gradient(180deg, #dff5e4 0%, #bfecc9 100%) !important;
+        color: #145a2a !important;
+        border-color: rgba(20, 90, 42, 0.18) !important;
+    }
+
+    #relatorioFinal td:nth-child(10).status-encaminhado {
+        background: linear-gradient(180deg, #ffe6c8 0%, #ffd39b 100%) !important;
+        color: #7a3f00 !important;
+        border-color: rgba(122, 63, 0, 0.18) !important;
+    }
+
+    #relatorioFinal td:nth-child(10).status-encerrado {
+        background: linear-gradient(180deg, #dff5e4 0%, #bfecc9 100%) !important;
+        color: #145a2a !important;
+        border-color: rgba(20, 90, 42, 0.18) !important;
+    }
+
+    body[data-theme="night"] #relatorioFinal td.status-encaminhado {
+        background: linear-gradient(180deg, rgba(140, 86, 20, 0.82) 0%, rgba(103, 62, 13, 0.82) 100%) !important;
+        color: #ffe7c2 !important;
+        border-color: rgba(255, 215, 173, 0.24) !important;
+    }
+
+    body[data-theme="night"] #relatorioFinal td.status-encerrado {
+        background: linear-gradient(180deg, rgba(18, 97, 42, 0.82) 0%, rgba(12, 69, 29, 0.82) 100%) !important;
+        color: #dfffe6 !important;
+        border-color: rgba(184, 255, 201, 0.24) !important;
+    }
 
     .btn,
     .shortcut-link {
@@ -716,13 +762,13 @@
 
     @media (min-width: 1100px) {
         body {
-            height: 100vh;
-            overflow: hidden;
+            height: auto;
+            overflow: auto;
         }
 
         .page-shell {
-            height: calc(100vh - 96px);
-            overflow: auto;
+            height: auto;
+            overflow: visible;
             margin-top: 18px;
         }
 
@@ -1147,6 +1193,158 @@ body[data-theme="night"] #registroForm .campo-numerico {
     }
 }
 
+@media (max-width: 600px) {
+    #tabelaAtivos,
+    #relatorioFinal {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+    }
+
+    #tabelaAtivos thead,
+    #relatorioFinal thead {
+        display: none !important;
+    }
+
+    #tabelaAtivos tbody,
+    #relatorioFinal tbody {
+        display: grid !important;
+        gap: 10px;
+        width: 100%;
+    }
+
+    #tabelaAtivos tr,
+    #relatorioFinal tr {
+        display: grid !important;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        width: 100%;
+        padding: 10px;
+        border: 1px solid rgba(44, 62, 80, 0.18);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.86);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    body[data-theme="night"] #tabelaAtivos tr,
+    body[data-theme="night"] #relatorioFinal tr {
+        border-color: rgba(216, 246, 255, 0.18);
+        background: rgba(12, 28, 36, 0.70);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+    }
+
+    #tabelaAtivos td,
+    #relatorioFinal td {
+        display: block !important;
+        width: 100%;
+        min-height: 0;
+        padding: 8px 10px !important;
+        border: 0 !important;
+        border-radius: 10px;
+        text-align: left !important;
+        align-items: flex-start;
+        justify-content: flex-start;
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    #tabelaAtivos td::before,
+    #relatorioFinal td::before {
+        display: block;
+        margin-bottom: 4px;
+        color: #607d8b;
+        font-size: 10px;
+        font-weight: 800;
+        line-height: 1.1;
+        text-transform: uppercase;
+    }
+
+    body[data-theme="night"] #tabelaAtivos td::before,
+    body[data-theme="night"] #relatorioFinal td::before {
+        color: #d8f6ff;
+    }
+
+    #tabelaAtivos td:nth-child(1)::before { content: "Veículo e local"; }
+    #tabelaAtivos td:nth-child(2)::before { content: "Agentes e condutor"; }
+    #tabelaAtivos td:nth-child(3)::before { content: "HT (Nº)"; }
+    #tabelaAtivos td:nth-child(4)::before { content: "ASE (Nº)"; }
+    #tabelaAtivos td:nth-child(5)::before { content: "Função da equipe"; }
+    #tabelaAtivos td:nth-child(6)::before { content: "Maletas (Nº)"; }
+    #tabelaAtivos td:nth-child(7)::before { content: "Região atual"; }
+    #tabelaAtivos td:nth-child(8)::before { content: "Hora de início"; }
+    #tabelaAtivos td:nth-child(9)::before { content: "Ponto base atual"; }
+    #tabelaAtivos td:last-child::before { content: "Ações"; }
+
+    #relatorioFinal td:nth-child(1)::before { content: "Veículo"; }
+    #relatorioFinal td:nth-child(2)::before { content: "Agente"; }
+    #relatorioFinal td:nth-child(3)::before { content: "HT"; }
+    #relatorioFinal td:nth-child(4)::before { content: "ASE"; }
+    #relatorioFinal td:nth-child(5)::before { content: "Função"; }
+    #relatorioFinal td:nth-child(6)::before { content: "Maletas"; }
+    #relatorioFinal td:nth-child(7)::before { content: "Região"; }
+    #relatorioFinal td:nth-child(8)::before { content: "Hora início"; }
+    #relatorioFinal td:nth-child(9)::before { content: "Hora fim"; }
+    #relatorioFinal td:nth-child(10)::before { content: "Tipo registro"; }
+    #relatorioFinal td:nth-child(11)::before { content: "Ponto base"; }
+    #relatorioFinal .historico-data-mobile::before { content: "Data"; }
+    #relatorioFinal td:last-child::before { content: "Ações"; }
+
+    #tabelaAtivos .acao-botoes,
+    #relatorioFinal .acao-botoes {
+        width: 100%;
+        min-height: 0;
+        align-items: stretch;
+        justify-content: flex-start !important;
+        gap: 8px;
+    }
+
+    #tabelaAtivos .acao-botoes-row,
+    #relatorioFinal .acao-botoes-row {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    #tabelaAtivos .acao-botoes > button,
+    #tabelaAtivos .acao-botoes-row > button,
+    #relatorioFinal .acao-botoes > button,
+    #relatorioFinal .acao-botoes-row > button,
+    #tabelaAtivos .btn-visualizar-registro,
+    #relatorioFinal .btn-visualizar-registro,
+    #relatorioFinal .btn-excluir-x,
+    #relatorioFinal .btn-editar-historico {
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 12px !important;
+        font-size: 12px !important;
+        line-height: 1.1;
+    }
+
+    #tabelaAtivos .acao-botoes .btn-devolver,
+    #tabelaAtivos .acao-botoes .btn-encaminhar,
+    #tabelaAtivos .acao-botoes .btn-editar-ativo,
+    #relatorioFinal .acao-botoes .btn-excluir-x,
+    #relatorioFinal .acao-botoes .btn-editar-historico {
+        width: 100%;
+        min-width: 0;
+        padding: 12px 14px !important;
+    }
+
+    #tabelaAtivos .acao-botoes-row > button + button,
+    #relatorioFinal .acao-botoes > button + button,
+    #relatorioFinal .acao-botoes-row > button + button {
+        margin-top: 0;
+    }
+
+    #relatorioFinal .historico-data-mobile {
+        display: block !important;
+    }
+}
+
 /* Padronização visual com Observações/Ocorrências: sem brilho neon. */
 body {
     --cyan: #2c3e50;
@@ -1366,18 +1564,66 @@ body[data-theme="night"] .page-shell {
     border: 0 !important;
 }
 
+.mobile-agentes-accordion {
+    display: block;
+    margin: 0;
+}
+
+.mobile-agentes-accordion > summary {
+    list-style: none;
+}
+
+.mobile-agentes-accordion > summary::-webkit-details-marker {
+    display: none;
+}
+
+.mobile-agentes-accordion > .mobile-accordion-body {
+    display: block;
+}
+
+.mobile-agentes-accordion > summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 44px 12px 14px;
+    cursor: default;
+    pointer-events: none;
+}
+
+.mobile-agentes-accordion > summary .mobile-accordion-chevron {
+    display: none;
+}
+
+body[data-theme="day"] .mobile-agentes-accordion > summary,
+body[data-theme="day"] .mobile-agentes-accordion > summary .mobile-accordion-title {
+    color: #ffffff !important;
+}
+
+@media (min-width: 601px) {
+    .mobile-agentes-accordion > summary {
+        pointer-events: none;
+    }
+
+    .mobile-agentes-accordion > summary .mobile-accordion-chevron {
+        display: none !important;
+    }
+}
+
+.mobile-agentes-accordion .mobile-accordion-chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
 body[data-theme="day"] table,
 body[data-theme="day"] #tabelaAtivos td,
 body[data-theme="day"] #relatorioFinal td,
 body[data-theme="day"] form td {
     background: rgba(255, 255, 255, 0.78) !important;
-}
-
-body[data-theme="day"] .date-header-row,
-body[data-theme="day"] .data-header,
-body[data-theme="day"] #relatorioFinal th {
-    background: #eceff1 !important;
-    color: #455a64 !important;
 }
 
 body[data-theme="night"] .date-header-row,
@@ -1630,10 +1876,6 @@ body[data-theme="night"] .modal-motivo-card {
     min-height: 30px;
 }
 
-.historico-data-mobile {
-    display: none !important;
-}
-
 .historico-editor-form {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1858,7 +2100,6 @@ body[data-theme="night"] .historico-editor-form label {
 
     #tabelaAtivos td:nth-child(8),
     #tabelaAtivos td:last-child,
-    #relatorioFinal .historico-data-mobile,
     #relatorioFinal td:nth-child(8),
     #relatorioFinal td:nth-child(9),
     #relatorioFinal td:last-child {
@@ -1866,14 +2107,12 @@ body[data-theme="night"] .historico-editor-form label {
     }
 
     #tabelaAtivos td:nth-child(8),
-    #relatorioFinal .historico-data-mobile,
     #relatorioFinal td:nth-child(8),
     #relatorioFinal td:nth-child(9) {
         border-bottom: 1px solid rgba(44, 62, 80, 0.18) !important;
     }
 
     body[data-theme="night"] #tabelaAtivos td:nth-child(8),
-    body[data-theme="night"] #relatorioFinal .historico-data-mobile,
     body[data-theme="night"] #relatorioFinal td:nth-child(8),
     body[data-theme="night"] #relatorioFinal td:nth-child(9) {
         border-bottom-color: rgba(216, 246, 255, 0.18) !important;
@@ -1885,7 +2124,7 @@ body[data-theme="night"] .historico-editor-form label {
         display: block;
         margin-right: 8px;
         color: #607d8b;
-        font-size: 10px;
+        font-size: 9.5px;
         font-weight: 800;
         text-transform: uppercase;
     }
@@ -1902,7 +2141,7 @@ body[data-theme="night"] .historico-editor-form label {
     }
 
     #tabelaAtivos td:nth-child(8)::before {
-        font-size: 14px;
+        font-size: 9.5px;
     }
 
     #tabelaAtivos td:last-child {
@@ -1912,7 +2151,6 @@ body[data-theme="night"] .historico-editor-form label {
         min-width: 92px;
     }
 
-    #relatorioFinal .historico-data-mobile,
     #relatorioFinal td:nth-child(8),
     #relatorioFinal td:nth-child(9) {
         grid-column: 1;
@@ -1921,36 +2159,22 @@ body[data-theme="night"] .historico-editor-form label {
         font-weight: 900;
     }
 
-    #relatorioFinal .historico-data-mobile {
+    #relatorioFinal td:nth-child(8) {
         grid-row: 1;
     }
 
-    #relatorioFinal td:nth-child(8) {
+    #relatorioFinal td:nth-child(9) {
         grid-row: 2;
     }
 
-    #relatorioFinal td:nth-child(9) {
-        grid-row: 3;
-    }
-
     #relatorioFinal td:nth-child(8)::before {
-        font-size: 12px;
+        font-size: 9.5px;
     }
 
     #relatorioFinal td:last-child {
         grid-column: 2;
         grid-row: 1 / span 3;
         align-self: stretch;
-    }
-
-    #relatorioFinal .historico-data-mobile::before {
-        content: "Data";
-        display: block;
-        margin-right: 8px;
-        color: #607d8b;
-        font-size: 12px;
-        font-weight: 800;
-        text-transform: uppercase;
     }
 
     #relatorioFinal td:nth-child(9)::before {
@@ -1964,7 +2188,6 @@ body[data-theme="night"] .historico-editor-form label {
     }
 
     body[data-theme="night"] #tabelaAtivos td:nth-child(8)::before,
-    body[data-theme="night"] #relatorioFinal .historico-data-mobile::before,
     body[data-theme="night"] #relatorioFinal td:nth-child(8)::before,
     body[data-theme="night"] #relatorioFinal td:nth-child(9)::before {
         color: #d8f6ff;
@@ -2025,6 +2248,691 @@ body[data-theme="night"] .historico-editor-form label {
     .historico-editor-form {
         grid-template-columns: 1fr;
         padding: 10px;
+    }
+}
+
+@media (max-width: 600px) {
+    .mobile-agentes-accordion {
+        margin-top: 10px;
+    }
+
+    .mobile-agentes-accordion + .mobile-agentes-accordion {
+        margin-top: 12px;
+    }
+
+    .mobile-agentes-accordion > summary {
+        display: none;
+    }
+
+    .mobile-agentes-accordion > .mobile-accordion-body {
+        margin-top: 10px;
+    }
+
+    #tabelaAtivos,
+    #relatorioFinal {
+        width: 100% !important;
+        min-width: 0 !important;
+        display: block !important;
+        border: 0 !important;
+        background: transparent !important;
+    }
+
+    #tabelaAtivos thead,
+    #relatorioFinal thead {
+        display: none !important;
+    }
+
+    #tabelaAtivos tbody,
+    #relatorioFinal tbody {
+        display: grid !important;
+        gap: 10px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .mobile-agentes-accordion {
+        margin-top: 14px;
+    }
+
+    .mobile-agentes-accordion + .mobile-agentes-accordion {
+        margin-top: 14px;
+    }
+
+    .mobile-agentes-accordion > summary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 44px 12px 14px;
+        cursor: pointer;
+        pointer-events: auto;
+    }
+
+    .mobile-agentes-accordion > summary .mobile-accordion-title {
+        flex: 1;
+        text-align: center;
+    }
+
+    body[data-theme="day"] .mobile-agentes-accordion > summary .mobile-accordion-title {
+        color: #ffffff !important;
+    }
+
+    .mobile-agentes-accordion > summary .mobile-accordion-chevron {
+        display: inline-flex;
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .mobile-agentes-accordion[open] > summary .mobile-accordion-chevron {
+        transform: translateY(-50%) rotate(180deg);
+    }
+
+    .mobile-agentes-accordion > .mobile-accordion-body {
+        margin-top: 10px;
+    }
+
+    #tabelaAtivos,
+    #relatorioFinal {
+        width: 100% !important;
+        min-width: 0 !important;
+        display: block !important;
+        border: 0 !important;
+        background: transparent !important;
+    }
+
+    #tabelaAtivos thead,
+    #relatorioFinal thead {
+        display: none !important;
+    }
+
+    #tabelaAtivos tbody,
+    #relatorioFinal tbody {
+        display: grid !important;
+        gap: 10px;
+        width: 100%;
+    }
+
+    #tabelaAtivos tr,
+    #relatorioFinal tr {
+        display: grid !important;
+        grid-template-columns: 1fr;
+        gap: 6px;
+        width: 100%;
+        padding: 10px 10px 12px;
+        border: 1px solid rgba(44, 62, 80, 0.14);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 8px 18px rgba(16, 24, 32, 0.08);
+        overflow: hidden;
+    }
+
+    body[data-theme="night"] #tabelaAtivos tr,
+    body[data-theme="night"] #relatorioFinal tr {
+        border-color: rgba(216, 246, 255, 0.16);
+        background: rgba(12, 28, 36, 0.74);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.20);
+    }
+
+    #tabelaAtivos td,
+    #relatorioFinal td {
+        display: flex !important;
+        width: 100%;
+        min-height: 32px;
+        padding: 7px 10px !important;
+        border: 0 !important;
+        border-radius: 10px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        text-align: left !important;
+        white-space: normal;
+        word-break: break-word;
+        line-height: 1.1;
+        font-size: 10px !important;
+    }
+
+    #relatorioFinal td:nth-child(1),
+    #relatorioFinal td:nth-child(2) {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 10px;
+    }
+
+    #tabelaAtivos td:nth-child(1),
+    #relatorioFinal td:nth-child(1) {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 7px 10px !important;
+        min-height: 32px;
+        width: 100%;
+        min-width: 0;
+        border-radius: 10px;
+        background: rgba(44, 62, 80, 0.06) !important;
+        color: #1e2f3b !important;
+        font-size: 11px !important;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        text-transform: none;
+        white-space: normal;
+    }
+
+    #tabelaAtivos td:nth-child(2),
+    #relatorioFinal td:nth-child(2) {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        padding: 7px 10px !important;
+        min-height: 0;
+        background: rgba(44, 62, 80, 0.04) !important;
+        color: #1e2f3b;
+        font-size: 10px !important;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+        line-height: 1.15;
+    }
+
+    body[data-theme="night"] #tabelaAtivos td:nth-child(2),
+    body[data-theme="night"] #relatorioFinal td:nth-child(2) {
+        color: #f4fbff;
+    }
+
+    #tabelaAtivos td:nth-child(1)::before,
+    #relatorioFinal td:nth-child(1)::before,
+    #tabelaAtivos td:nth-child(2)::before,
+    #relatorioFinal td:nth-child(2)::before {
+        content: none !important;
+    }
+
+    #tabelaAtivos td:nth-child(1)::before {
+        content: "VEÍCULO E LOCAL" !important;
+        display: inline-flex;
+        margin-bottom: 0;
+        color: #5e7381;
+        font-size: 9.5px;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+
+    #tabelaAtivos td:nth-child(2)::before {
+        content: "AGENTES E CONDUTOR" !important;
+        display: block;
+        margin-bottom: 3px;
+        width: 100%;
+        text-align: center;
+        color: #5e7381;
+        font-size: 9.5px;
+        font-weight: 900;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    #tabelaAtivos td:nth-child(2) {
+        gap: 8px;
+    }
+
+    #tabelaAtivos td:nth-child(2) > * {
+        min-width: 0;
+    }
+
+    #tabelaAtivos td:nth-child(2),
+    #tabelaAtivos td:nth-child(2) * {
+        font-size: 10px !important;
+        line-height: 1.05;
+        text-align: center;
+    }
+
+    body[data-theme="night"] #tabelaAtivos td:nth-child(1)::before,
+    body[data-theme="night"] #tabelaAtivos td:nth-child(2)::before {
+        color: #d8f6ff;
+    }
+
+    #tabelaAtivos td:nth-child(n + 3),
+    #relatorioFinal td:nth-child(n + 3) {
+        grid-column: 1 / -1;
+    }
+
+    #tabelaAtivos td::before,
+    #relatorioFinal td::before {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #5e7381;
+        font-size: 9.5px;
+        font-weight: 900;
+        line-height: 1.1;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    body[data-theme="night"] #tabelaAtivos td::before,
+    body[data-theme="night"] #relatorioFinal td::before {
+        color: #d8f6ff;
+    }
+
+    #tabelaAtivos td:nth-child(3)::before { content: "HT (Nº)"; }
+    #tabelaAtivos td:nth-child(4)::before { content: "ASE (Nº)"; }
+    #tabelaAtivos td:nth-child(5)::before { content: "Função da equipe"; }
+    #tabelaAtivos td:nth-child(6)::before { content: "Maletas (Nº)"; }
+    #tabelaAtivos td:nth-child(7)::before { content: "Região atual"; }
+    #tabelaAtivos td:nth-child(8)::before { content: "Hora de início"; }
+    #tabelaAtivos td:nth-child(9)::before { content: "Ponto base atual"; }
+    #tabelaAtivos td:last-child::before { content: "Ações"; }
+
+    #tabelaAtivos td:nth-child(8)::before,
+    #tabelaAtivos td:nth-child(9)::before {
+        font-size: 9.5px;
+    }
+
+    #tabelaAtivos td:nth-child(7),
+    #tabelaAtivos td:nth-child(8),
+    #tabelaAtivos td:nth-child(9),
+    #tabelaAtivos td:last-child {
+        grid-column: 1 / -1;
+    }
+
+    #tabelaAtivos td:nth-child(7) {
+        order: 17;
+    }
+
+    #tabelaAtivos td:nth-child(8) {
+        order: 18;
+        grid-column: 1 / -1;
+        grid-row: auto !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        min-height: 32px;
+        font-size: 10px !important;
+        font-weight: 700;
+        background: rgba(44, 62, 80, 0.04) !important;
+    }
+
+    #tabelaAtivos td:nth-child(8)::before {
+        display: inline-flex;
+        margin-bottom: 0;
+        font-size: 9.5px;
+    }
+
+    #tabelaAtivos td:nth-child(8),
+    #tabelaAtivos td:nth-child(8) * {
+        font-size: 10px !important;
+        line-height: 1.05;
+    }
+
+    #tabelaAtivos td:nth-child(9) {
+        order: 19;
+    }
+
+    #tabelaAtivos td:last-child {
+        order: 999 !important;
+        grid-row: auto !important;
+        margin-top: 10px;
+        padding-top: 10px !important;
+        border-top: 1px solid rgba(44, 62, 80, 0.16) !important;
+        align-self: stretch !important;
+        justify-self: stretch !important;
+        width: 100%;
+    }
+
+    #relatorioFinal td:nth-child(3)::before { content: "HT"; }
+    #relatorioFinal td:nth-child(4)::before { content: "ASE"; }
+    #relatorioFinal td:nth-child(5)::before { content: "Função"; }
+    #relatorioFinal td:nth-child(6)::before { content: "Maletas"; }
+    #relatorioFinal td:nth-child(7)::before { content: "Região"; }
+    #relatorioFinal td:nth-child(8)::before { content: "Hora início"; }
+    #relatorioFinal td:nth-child(9)::before { content: "Hora fim"; }
+    #relatorioFinal td:nth-child(10)::before { content: "Tipo registro"; }
+    #relatorioFinal td:nth-child(11)::before { content: "Ponto base"; }
+
+    #relatorioFinal td:nth-child(8)::before,
+    #relatorioFinal td:nth-child(11)::before {
+        font-size: 9.5px;
+    }
+    #relatorioFinal .historico-data-mobile {
+        display: flex !important;
+        align-items: center;
+        grid-column: 1 / -1;
+        order: 20;
+        padding: 7px 10px !important;
+        min-height: 32px;
+        border-radius: 10px;
+        background: rgba(44, 62, 80, 0.06) !important;
+    }
+    #relatorioFinal .historico-data-mobile::before { content: "Data"; }
+    #relatorioFinal td:last-child::before { content: "Ações"; }
+
+    #relatorioFinal td:nth-child(8),
+    #relatorioFinal td:nth-child(9) {
+        grid-column: 1 / -1;
+        order: 18;
+    }
+
+    #relatorioFinal td:nth-child(8) {
+        margin-top: 2px;
+        grid-row: auto !important;
+        min-height: 32px;
+        font-size: 11px !important;
+        font-weight: 700;
+        background: rgba(44, 62, 80, 0.04) !important;
+    }
+
+    #relatorioFinal td:nth-child(9) {
+        order: 19;
+        grid-row: auto !important;
+        min-height: 32px;
+        font-size: 11px !important;
+        font-weight: 700;
+    }
+
+    #relatorioFinal td:nth-child(11) {
+        grid-column: 1 / -1;
+        order: 998 !important;
+    }
+
+    #relatorioFinal td:last-child {
+        grid-column: 1 / -1;
+        order: 999 !important;
+        grid-row: auto !important;
+        margin-top: 16px;
+        padding-top: 12px !important;
+        border-top: 1px solid rgba(44, 62, 80, 0.16) !important;
+        align-self: stretch !important;
+        justify-self: stretch !important;
+        width: 100%;
+    }
+
+    #tabelaAtivos .acao-botoes,
+    #relatorioFinal .acao-botoes {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-height: 0;
+        display: flex !important;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start !important;
+        gap: 8px;
+        padding-top: 2px;
+        order: 1000 !important;
+        margin-top: 0;
+        grid-row: auto !important;
+    }
+
+    #tabelaAtivos .acao-botoes-row,
+    #relatorioFinal .acao-botoes-row {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    #tabelaAtivos .acao-botoes > button,
+    #tabelaAtivos .acao-botoes-row > button,
+    #relatorioFinal .acao-botoes > button,
+    #relatorioFinal .acao-botoes-row > button,
+    #tabelaAtivos .btn-visualizar-registro,
+    #relatorioFinal .btn-visualizar-registro,
+    #relatorioFinal .btn-excluir-x,
+    #relatorioFinal .btn-editar-historico,
+    #tabelaAtivos .btn-devolver,
+    #tabelaAtivos .btn-encaminhar,
+    #tabelaAtivos .btn-editar-ativo {
+        width: 100%;
+        min-height: 42px;
+        padding: 10px 12px !important;
+        border-radius: 8px !important;
+        font-size: 12px !important;
+        font-weight: 900;
+        letter-spacing: 0.01em;
+        line-height: 1.1;
+    }
+
+    #tabelaAtivos .btn-devolver,
+    #relatorioFinal .btn-excluir-x {
+        background: linear-gradient(180deg, #ff8b8b 0%, #f26d6d 100%) !important;
+    }
+
+    #tabelaAtivos .btn-editar-ativo,
+    #relatorioFinal .btn-editar-historico {
+        background: linear-gradient(180deg, #ffd86f 0%, #f4bf32 100%) !important;
+        color: #111 !important;
+    }
+
+    #tabelaAtivos .acao-botoes-row > button + button,
+    #relatorioFinal .acao-botoes > button + button,
+    #relatorioFinal .acao-botoes-row > button + button {
+        margin-top: 0;
+    }
+
+    #relatorioFinal .historico-data-mobile {
+        display: flex !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .mobile-agentes-accordion {
+        margin-top: 14px;
+    }
+
+    .mobile-agentes-accordion + .mobile-agentes-accordion {
+        margin-top: 14px;
+    }
+
+    #relatorioFinal tr {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        padding: 10px 10px 12px !important;
+        border: 1px solid rgba(44, 62, 80, 0.14) !important;
+        border-radius: 14px !important;
+        background: rgba(255, 255, 255, 0.92) !important;
+        box-shadow: 0 8px 18px rgba(16, 24, 32, 0.08) !important;
+        overflow: hidden;
+    }
+
+    #relatorioFinal tr + tr {
+        margin-top: 10px;
+        padding-top: 12px !important;
+        border-top: 2px solid #000000 !important;
+    }
+
+    #tabelaAtivos tr + tr {
+        margin-top: 10px;
+        padding-top: 12px !important;
+        border-top: 2px solid #000000 !important;
+    }
+
+    body[data-theme="night"] #relatorioFinal tr {
+        border-color: rgba(216, 246, 255, 0.16) !important;
+        background: rgba(12, 28, 36, 0.74) !important;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.20) !important;
+    }
+
+    body[data-theme="night"] #relatorioFinal tr + tr {
+        border-top-color: rgba(216, 246, 255, 0.24) !important;
+    }
+
+    body[data-theme="night"] #tabelaAtivos tr + tr {
+        border-top-color: rgba(216, 246, 255, 0.24) !important;
+    }
+
+    #relatorioFinal td {
+        display: flex !important;
+        width: 100%;
+        min-height: 32px;
+        padding: 7px 10px !important;
+        border: 0 !important;
+        border-radius: 10px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        text-align: left !important;
+        white-space: normal;
+        word-break: break-word;
+        line-height: 1.2;
+    }
+
+    #relatorioFinal td:nth-child(1),
+    #relatorioFinal td:nth-child(2),
+    #relatorioFinal td:nth-child(3),
+    #relatorioFinal td:nth-child(4),
+    #relatorioFinal td:nth-child(5),
+    #relatorioFinal td:nth-child(6),
+    #relatorioFinal td:nth-child(7),
+    #relatorioFinal td:nth-child(8),
+    #relatorioFinal td:nth-child(9),
+    #relatorioFinal td:nth-child(10),
+    #relatorioFinal td:nth-child(11),
+    #relatorioFinal td:last-child {
+        display: flex !important;
+    }
+
+    #relatorioFinal td:nth-child(1) {
+        order: 1;
+    }
+
+    #relatorioFinal td:nth-child(2) {
+        order: 2;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    #relatorioFinal td:nth-child(3) {
+        order: 3;
+    }
+
+    #relatorioFinal td:nth-child(4) {
+        order: 4;
+    }
+
+    #relatorioFinal td:nth-child(1),
+    #relatorioFinal td:nth-child(2),
+    #relatorioFinal td:nth-child(3),
+    #relatorioFinal td:nth-child(4) {
+        grid-column: 1 / -1;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    #relatorioFinal td:nth-child(1) {
+        background: rgba(44, 62, 80, 0.06) !important;
+    }
+
+    #relatorioFinal td:nth-child(2),
+    #relatorioFinal td:nth-child(3),
+    #relatorioFinal td:nth-child(4) {
+        background: rgba(44, 62, 80, 0.04) !important;
+    }
+
+    #relatorioFinal td:nth-child(5) {
+        order: 5;
+    }
+
+    #relatorioFinal td:nth-child(6) {
+        order: 6;
+    }
+
+    #relatorioFinal td:nth-child(7) {
+        order: 7;
+    }
+
+    #relatorioFinal td:nth-child(8) {
+        order: 8;
+    }
+
+    #relatorioFinal td:nth-child(9) {
+        order: 9;
+    }
+
+    #relatorioFinal td:nth-child(10) {
+        order: 10;
+    }
+
+    #relatorioFinal td:nth-child(11) {
+        order: 11;
+        background: rgba(44, 62, 80, 0.04) !important;
+        color: #1e2f3b;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+    }
+
+    body[data-theme="night"] #relatorioFinal td:nth-child(11) {
+        color: #f4fbff;
+    }
+
+    #relatorioFinal td:last-child {
+        order: 12;
+        grid-column: 1 / -1;
+        min-width: 0;
+        justify-self: stretch;
+        margin-top: 0;
+        padding-top: 10px !important;
+        border-top: 1px solid rgba(44, 62, 80, 0.16) !important;
+        background: transparent !important;
+    }
+
+    #relatorioFinal td:nth-child(1)::before,
+    #relatorioFinal td:nth-child(2)::before {
+        display: inline-flex !important;
+        flex: 0 0 auto !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        white-space: nowrap;
+        font-size: 10px !important;
+    }
+
+    #relatorioFinal td:nth-child(1)::before { content: "VEÍCULO" !important; }
+    #relatorioFinal td:nth-child(2)::before { content: "AGENTE" !important; }
+    #relatorioFinal td:nth-child(3)::before { content: "HT" !important; }
+    #relatorioFinal td:nth-child(4)::before { content: "ASE" !important; }
+    #relatorioFinal td:nth-child(5)::before { content: "FUNÇÃO" !important; }
+    #relatorioFinal td:nth-child(6)::before { content: "MALETAS" !important; }
+    #relatorioFinal td:nth-child(7)::before { content: "REGIÃO" !important; }
+    #relatorioFinal td:nth-child(8)::before { content: "HORA INÍCIO" !important; }
+    #relatorioFinal td:nth-child(9)::before { content: "HORA FIM" !important; }
+    #relatorioFinal td:nth-child(10)::before { content: "TIPO REGISTRO" !important; }
+    #relatorioFinal td:nth-child(11)::before { content: "PONTO BASE" !important; }
+    #relatorioFinal td:last-child::before { content: "AÇÃO" !important; }
+
+    #relatorioFinal td:last-child,
+    #relatorioFinal td:last-child::before,
+    #relatorioFinal .acao-botoes,
+    #relatorioFinal .acao-botoes * {
+        font-size: 10px !important;
+        line-height: 1.1;
+    }
+
+    body[data-theme="night"] #relatorioFinal td:last-child {
+        border-top-color: rgba(216, 246, 255, 0.18) !important;
+    }
+
+    #registroForm .registro-actions {
+        grid-template-columns: 1fr !important;
+        justify-items: center;
+        gap: 8px;
+    }
+
+    #registroForm .registro-actions .btn-salvar,
+    #registroForm .registro-actions .btn-limpar-equipe {
+        width: min(100%, 210px) !important;
+        min-width: 0;
+        padding: 0 12px !important;
+        font-size: 11px !important;
     }
 }
 
