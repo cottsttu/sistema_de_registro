@@ -1602,6 +1602,11 @@ body[data-theme="day"] .mobile-agentes-accordion > summary .mobile-accordion-tit
     color: #ffffff !important;
 }
 
+body[data-theme="night"] .mobile-agentes-accordion > summary,
+body[data-theme="night"] .mobile-agentes-accordion > summary .mobile-accordion-title {
+    color: #ffffff !important;
+}
+
 @media (min-width: 601px) {
     .mobile-agentes-accordion > summary {
         pointer-events: none;

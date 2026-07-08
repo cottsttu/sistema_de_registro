@@ -8253,6 +8253,59 @@ body[data-theme="day"] .region-panel .region-agent-group-active {
         font-size: 1rem;
     }
 
+
+body .region-panel .region-ranking-row,
+body[data-theme="night"] .region-panel .region-ranking-row,
+body[data-theme="day"] .region-panel .region-ranking-row,
+body .region-panel .region-name-line,
+body[data-theme="night"] .region-panel .region-name-line,
+body[data-theme="day"] .region-panel .region-name-line {
+    border-left-color: var(--legend-color) !important;
+}
+
+body .region-panel .region-name-line,
+body[data-theme="night"] .region-panel .region-name-line,
+body[data-theme="day"] .region-panel .region-name-line {
+    border-color: color-mix(in srgb, var(--legend-color) 84%, #ffffff 10%) !important;
+    background: var(--legend-color) !important;
+}
+
+body[data-theme="day"] .region-panel .region-name-line,
+body[data-theme="day"] .region-panel .region-ranking-row {
+    background:
+        linear-gradient(135deg, color-mix(in srgb, var(--legend-color) 26%, rgba(230, 236, 242, 0.9)), rgba(164, 177, 190, 0.78)) !important;
+}
+
+body[data-theme="night"] .region-panel .region-name-line .region-name,
+body[data-theme="day"] .region-panel .region-name-line .region-name,
+body[data-theme="night"] .region-panel .region-name-line > span,
+body[data-theme="day"] .region-panel .region-name-line > span,
+body[data-theme="night"] .region-panel .region-occurrence-cell strong,
+body[data-theme="day"] .region-panel .region-occurrence-cell strong,
+body[data-theme="night"] .region-panel .region-occurrence-cell span,
+body[data-theme="day"] .region-panel .region-occurrence-cell span,
+body[data-theme="night"] .region-panel .region-agent-code,
+body[data-theme="day"] .region-panel .region-agent-code,
+body[data-theme="night"] .region-panel .region-agent-name,
+body[data-theme="day"] .region-panel .region-agent-name {
+    color: inherit !important;
+}
+
+body[data-theme="day"] .region-panel .region-name-line .region-name,
+body[data-theme="day"] .region-panel .region-name-line > span,
+body[data-theme="day"] .region-panel .region-occurrence-cell strong,
+body[data-theme="day"] .region-panel .region-agent-code,
+body[data-theme="day"] .region-panel .region-agent-name {
+    color: #101820 !important;
+}
+
+body[data-theme="night"] .region-panel .region-name-line .region-name,
+body[data-theme="night"] .region-panel .region-name-line > span,
+body[data-theme="night"] .region-panel .region-occurrence-cell strong,
+body[data-theme="night"] .region-panel .region-agent-code,
+body[data-theme="night"] .region-panel .region-agent-name {
+    color: #ffffff !important;
+}
     .fleet-icon {
         width: 14px;
         height: 14px;

@@ -217,6 +217,11 @@ h3 {
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.72) !important;
 }
 
+body[data-theme="night"] #areaRegistro ~ .section-title {
+    color: #ffffff !important;
+    text-shadow: none !important;
+}
+
 p,
 small,
 label,
@@ -1081,4 +1086,11 @@ body[data-theme="night"] #areaRegistro #registroForm .registro-panel .subtipo-co
 body[data-theme="night"] #areaRegistro #registroForm .registro-panel .qtc-container {
     border-color: rgba(85, 246, 255, 0.34) !important;
     background: rgba(7, 34, 48, 0.74) !important;
+}
+
+body[data-theme="night"] .ocorrencias-title {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow: none !important;
+    filter: none !important;
 }
