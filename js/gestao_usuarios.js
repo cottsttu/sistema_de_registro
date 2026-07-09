@@ -378,6 +378,36 @@ async function iniciarGestaoUsuarios() {
                     estadoEdicao.permissoes[modulo].habilitado = true;
                 }
 
+                if (acao === "criar" && input.checked) {
+                    estadoEdicao.permissoes[modulo].habilitado = true;
+                    estadoEdicao.permissoes[modulo].visualizar = true;
+                    estadoEdicao.permissoes[modulo].editar = false;
+                    estadoEdicao.permissoes[modulo].excluir = false;
+                }
+
+                if (acao === "criar" && !input.checked) {
+                    estadoEdicao.permissoes[modulo].editar = false;
+                    estadoEdicao.permissoes[modulo].excluir = false;
+                }
+
+                if (acao === "editar" && input.checked) {
+                    estadoEdicao.permissoes[modulo].habilitado = true;
+                    estadoEdicao.permissoes[modulo].visualizar = true;
+                    estadoEdicao.permissoes[modulo].criar = true;
+                    estadoEdicao.permissoes[modulo].excluir = false;
+                }
+
+                if (acao === "editar" && !input.checked) {
+                    estadoEdicao.permissoes[modulo].excluir = false;
+                }
+
+                if (acao === "excluir" && input.checked) {
+                    estadoEdicao.permissoes[modulo].habilitado = true;
+                    estadoEdicao.permissoes[modulo].visualizar = true;
+                    estadoEdicao.permissoes[modulo].criar = true;
+                    estadoEdicao.permissoes[modulo].editar = true;
+                }
+
                 if (!["habilitado", "visualizar"].includes(acao) && input.checked) {
                     estadoEdicao.permissoes[modulo].habilitado = true;
                     estadoEdicao.permissoes[modulo].visualizar = true;

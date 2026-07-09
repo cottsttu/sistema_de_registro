@@ -58,6 +58,7 @@
     let usuarioPodeCriar = false;
     let usuarioPodeEditar = false;
     let usuarioPodeExcluir = false;
+    let usuarioPodeOperar = false;
     let maletasRegistradasHoje = new Set();
     let registrosObservacoesHoje = [];
 
@@ -233,8 +234,9 @@
                     usuarioPodeCriar = temPermissaoModulo(dados, "observacoes", "criar");
                     usuarioPodeEditar = temPermissaoModulo(dados, "observacoes", "editar");
                     usuarioPodeExcluir = temPermissaoModulo(dados, "observacoes", "excluir");
+                    usuarioPodeOperar = usuarioPodeCriar || usuarioPodeEditar || usuarioPodeExcluir;
                     isAdmin = usuarioPodeEditar || usuarioPodeExcluir;
-                    isVisualizador = !usuarioPodeCriar && !usuarioPodeEditar && !usuarioPodeExcluir && cargo !== 'admin';
+                    isVisualizador = !usuarioPodeOperar && cargo !== 'admin';
                     renderizarRegistrosObservacoes(registrosObservacoesHoje);
 
                     if (!usuarioPodeCriar) {
@@ -354,14 +356,14 @@
 
             item.innerHTML = html;
 
-            if ((data.requerBaixa && !data.baixa && usuarioPodeEditar) || isAdmin) {
+            if ((data.requerBaixa && !data.baixa && usuarioPodeOperar) || usuarioPodeEditar || usuarioPodeExcluir) {
                 const btnContainer = document.createElement('div');
                 btnContainer.className = 'registro-acoes';
                 btnContainer.style.display = 'flex';
                 btnContainer.style.flexDirection = 'column';
                 btnContainer.style.gap = '5px';
                 
-                if (data.requerBaixa && !data.baixa && usuarioPodeEditar) {
+                if (data.requerBaixa && !data.baixa && usuarioPodeOperar) {
                     const btnBaixa = document.createElement('button');
                     btnBaixa.className = 'btn btn-baixa';
                     btnBaixa.innerText = 'DAR BAIXA / DEVOLVER';
@@ -494,7 +496,7 @@
     };
 
     window.darBaixaNoFirebase = async (idDoc) => {
-        if (!usuarioPodeEditar) return alert("Acesso Negado.");
+        if (!usuarioPodeOperar) return alert("Acesso Negado.");
         const conferente = prompt("POR FAVOR, DIGITE O NOME DO AGENTE QUE ESTÁ CONFERINDO A DEVOLUÇÃO:");
         if (!conferente || conferente.trim() === "") return;
 
@@ -509,7 +511,7 @@
 
     // --- NOVA FUNÇÃO DO MODAL (ATUALIZADA) ---
     window.abrirModalFalta = (id, texto) => {
-        if (!usuarioPodeEditar) return alert("Acesso Negado.");
+        if (!usuarioPodeOperar) return alert("Acesso Negado.");
         document.getElementById('id-devolucao-atual').value = id;
 
         // Função hiper-resistente que ignora pontuações e espaços para achar o número exato
@@ -545,7 +547,7 @@
     window.fecharModal = () => document.getElementById('modalDevolucao').style.display = 'none';
 
     window.confirmarBaixaComFalta = async () => {
-        if (!usuarioPodeEditar) return alert("Acesso Negado.");
+        if (!usuarioPodeOperar) return alert("Acesso Negado.");
         const idDoc = document.getElementById('id-devolucao-atual').value;
         const conferente = document.getElementById('dev-responsavel').value.trim().toUpperCase();
         if (!conferente) return alert("Informe quem conferiu.");

@@ -57,6 +57,7 @@
     let usuarioPodeCriar = false;
     let usuarioPodeEditar = false;
     let usuarioPodeExcluir = false;
+    let usuarioPodeOperar = false;
     let isVisualizador = false;
     
     // Lista unificada
@@ -111,6 +112,7 @@
                     usuarioPodeCriar = temPermissaoModulo(dados, "ocorrencias", "criar");
                     usuarioPodeEditar = temPermissaoModulo(dados, "ocorrencias", "editar");
                     usuarioPodeExcluir = temPermissaoModulo(dados, "ocorrencias", "excluir");
+                    usuarioPodeOperar = usuarioPodeCriar || usuarioPodeEditar || usuarioPodeExcluir;
                     usuarioEhAdmin = usuarioPodeEditar || usuarioPodeExcluir; 
                     
                     // Se já tiver dados carregados, renderiza novamente com as permissões corretas
@@ -133,7 +135,7 @@
                         if (areaRegistro) areaRegistro.remove();
                     }
 
-                    if (!usuarioPodeCriar && !usuarioPodeEditar && !usuarioPodeExcluir) {
+                    if (!usuarioPodeOperar) {
                         isVisualizador = true;
                         
                         const modalEncaminhar = document.getElementById('modalEncaminhar');
@@ -713,7 +715,7 @@
             cellHist.appendChild(divWrapper);
 
             // --- AÇÕES PARA TABELA DE PENDENTES ---
-            if (usuarioPodeEditar && !statusFinalizado) {
+            if (usuarioPodeOperar && !statusFinalizado) {
                 const acCell = row.insertCell();
                 acCell.className = 'col-acao';
                 acCell.style.display = 'flex';
@@ -893,7 +895,7 @@
     };
 
     window.abrirModalEditarOcorrencia = (id, dados) => {
-        if (!usuarioPodeEditar) {
+                if (usuarioPodeOperar) {
             alert("⛔ Acesso Negado: Apenas administradores podem editar ocorrências concluídas.");
             return;
         }
@@ -919,7 +921,7 @@
     window.fecharModal = () => document.getElementById('modalEncaminhar').style.display = 'none';
 
     window.confirmarEncaminhamento = async () => {
-        if (!usuarioPodeEditar) return;
+        if (!usuarioPodeOperar) return;
         const id = document.getElementById('editId').value;
         const novaHora = getHoraAtual();
         const docRef = doc(db, "ocorrencias_sttu", id);
@@ -962,7 +964,7 @@
     let conclusaoPendente = null;
 
     window.concluirOcorrencia = (id, dadosAntigos) => {
-        if (!usuarioPodeEditar) return;
+        if (!usuarioPodeOperar) return;
         conclusaoPendente = {id, dadosAntigos};
         const inputId = document.getElementById('concluirId');
         const textarea = document.getElementById('concluirResultado');
@@ -985,7 +987,7 @@
     };
 
     window.confirmarConclusaoOcorrencia = async () => {
-        if (!usuarioPodeEditar || !conclusaoPendente) return;
+        if (!usuarioPodeOperar || !conclusaoPendente) return;
 
         const {id, dadosAntigos} = conclusaoPendente;
         const textarea = document.getElementById('concluirResultado');

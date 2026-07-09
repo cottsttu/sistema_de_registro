@@ -54,6 +54,7 @@
     let usuarioPodeCriar = false;
     let usuarioPodeEditar = false;
     let usuarioPodeExcluir = false;
+    let usuarioPodeOperar = false;
     let isVisualizador = false;
     const listarAgentesCondutoresUrl = "https://us-central1-sttu-registros.cloudfunctions.net/listarAgentesCondutoresHttp";
     let filtroAtivos = "todos";
@@ -81,6 +82,7 @@
                     usuarioPodeCriar = temPermissaoModulo(dados, "agentes", "criar");
                     usuarioPodeEditar = temPermissaoModulo(dados, "agentes", "editar");
                     usuarioPodeExcluir = temPermissaoModulo(dados, "agentes", "excluir");
+                    usuarioPodeOperar = usuarioPodeCriar || usuarioPodeEditar || usuarioPodeExcluir;
                     usuarioEhAdmin = usuarioPodeEditar || usuarioPodeExcluir; 
                     
                     document.getElementById('nomeUsuarioDisplay').innerText = "Olá, " + nomeUsuarioLogado;
@@ -104,7 +106,7 @@
                         if (areaRegistro) areaRegistro.remove();
                     }
 
-                    if (!usuarioPodeCriar && !usuarioPodeEditar && !usuarioPodeExcluir) {
+                    if (!usuarioPodeOperar) {
                         isVisualizador = true;
                         console.log("🔒 Modo Apenas Leitura Ativado");
 
@@ -900,7 +902,7 @@
     }
 
     async function devolverVeiculo(dados, horaFim) {
-        if (!usuarioPodeEditar) return;
+        if (!usuarioPodeOperar) return;
         const dadosHistorico = {...dados, horaFim, tipo: 'ENCERRAMENTO'};
         delete dadosHistorico.id; 
         delete dadosHistorico.timestamp; 
@@ -1008,12 +1010,12 @@
             actionCell.className = 'acao-botoes';
             actionCell.appendChild(criarBotaoVisualizarRegistro(dados, "Veículo em Operação"));
 
-            if (usuarioPodeEditar && isVeiculoMtOuVt(dados.veiculo)) {
+            if (usuarioPodeOperar && isVeiculoMtOuVt(dados.veiculo)) {
                 actionCell.appendChild(criarBotaoDisponibilidadeSmartwall(dados));
             }
             
             // --- AQUI VEM O BLOQUEIO: Só cria botões se NÃO for visualizador
-            if (usuarioPodeEditar) {
+            if (usuarioPodeOperar) {
                 const actionRow = document.createElement('div');
                 actionRow.className = 'acao-botoes-row';
 
