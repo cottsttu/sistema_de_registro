@@ -1776,3 +1776,117 @@ body[data-theme="day"] #relatorioTable th {
     text-shadow: none !important;
     filter: none !important;
 }
+
+body[data-theme="night"] #tabelaAtivos td.regiao-1,
+body[data-theme="night"] #relatorioFinal td.regiao-1,
+body[data-theme="night"] form td.regiao-1 {
+    color: #ffffff !important;
+    background: #2b2444 !important;
+    background-color: #2b2444 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="night"] #tabelaAtivos td.regiao-2,
+body[data-theme="night"] #relatorioFinal td.regiao-2,
+body[data-theme="night"] form td.regiao-2 {
+    color: #111111 !important;
+    background: #f1ff00 !important;
+    background-color: #f1ff00 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="night"] #tabelaAtivos td.regiao-3,
+body[data-theme="night"] #relatorioFinal td.regiao-3,
+body[data-theme="night"] form td.regiao-3 {
+    color: #111111 !important;
+    background: #5dff00 !important;
+    background-color: #5dff00 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="night"] #tabelaAtivos td.regiao-4,
+body[data-theme="night"] #relatorioFinal td.regiao-4,
+body[data-theme="night"] form td.regiao-4 {
+    color: #ffffff !important;
+    background: #005ecb !important;
+    background-color: #005ecb !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="night"] #tabelaAtivos td.regiao-5,
+body[data-theme="night"] #relatorioFinal td.regiao-5,
+body[data-theme="night"] form td.regiao-5 {
+    color: #ffffff !important;
+    background: #d00000 !important;
+    background-color: #d00000 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="night"] #tabelaAtivos td.regiao-geral,
+body[data-theme="night"] #relatorioFinal td.regiao-geral,
+body[data-theme="night"] form td.regiao-geral {
+    color: #ffffff !important;
+    background: #5b2fa0 !important;
+    background-color: #5b2fa0 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="night"] #tabelaAtivos tbody td:nth-child(7).regiao-1,
+body[data-theme="night"] #tabelaAtivos tbody td.regiao-1:nth-child(7) {
+    color: #ffffff !important;
+    background: #2b2444 !important;
+    background-color: #2b2444 !important;
+}
+
+body[data-theme="night"] #tabelaAtivos tbody td:nth-child(7).regiao-2,
+body[data-theme="night"] #tabelaAtivos tbody td.regiao-2:nth-child(7) {
+    color: #111111 !important;
+    background: #f1ff00 !important;
+    background-color: #f1ff00 !important;
+}
+
+body[data-theme="night"] #tabelaAtivos tbody td:nth-child(7).regiao-3,
+body[data-theme="night"] #tabelaAtivos tbody td.regiao-3:nth-child(7) {
+    color: #111111 !important;
+    background: #5dff00 !important;
+    background-color: #5dff00 !important;
+}
+
+body[data-theme="night"] #tabelaAtivos tbody td:nth-child(7).regiao-4,
+body[data-theme="night"] #tabelaAtivos tbody td.regiao-4:nth-child(7) {
+    color: #ffffff !important;
+    background: #005ecb !important;
+    background-color: #005ecb !important;
+}
+
+body[data-theme="night"] #tabelaAtivos tbody td:nth-child(7).regiao-5,
+body[data-theme="night"] #tabelaAtivos tbody td.regiao-5:nth-child(7) {
+    color: #ffffff !important;
+    background: #d00000 !important;
+    background-color: #d00000 !important;
+}
+
+body[data-theme="night"] #tabelaAtivos tbody td:nth-child(7).regiao-geral,
+body[data-theme="night"] #tabelaAtivos tbody td.regiao-geral:nth-child(7) {
+    color: #ffffff !important;
+    background: #5b2fa0 !important;
+    background-color: #5b2fa0 !important;
+}
