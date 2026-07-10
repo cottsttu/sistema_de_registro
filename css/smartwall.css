@@ -8367,3 +8367,1044 @@ body[data-theme="night"] .region-panel .region-agent-name {
         min-height: 220px;
     }
 }
+
+body[data-theme="day"] {
+    --sw-bg: #D1D0CA;
+    --sw-panel: #D1D0CA;
+    --sw-panel-strong: #D1D0CA;
+    background: #D1D0CA;
+}
+
+body[data-theme="day"] .smart-header,
+body[data-theme="day"] .kpi-card,
+body[data-theme="day"] .panel-card,
+body[data-theme="day"] .type-panel.panel-card,
+body[data-theme="day"] .chart-box.panel-card.region-panel,
+body[data-theme="day"] .active-list-section.panel-card,
+body[data-theme="day"] .type-panel .type-chart-wrap,
+body[data-theme="day"] .type-panel .type-legend-item,
+body[data-theme="day"] .type-panel .type-total-card,
+body[data-theme="day"] .region-panel .region-visual,
+body[data-theme="day"] .region-panel .region-ranking-panel,
+body[data-theme="day"] .region-panel .region-ranking-head,
+body[data-theme="day"] .region-panel .region-ranking-row,
+body[data-theme="day"] .region-panel .region-ranking-total,
+body[data-theme="day"] .region-panel .region-agent-group,
+body[data-theme="day"] .region-panel .region-occurrence-cell,
+body[data-theme="day"] .active-list-section .active-live-summary,
+body[data-theme="day"] .smart-header .brand-mark,
+body[data-theme="day"] .smart-header .operator-chip,
+body[data-theme="day"] .smart-header .clock-panel,
+body[data-theme="day"] .smart-header .operator-avatar,
+body[data-theme="day"] .smart-header .clock-icon,
+body[data-theme="day"] .smart-header .smart-controls .app-home-shortcut,
+body[data-theme="day"] .smart-header .smart-controls .app-menu-toggle,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch {
+    background: #D1D0CA !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body[data-theme="day"] .type-panel.panel-card::before,
+body[data-theme="day"] .chart-box.panel-card.region-panel::before,
+body[data-theme="day"] .active-list-section.panel-card::before {
+    background: none !important;
+    background-image: none !important;
+}
+
+body[data-theme="day"] .type-panel .panel-title,
+body[data-theme="day"] .type-panel .type-legend-name,
+body[data-theme="day"] .type-panel .type-legend-count,
+body[data-theme="day"] .type-panel .type-total-card span,
+body[data-theme="day"] .type-panel .type-total-card strong,
+body[data-theme="day"] .region-panel .panel-title,
+body[data-theme="day"] .region-panel .region-ranking-title,
+body[data-theme="day"] .region-panel .region-ranking-head,
+body[data-theme="day"] .region-panel .region-ranking-row,
+body[data-theme="day"] .region-panel .region-ranking-total,
+body[data-theme="day"] .region-panel .region-total,
+body[data-theme="day"] .region-panel .region-name,
+body[data-theme="day"] .region-panel .region-fleet-counts,
+body[data-theme="day"] .region-panel .region-agent-code,
+body[data-theme="day"] .region-panel .region-agent-name,
+body[data-theme="day"] .region-panel .region-occurrence-cell strong,
+body[data-theme="day"] .region-panel .region-occurrence-cell span,
+body[data-theme="day"] .active-list-section .panel-title,
+body[data-theme="day"] .active-list-section .active-live-summary span,
+body[data-theme="day"] .active-list-section .active-live-summary strong,
+body[data-theme="day"] .smart-header .brand-title,
+body[data-theme="day"] .smart-header .operator-name,
+body[data-theme="day"] .smart-header .clock {
+    text-shadow: none !important;
+}
+
+body[data-theme="day"] button,
+body[data-theme="day"] .btn,
+body[data-theme="day"] .app-home-shortcut,
+body[data-theme="day"] .app-menu-toggle,
+body[data-theme="day"] .app-logout-button,
+body[data-theme="day"] .panel-action,
+body[data-theme="day"] .shift-filter-btn,
+body[data-theme="day"] .region-agent-name,
+body[data-theme="day"] input,
+body[data-theme="day"] select,
+body[data-theme="day"] textarea,
+body[data-theme="day"] .search-box,
+body[data-theme="day"] .input-shell,
+body[data-theme="day"] .input-row,
+body[data-theme="day"] table,
+body[data-theme="day"] tr,
+body[data-theme="day"] tbody tr,
+body[data-theme="day"] thead tr,
+body[data-theme="day"] thead th,
+body[data-theme="day"] table th,
+body[data-theme="day"] td,
+body[data-theme="day"] #tabelaAtivos,
+body[data-theme="day"] #relatorioFinal,
+body[data-theme="day"] #tabelaPendentes,
+body[data-theme="day"] #relatorioTable,
+body[data-theme="day"] #tabelaAtivos tr,
+body[data-theme="day"] #relatorioFinal tr,
+body[data-theme="day"] #tabelaPendentes tr,
+body[data-theme="day"] #relatorioTable tr,
+body[data-theme="day"] #tabelaAtivos tbody tr,
+body[data-theme="day"] #relatorioFinal tbody tr,
+body[data-theme="day"] #tabelaPendentes tbody tr,
+body[data-theme="day"] #relatorioTable tbody tr,
+body[data-theme="day"] #tabelaAtivos th,
+body[data-theme="day"] #relatorioFinal th,
+body[data-theme="day"] #tabelaPendentes th,
+body[data-theme="day"] #relatorioTable th,
+body[data-theme="day"] #tabelaAtivos td,
+body[data-theme="day"] #relatorioFinal td,
+body[data-theme="day"] #tabelaPendentes td,
+body[data-theme="day"] #relatorioTable td,
+body[data-theme="day"] .table-container,
+body[data-theme="day"] .type-panel .type-legend-icon,
+body[data-theme="day"] .active-list-section .list-item {
+    background: #D1D0CA !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body[data-theme="day"] button:hover,
+body[data-theme="day"] .btn:hover,
+body[data-theme="day"] .app-home-shortcut:hover,
+body[data-theme="day"] .app-menu-toggle:hover,
+body[data-theme="day"] .app-logout-button:hover,
+body[data-theme="day"] .panel-action:hover,
+body[data-theme="day"] .shift-filter-btn:hover,
+body[data-theme="day"] .region-agent-name:hover,
+body[data-theme="day"] input:focus,
+body[data-theme="day"] select:focus,
+body[data-theme="day"] textarea:focus,
+body[data-theme="day"] .active-list-section .list-item:hover,
+body[data-theme="day"] .active-list-section .list-item:focus-visible {
+    background: #D1D0CA !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos tbody tr,
+body[data-theme="day"] #tabelaAtivos tbody td,
+body[data-theme="day"] #tabelaAtivos tbody td:nth-child(7),
+body[data-theme="day"] #tabelaAtivos tbody td[class*="regiao-"],
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-geral {
+    background: #D1D0CA !important;
+    background-color: #D1D0CA !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] button,
+body[data-theme="day"] .btn,
+body[data-theme="day"] .app-home-shortcut,
+body[data-theme="day"] .app-menu-toggle,
+body[data-theme="day"] .app-logout-button,
+body[data-theme="day"] .panel-action,
+body[data-theme="day"] .shift-filter-btn,
+body[data-theme="day"] .region-agent-name {
+    color: #0b1720 !important;
+    border-color: #7f8582 !important;
+    background: #b8bbb5 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] button:hover,
+body[data-theme="day"] .btn:hover,
+body[data-theme="day"] .app-home-shortcut:hover,
+body[data-theme="day"] .app-menu-toggle:hover,
+body[data-theme="day"] .app-logout-button:hover,
+body[data-theme="day"] .panel-action:hover,
+body[data-theme="day"] .shift-filter-btn:hover,
+body[data-theme="day"] .region-agent-name:hover {
+    background: #aeb2ac !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] .shift-filter-btn {
+    color: color-mix(in srgb, var(--shift-color) 78%, #071126) !important;
+    border-color: color-mix(in srgb, var(--shift-color) 72%, #5f6764) !important;
+    background: color-mix(in srgb, var(--shift-color) 16%, #D1D0CA) !important;
+}
+
+body[data-theme="day"] .shift-filter-btn.active {
+    color: #ffffff !important;
+    border-color: color-mix(in srgb, var(--shift-color) 80%, #071126) !important;
+    background: color-mix(in srgb, var(--shift-color) 72%, #101820) !important;
+    animation: none !important;
+}
+
+body[data-theme="day"] .panel-action,
+body[data-theme="day"] .btn-view {
+    color: #ffffff !important;
+    border-color: #087686 !important;
+    background: #0093a6 !important;
+    background-image: none !important;
+}
+
+body[data-theme="day"] .app-logout-button,
+body[data-theme="day"] .btn-trash {
+    color: #ffffff !important;
+    border-color: #9d2e27 !important;
+    background: #c63c32 !important;
+    background-image: none !important;
+}
+
+body[data-theme="day"] .region-panel .region-agent-name-available,
+body[data-theme="day"] .region-panel .region-agent-group-active .region-agent-name {
+    color: #ffffff !important;
+    border-color: #0f6b3a !important;
+    background: #16884f !important;
+    background-image: none !important;
+}
+
+body[data-theme="day"] .region-panel .region-agent-name-unavailable,
+body[data-theme="day"] .region-panel button.region-agent-name.region-agent-name-unavailable {
+    color: #25313a !important;
+    border-color: #858d91 !important;
+    background: #a7aca8 !important;
+    background-image: none !important;
+}
+
+body[data-theme="day"] button,
+body[data-theme="day"] .btn,
+body[data-theme="day"] .app-home-shortcut,
+body[data-theme="day"] .app-menu-toggle,
+body[data-theme="day"] .panel-action,
+body[data-theme="day"] .shift-filter-btn,
+body[data-theme="day"] .region-agent-name {
+    color: #ffffff !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] .smart-controls .app-home-shortcut,
+body[data-theme="day"] .smart-controls .app-menu-toggle,
+body[data-theme="day"] .smart-theme-switch.theme-switch {
+    border-color: #0f5f80 !important;
+    background: #0ea5e9 !important;
+}
+
+body[data-theme="day"] .smart-controls .app-home-shortcut:hover,
+body[data-theme="day"] .smart-controls .app-menu-toggle:hover,
+body[data-theme="day"] .smart-theme-switch.theme-switch:hover {
+    background: #0284c7 !important;
+}
+
+body[data-theme="day"] .panel-action,
+body[data-theme="day"] .btn-view {
+    border-color: #0f766e !important;
+    background: #14b8a6 !important;
+}
+
+body[data-theme="day"] .panel-action:hover,
+body[data-theme="day"] .btn-view:hover {
+    background: #0d9488 !important;
+}
+
+body[data-theme="day"] .app-logout-button,
+body[data-theme="day"] .btn-trash {
+    color: #ffffff !important;
+    border-color: #b91c1c !important;
+    background: #ef4444 !important;
+    background-image: none !important;
+}
+
+body[data-theme="day"] .app-logout-button:hover,
+body[data-theme="day"] .btn-trash:hover {
+    background: #dc2626 !important;
+}
+
+body[data-theme="day"] .shift-filter-btn {
+    color: #ffffff !important;
+    border-color: color-mix(in srgb, var(--shift-color) 72%, #111827) !important;
+    background: color-mix(in srgb, var(--shift-color) 86%, #111827) !important;
+}
+
+body[data-theme="day"] .shift-filter-btn:hover,
+body[data-theme="day"] .shift-filter-btn.active {
+    color: #ffffff !important;
+    border-color: color-mix(in srgb, var(--shift-color) 82%, #020617) !important;
+    background: var(--shift-color) !important;
+    animation: none !important;
+}
+
+body[data-theme="day"] .region-panel .region-agent-name-available,
+body[data-theme="day"] .region-panel .region-agent-group-active .region-agent-name {
+    color: #ffffff !important;
+    border-color: #15803d !important;
+    background: #16a34a !important;
+    background-image: none !important;
+}
+
+body[data-theme="day"] .region-panel .region-agent-name-available:hover,
+body[data-theme="day"] .region-panel .region-agent-group-active .region-agent-name:hover {
+    background: #15803d !important;
+}
+
+body[data-theme="day"] .region-panel .region-agent-group-despacho .region-agent-name {
+    color: #ffffff !important;
+    border-color: #c2410c !important;
+    background: #f97316 !important;
+    background-image: none !important;
+}
+
+body[data-theme="day"] .region-panel .region-agent-group-despacho .region-agent-name:hover {
+    background: #ea580c !important;
+}
+
+body[data-theme="day"] .region-panel .region-agent-group-andamento .region-agent-name {
+    color: #ffffff !important;
+    border-color: #1d4ed8 !important;
+    background: #2563eb !important;
+    background-image: none !important;
+}
+
+body[data-theme="day"] .region-panel .region-agent-group-andamento .region-agent-name:hover {
+    background: #1d4ed8 !important;
+}
+
+body[data-theme="day"] button,
+body[data-theme="day"] .btn,
+body[data-theme="day"] .app-home-shortcut,
+body[data-theme="day"] .app-menu-toggle,
+body[data-theme="day"] .panel-action,
+body[data-theme="day"] .btn-view,
+body[data-theme="day"] .shift-filter-btn,
+body[data-theme="day"] .region-name-line.region-zone-toggle,
+body[data-theme="day"] .region-agent-name,
+body[data-theme="day"] .app-logout-button,
+body[data-theme="day"] .btn-trash {
+    color: #000000 !important;
+}
+
+body[data-theme="day"] button *,
+body[data-theme="day"] .btn *,
+body[data-theme="day"] .panel-action *,
+body[data-theme="day"] .btn-view *,
+body[data-theme="day"] .shift-filter-btn *,
+body[data-theme="day"] .region-name-line.region-zone-toggle *,
+body[data-theme="day"] .region-agent-name * {
+    color: #000000 !important;
+}
+
+body[data-theme="day"] .region-panel .region-name-line.region-zone-toggle {
+    border-color: color-mix(in srgb, var(--legend-color) 78%, #111111) !important;
+    background: var(--legend-color) !important;
+    background-image: none !important;
+}
+
+body[data-theme="day"] .region-panel .region-name-line.region-zone-toggle:hover {
+    background: color-mix(in srgb, var(--legend-color) 84%, #ffffff) !important;
+}
+
+body[data-theme="day"] .region-panel .region-agent-group-despacho .region-agent-name {
+    color: #000000 !important;
+    border-color: #15803d !important;
+    background: #22c55e !important;
+    background-image: none !important;
+}
+
+body[data-theme="day"] .region-panel .region-agent-group-despacho .region-agent-name:hover {
+    color: #000000 !important;
+    background: #16a34a !important;
+}
+
+body[data-theme="day"] .chart-total-center span,
+body[data-theme="day"] .chart-total-center strong {
+    color: #000000 !important;
+}
+
+body[data-theme="day"] .region-panel .region-fleet-panel .region-agent-name,
+body[data-theme="day"] .region-panel .region-fleet-panel .region-agent-code,
+body[data-theme="day"] .region-panel .region-fleet-panel .region-agent-name-available,
+body[data-theme="day"] .region-panel .region-fleet-panel .region-agent-name-unavailable,
+body[data-theme="day"] .region-panel .region-fleet-panel button.region-agent-name.region-agent-name-unavailable,
+body[data-theme="day"] .region-panel .region-fleet-panel .region-agent-group-active .region-agent-name,
+body[data-theme="day"] .region-panel .region-fleet-panel .region-agent-group-active .region-agent-code,
+body[data-theme="day"] .region-panel .region-fleet-panel .region-agent-group-despacho .region-agent-name,
+body[data-theme="day"] .region-panel .region-fleet-panel .region-agent-group-despacho .region-agent-code,
+body[data-theme="day"] .region-panel .region-fleet-panel .region-agent-group-andamento .region-agent-name,
+body[data-theme="day"] .region-panel .region-fleet-panel .region-agent-group-andamento .region-agent-code,
+body[data-theme="day"] .region-panel .region-fleet-panel .region-agent-name *,
+body[data-theme="day"] .region-panel .region-fleet-panel .region-agent-code * {
+    color: #000000 !important;
+}
+
+body[data-theme="day"] .type-panel .type-legend-item {
+    border-color: color-mix(in srgb, var(--type-color) 78%, #111111) !important;
+    background: var(--type-color) !important;
+    background-image: none !important;
+    box-shadow:
+        0 12px 28px rgba(39, 50, 62, 0.18),
+        0 0 18px color-mix(in srgb, var(--type-color) 28%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+}
+
+body[data-theme="day"] .type-panel .type-legend-item:hover {
+    background: color-mix(in srgb, var(--type-color) 84%, #ffffff) !important;
+}
+
+body[data-theme="day"] .type-panel .type-legend-name,
+body[data-theme="day"] .type-panel .type-legend-count,
+body[data-theme="day"] .type-panel .type-legend-percent {
+    color: #000000 !important;
+    text-shadow: none !important;
+}
+
+body[data-theme="day"] .active-list-section .list-item {
+    color: #000000 !important;
+    border-color: rgba(var(--occurrence-rgb), 0.78) !important;
+    background: rgb(var(--occurrence-rgb)) !important;
+    background-image: none !important;
+    box-shadow:
+        0 12px 28px rgba(39, 50, 62, 0.18),
+        0 0 18px rgba(var(--occurrence-rgb), 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+}
+
+body[data-theme="day"] .active-list-section .list-item:hover,
+body[data-theme="day"] .active-list-section .list-item:focus-visible {
+    background: rgba(var(--occurrence-rgb), 0.88) !important;
+}
+
+body[data-theme="day"] .active-list-section .item-tipo,
+body[data-theme="day"] .active-list-section .item-hora,
+body[data-theme="day"] .active-list-section .list-item[class*="zona-atendimento-"] .item-tipo,
+body[data-theme="day"] .active-list-section .list-item[class*="zona-atendimento-"] .item-hora {
+    color: #000000 !important;
+    text-shadow: none !important;
+}
+
+body[data-theme="day"] .active-list-section .item-action {
+    border-color: #000000 !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch {
+    border: 2px solid #000000 !important;
+    background:
+        linear-gradient(145deg, #ffffff 0%, #f4f7f9 34%, #b8c0c7 66%, #ffffff 100%) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1px 0 rgba(79, 88, 96, 0.32),
+        0 6px 14px rgba(37, 45, 54, 0.18) !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+body[data-theme="day"] .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch::after {
+    top: 50% !important;
+    right: 5px !important;
+    width: 26px !important;
+    height: 26px !important;
+    transform: translateY(-50%) !important;
+    border: 2px solid #000000 !important;
+    background:
+        linear-gradient(145deg, #ffffff 0%, #eef2f5 42%, #aeb7bf 72%, #ffffff 100%) !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+body[data-theme="day"] .shift-filter-btn,
+body[data-theme="day"] .shift-filter-btn.active,
+body[data-theme="day"] .shift-filter-btn:hover,
+body[data-theme="day"] .shift-filter-btn:focus-visible,
+body[data-theme="day"] .shift-filter-btn[data-shift],
+body[data-theme="day"] .shift-filter-btn[data-shift="total"],
+body[data-theme="day"] .shift-filter-btn[data-shift="total"].active,
+body[data-theme="day"] .shift-filter-btn[data-shift="total"]:hover,
+body[data-theme="day"] .shift-filter-btn strong,
+body[data-theme="day"] .shift-filter-btn.active strong,
+body[data-theme="day"] .shift-filter-btn[data-shift="total"] strong,
+body[data-theme="day"] .shift-filter-btn[data-shift="total"].active strong,
+body[data-theme="day"] .shift-filter-btn .shift-filter-icon,
+body[data-theme="day"] .shift-filter-btn.active .shift-filter-icon,
+body[data-theme="day"] .shift-filter-btn[data-shift="total"] .shift-filter-icon,
+body[data-theme="day"] .shift-filter-btn[data-shift="total"].active .shift-filter-icon {
+    color: #000000 !important;
+}
+
+body[data-theme="day"] .shift-filter-btn svg,
+body[data-theme="day"] .shift-filter-btn.active svg,
+body[data-theme="day"] .shift-filter-btn[data-shift="total"] svg,
+body[data-theme="day"] .shift-filter-btn[data-shift="total"].active svg,
+body[data-theme="day"] .shift-filter-btn svg *,
+body[data-theme="day"] .shift-filter-btn.active svg *,
+body[data-theme="day"] .shift-filter-btn[data-shift="total"] svg *,
+body[data-theme="day"] .shift-filter-btn[data-shift="total"].active svg * {
+    color: #000000 !important;
+    stroke: #000000 !important;
+    fill: none !important;
+}
+
+.smart-theme-switch.theme-switch::after,
+.smart-header .smart-theme-switch.theme-switch::after {
+    top: 50% !important;
+    right: 4px !important;
+    width: 28px !important;
+    height: 28px !important;
+    transform: translateY(-50%) !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    transform: translate(-40px, -50%) !important;
+}
+
+.smart-theme-switch.theme-switch,
+.smart-header .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch {
+    width: 76px !important;
+    height: 36px !important;
+    padding: 0 9px !important;
+}
+
+.smart-theme-switch.theme-switch::after,
+.smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    top: 4px !important;
+    right: 4px !important;
+    width: 28px !important;
+    height: 28px !important;
+    transform: none !important;
+}
+
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    transform: translateX(-40px) !important;
+}
+
+/* Replica o switch da pagina index na Smartwall. */
+.smart-theme-switch.theme-switch,
+.smart-header .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    z-index: 1000 !important;
+    box-sizing: border-box !important;
+    width: 106px !important;
+    min-width: 106px !important;
+    max-width: 106px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    padding: 0 12px !important;
+    border: 0 !important;
+    outline: none !important;
+    border-radius: 999px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    background: rgba(214, 218, 220, 0.92) !important;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22) !important;
+    cursor: pointer !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    line-height: normal !important;
+    align-self: center !important;
+}
+
+body[data-theme="night"] .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch {
+    background: rgba(38, 49, 58, 0.95) !important;
+}
+
+.smart-theme-switch.theme-switch::after,
+.smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 5px !important;
+    right: 5px !important;
+    width: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
+    border: 0 !important;
+    outline: none !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
+    transform: none !important;
+    transition: transform 0.22s ease !important;
+}
+
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    transform: translateX(-58px) !important;
+}
+
+.smart-theme-switch .theme-icon,
+.smart-header .smart-theme-switch .theme-icon,
+body[data-theme="day"] .smart-theme-switch .theme-icon,
+body[data-theme="day"] .smart-header .smart-theme-switch .theme-icon,
+body[data-theme="night"] .smart-theme-switch .theme-icon,
+body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon {
+    position: relative !important;
+    z-index: 1 !important;
+    width: 25px !important;
+    height: 25px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+body[data-theme="day"] .smart-theme-switch .theme-icon.sun,
+body[data-theme="day"] .smart-header .smart-theme-switch .theme-icon.sun,
+body[data-theme="night"] .smart-theme-switch .theme-icon.sun,
+body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon.sun {
+    color: #26313a !important;
+}
+
+body[data-theme="day"] .smart-theme-switch .theme-icon.moon,
+body[data-theme="day"] .smart-header .smart-theme-switch .theme-icon.moon {
+    color: #7d878d !important;
+}
+
+body[data-theme="night"] .smart-theme-switch .theme-icon.moon,
+body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon.moon {
+    color: #aeb7be !important;
+}
+
+.smart-theme-switch.theme-switch,
+.smart-header .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch {
+    width: 56px !important;
+    min-width: 56px !important;
+    max-width: 56px !important;
+    height: 26px !important;
+    min-height: 26px !important;
+    max-height: 26px !important;
+    padding: 0 6px !important;
+}
+
+.smart-theme-switch.theme-switch::after,
+.smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    top: 3px !important;
+    right: 3px !important;
+    width: 20px !important;
+    min-width: 20px !important;
+    max-width: 20px !important;
+    height: 20px !important;
+    min-height: 20px !important;
+    max-height: 20px !important;
+}
+
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    transform: translateX(-30px) !important;
+}
+
+.smart-theme-switch .theme-icon,
+.smart-header .smart-theme-switch .theme-icon,
+body[data-theme="day"] .smart-theme-switch .theme-icon,
+body[data-theme="day"] .smart-header .smart-theme-switch .theme-icon,
+body[data-theme="night"] .smart-theme-switch .theme-icon,
+body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon {
+    width: 14px !important;
+    height: 14px !important;
+}
+
+.smart-theme-switch.theme-switch,
+.smart-header .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch {
+    width: 88px !important;
+    min-width: 88px !important;
+    max-width: 88px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    padding: 0 10px !important;
+}
+
+.smart-theme-switch.theme-switch::after,
+.smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    top: 4px !important;
+    right: 4px !important;
+    width: 32px !important;
+    min-width: 32px !important;
+    max-width: 32px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+}
+
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    transform: translateX(-48px) !important;
+}
+
+.smart-theme-switch .theme-icon,
+.smart-header .smart-theme-switch .theme-icon,
+body[data-theme="day"] .smart-theme-switch .theme-icon,
+body[data-theme="day"] .smart-header .smart-theme-switch .theme-icon,
+body[data-theme="night"] .smart-theme-switch .theme-icon,
+body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon {
+    width: 21px !important;
+    height: 21px !important;
+}
+
+.smart-theme-switch.theme-switch,
+.smart-header .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch {
+    width: 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+    height: 20px !important;
+    min-height: 20px !important;
+    max-height: 20px !important;
+    padding: 0 5px !important;
+}
+
+.smart-theme-switch.theme-switch::after,
+.smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    top: 2px !important;
+    right: 2px !important;
+    width: 16px !important;
+    min-width: 16px !important;
+    max-width: 16px !important;
+    height: 16px !important;
+    min-height: 16px !important;
+    max-height: 16px !important;
+}
+
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    transform: translateX(-24px) !important;
+}
+
+.smart-theme-switch .theme-icon,
+.smart-header .smart-theme-switch .theme-icon,
+body[data-theme="day"] .smart-theme-switch .theme-icon,
+body[data-theme="day"] .smart-header .smart-theme-switch .theme-icon,
+body[data-theme="night"] .smart-theme-switch .theme-icon,
+body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon {
+    width: 11px !important;
+    height: 11px !important;
+}
+
+.smart-theme-switch.theme-switch,
+.smart-header .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    z-index: 1000 !important;
+    box-sizing: border-box !important;
+    width: 106px !important;
+    min-width: 106px !important;
+    max-width: 106px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    padding: 0 12px !important;
+    border: 0 !important;
+    outline: none !important;
+    border-radius: 999px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    background: rgba(214, 218, 220, 0.92) !important;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22) !important;
+    cursor: pointer !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    line-height: normal !important;
+    align-self: center !important;
+}
+
+body[data-theme="night"] .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch {
+    background: rgba(38, 49, 58, 0.95) !important;
+}
+
+.smart-theme-switch.theme-switch::after,
+.smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 5px !important;
+    right: 5px !important;
+    width: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
+    border: 0 !important;
+    outline: none !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
+    transform: none !important;
+    transition: transform 0.22s ease !important;
+}
+
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    transform: translateX(-58px) !important;
+}
+
+.smart-theme-switch .theme-icon,
+.smart-header .smart-theme-switch .theme-icon,
+body[data-theme="day"] .smart-theme-switch .theme-icon,
+body[data-theme="day"] .smart-header .smart-theme-switch .theme-icon,
+body[data-theme="night"] .smart-theme-switch .theme-icon,
+body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon {
+    position: relative !important;
+    z-index: 1 !important;
+    width: 25px !important;
+    height: 25px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+body[data-theme="day"] .smart-theme-switch .theme-icon.sun,
+body[data-theme="day"] .smart-header .smart-theme-switch .theme-icon.sun,
+body[data-theme="night"] .smart-theme-switch .theme-icon.sun,
+body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon.sun {
+    color: #26313a !important;
+}
+
+body[data-theme="day"] .smart-theme-switch .theme-icon.moon,
+body[data-theme="day"] .smart-header .smart-theme-switch .theme-icon.moon {
+    color: #7d878d !important;
+}
+
+body[data-theme="night"] .smart-theme-switch .theme-icon.moon,
+body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon.moon {
+    color: #aeb7be !important;
+}
+
+.smart-theme-switch.theme-switch,
+.smart-header .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    z-index: 1000 !important;
+    width: 106px !important;
+    min-width: 106px !important;
+    max-width: 106px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    padding: 0 12px !important;
+    border: 0 !important;
+    outline: none !important;
+    border-radius: 999px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    background: rgba(214, 218, 220, 0.92) !important;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22) !important;
+    cursor: pointer !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    line-height: normal !important;
+}
+
+body[data-theme="night"] .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch {
+    background: rgba(38, 49, 58, 0.95) !important;
+}
+
+.smart-theme-switch.theme-switch::after,
+.smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 5px !important;
+    right: 5px !important;
+    width: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
+    border: 0 !important;
+    outline: none !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
+    transform: none !important;
+    transition: transform 0.22s ease !important;
+}
+
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    transform: translateX(-58px) !important;
+}
+
+.smart-theme-switch .theme-icon,
+.smart-header .smart-theme-switch .theme-icon,
+body[data-theme="day"] .smart-theme-switch .theme-icon,
+body[data-theme="day"] .smart-header .smart-theme-switch .theme-icon,
+body[data-theme="night"] .smart-theme-switch .theme-icon,
+body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon {
+    position: relative !important;
+    z-index: 1 !important;
+    width: 25px !important;
+    height: 25px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+body[data-theme="day"] .smart-theme-switch .theme-icon.sun,
+body[data-theme="day"] .smart-header .smart-theme-switch .theme-icon.sun,
+body[data-theme="night"] .smart-theme-switch .theme-icon.sun,
+body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon.sun {
+    color: #26313a !important;
+}
+
+body[data-theme="day"] .smart-theme-switch .theme-icon.moon,
+body[data-theme="day"] .smart-header .smart-theme-switch .theme-icon.moon {
+    color: #7d878d !important;
+}
+
+body[data-theme="night"] .smart-theme-switch .theme-icon.moon,
+body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon.moon {
+    color: #aeb7be !important;
+}
+
+/* Tamanho final do switch da Smartwall. */
+.smart-theme-switch.theme-switch,
+.smart-header .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-theme-switch.theme-switch,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-theme-switch.theme-switch,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch {
+    width: 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+    height: 20px !important;
+    min-height: 20px !important;
+    max-height: 20px !important;
+    padding: 0 5px !important;
+}
+
+.smart-theme-switch.theme-switch::after,
+.smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-theme-switch.theme-switch::after,
+body[data-theme="day"] .smart-header .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    top: 2px !important;
+    right: 2px !important;
+    width: 16px !important;
+    min-width: 16px !important;
+    max-width: 16px !important;
+    height: 16px !important;
+    min-height: 16px !important;
+    max-height: 16px !important;
+}
+
+body[data-theme="night"] .smart-theme-switch.theme-switch::after,
+body[data-theme="night"] .smart-header .smart-theme-switch.theme-switch::after {
+    transform: translateX(-24px) !important;
+}
+
+.smart-theme-switch .theme-icon,
+.smart-header .smart-theme-switch .theme-icon,
+body[data-theme="day"] .smart-theme-switch .theme-icon,
+body[data-theme="day"] .smart-header .smart-theme-switch .theme-icon,
+body[data-theme="night"] .smart-theme-switch .theme-icon,
+body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon {
+    width: 11px !important;
+    height: 11px !important;
+}

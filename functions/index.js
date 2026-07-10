@@ -276,11 +276,67 @@ async function listarAgentesCondutores(authUid) {
   return {ok: true, agentes};
 }
 
+async function excluirUsuarioAdmin(data, authUid) {
+  const adminCheck = await validarAdmin(authUid);
+  if (!adminCheck.ok) return adminCheck;
+
+  const uid = String((data && data.uid) || "").trim();
+  if (!uid) {
+    return {ok: false, message: "Usuario nao informado."};
+  }
+
+  try {
+    await admin.auth().deleteUser(uid);
+  } catch (error) {
+    if (error.code !== "auth/user-not-found") {
+      console.error("Erro ao excluir usuario do Authentication:", error);
+      return {
+        ok: false,
+        code: error.code || "unknown",
+        message: error.message || "Nao foi possivel excluir o usuario no Firebase Authentication."
+      };
+    }
+  }
+
+  await admin.firestore().doc(`usuarios/${uid}`).delete();
+  return {ok: true};
+}
+
 exports.atualizarCredenciaisUsuario = onCall(async (request) => {
   const resultado = await atualizarCredenciais(request.data, request.auth && request.auth.uid);
 
   if (!resultado.ok) {
     throw new HttpsError("failed-precondition", resultado.message || "Não foi possível atualizar login/senha.", resultado);
+  }
+
+  return resultado;
+});
+
+exports.gerenciarAgenteCondutor = onCall(async (request) => {
+  const resultado = await gerenciarAgenteCondutor(request.data, request.auth && request.auth.uid);
+
+  if (!resultado.ok) {
+    throw new HttpsError("failed-precondition", resultado.message || "Nao foi possivel gerenciar agente/condutor.", resultado);
+  }
+
+  return resultado;
+});
+
+exports.listarAgentesCondutores = onCall(async (request) => {
+  const resultado = await listarAgentesCondutores(request.auth && request.auth.uid);
+
+  if (!resultado.ok) {
+    throw new HttpsError("failed-precondition", resultado.message || "Nao foi possivel listar agentes/condutores.", resultado);
+  }
+
+  return resultado;
+});
+
+exports.excluirUsuarioAdmin = onCall(async (request) => {
+  const resultado = await excluirUsuarioAdmin(request.data, request.auth && request.auth.uid);
+
+  if (!resultado.ok) {
+    throw new HttpsError("failed-precondition", resultado.message || "Nao foi possivel excluir o usuario.", resultado);
   }
 
   return resultado;

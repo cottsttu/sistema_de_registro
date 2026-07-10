@@ -1,7 +1,8 @@
 ﻿async function iniciarAdmin() {
     const {initializeApp} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js");
-    const {getFirestore, doc, getDoc, updateDoc, deleteDoc, collection, onSnapshot, setDoc} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
+    const {getFirestore, doc, getDoc, updateDoc, collection, onSnapshot, setDoc} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js");
     const {getAuth, onAuthStateChanged, signOut} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js");
+    const {getFunctions, httpsCallable} = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-functions.js");
     const firebaseConfig = {
         apiKey: "AIzaSyCjiEzdahcQqKS9V1Py4nAIx15Zqr9nIIo",
         authDomain: "sttu-registros.firebaseapp.com",
@@ -15,9 +16,11 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const atualizarCredenciaisUsuarioUrl = "https://us-central1-sttu-registros.cloudfunctions.net/atualizarCredenciaisUsuarioHttp";
-    const gerenciarAgenteCondutorUrl = "https://us-central1-sttu-registros.cloudfunctions.net/gerenciarAgenteCondutorHttp";
-    const listarAgentesCondutoresUrl = "https://us-central1-sttu-registros.cloudfunctions.net/listarAgentesCondutoresHttp";
+    const functions = getFunctions(app, "us-central1");
+    const atualizarCredenciaisUsuarioCallable = httpsCallable(functions, "atualizarCredenciaisUsuario");
+    const gerenciarAgenteCondutorCallable = httpsCallable(functions, "gerenciarAgenteCondutor");
+    const listarAgentesCondutoresCallable = httpsCallable(functions, "listarAgentesCondutores");
+    const excluirUsuarioAdminCallable = httpsCallable(functions, "excluirUsuarioAdmin");
     let matriculaSelecionadaOriginal = "";
     const uidPreSelecionado = new URLSearchParams(window.location.search).get("uid");
     let preSelecaoAplicada = false;
@@ -139,20 +142,9 @@
         const user = auth.currentUser;
         if (!user) throw new Error("Sessão expirada. Faça login novamente.");
 
-        const token = await user.getIdToken(true);
-        const resposta = await fetch(atualizarCredenciaisUsuarioUrl, {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(dados)
-        });
-
-        const resultado = await resposta.json().catch(() => ({}));
-        if (!resposta.ok || !resultado.ok) {
-            throw new Error(resultado.message || `Erro HTTP ${resposta.status}`);
-        }
+        const chamada = await atualizarCredenciaisUsuarioCallable(dados);
+        const resultado = chamada.data || {};
+        if (!resultado.ok) throw new Error(resultado.message || "Não foi possível atualizar login/senha.");
         return resultado;
     }
 
@@ -160,20 +152,9 @@
         const user = auth.currentUser;
         if (!user) throw new Error("Sessão expirada. Faça login novamente.");
 
-        const token = await user.getIdToken(true);
-        const resposta = await fetch(gerenciarAgenteCondutorUrl, {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(dados)
-        });
-
-        const resultado = await resposta.json().catch(() => ({}));
-        if (!resposta.ok || !resultado.ok) {
-            throw new Error(resultado.message || `Erro HTTP ${resposta.status}`);
-        }
+        const chamada = await gerenciarAgenteCondutorCallable(dados);
+        const resultado = chamada.data || {};
+        if (!resultado.ok) throw new Error(resultado.message || "Não foi possível gerenciar agente/condutor.");
         return resultado;
     }
 
@@ -181,19 +162,20 @@
         const user = auth.currentUser;
         if (!user) throw new Error("Sessão expirada. Faça login novamente.");
 
-        const token = await user.getIdToken(true);
-        const resposta = await fetch(listarAgentesCondutoresUrl, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        });
-
-        const resultado = await resposta.json().catch(() => ({}));
-        if (!resposta.ok || !resultado.ok) {
-            throw new Error(resultado.message || `Erro HTTP ${resposta.status}`);
-        }
+        const chamada = await listarAgentesCondutoresCallable();
+        const resultado = chamada.data || {};
+        if (!resultado.ok) throw new Error(resultado.message || "Não foi possível listar agentes/condutores.");
         return resultado.agentes || [];
+    }
+
+    async function excluirUsuarioAdmin(uid) {
+        const user = auth.currentUser;
+        if (!user) throw new Error("Sessão expirada. Faça login novamente.");
+
+        const chamada = await excluirUsuarioAdminCallable({ uid });
+        const resultado = chamada.data || {};
+        if (!resultado.ok) throw new Error(resultado.message || "Não foi possível excluir o usuário.");
+        return resultado;
     }
 
     async function carregarAgentesDoServidor() {
@@ -315,6 +297,8 @@
         } catch (error) {
             if (error.code === "functions/not-found") {
                 alert("A função de administração ainda não foi publicada no Firebase. Publique a Cloud Function para alterar login e senha.");
+            } else if (error.code === "functions/internal" || error.code === "internal") {
+                alert("Erro ao atualizar login/senha: Cloud Functions indisponível no Firebase. Verifique o faturamento/API do projeto no Google Cloud.");
             } else {
                 const detalhes = error.details?.message || error.details || error.message || error.code || "Erro desconhecido.";
                 alert("Erro ao atualizar login/senha: " + detalhes);
@@ -329,7 +313,7 @@
         
         if (confirm("Tem certeza que deseja EXCLUIR este usuário?")) {
             try {
-                await deleteDoc(doc(db, "usuarios", uid));
+                await excluirUsuarioAdmin(uid);
                 alert("🗑️ Usuário removido!");
                 limparFormulario();
             } catch (error) {
@@ -607,7 +591,7 @@
             if (!confirmar) return;
 
             try {
-                await deleteDoc(doc(db, "usuarios", uid));
+                await excluirUsuarioAdmin(uid);
                 if (document.getElementById('uidUser').value.trim() === uid) {
                     limparFormulario();
                 }

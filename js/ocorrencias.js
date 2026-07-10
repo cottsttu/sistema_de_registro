@@ -725,11 +725,13 @@
                 acCell.style.justifyContent = 'center';
                 acCell.style.textAlign = 'center';
 
-                const btnEnc = document.createElement('button');
-                btnEnc.className = 'btn btn-encaminhar btn-acao-tabela'; 
-                btnEnc.innerText = 'ENCAMINHAR';
-                btnEnc.onclick = () => window.abrirModalEncaminhar(id, d);
-                acCell.appendChild(btnEnc);
+                if (usuarioPodeCriar) {
+                    const btnEnc = document.createElement('button');
+                    btnEnc.className = 'btn btn-encaminhar btn-acao-tabela'; 
+                    btnEnc.innerText = 'ENCAMINHAR';
+                    btnEnc.onclick = () => window.abrirModalEncaminhar(id, d);
+                    acCell.appendChild(btnEnc);
+                }
 
                 const btnCon = document.createElement('button');
                 btnCon.className = 'btn btn-concluir btn-acao-tabela'; 
@@ -875,7 +877,7 @@
     };
 
     window.abrirModalEncaminhar = (id, dados) => {
-        if (!usuarioPodeEditar) return;
+        if (!usuarioPodeCriar) return;
         document.getElementById('editId').value = id;
         document.getElementById('editSolicitante').value = dados.solicitante || "";
         document.getElementById('editSobrenome').value = dados.sobrenome || "";
@@ -895,8 +897,8 @@
     };
 
     window.abrirModalEditarOcorrencia = (id, dados) => {
-                if (usuarioPodeOperar) {
-            alert("⛔ Acesso Negado: Apenas administradores podem editar ocorrências concluídas.");
+        if (!usuarioPodeEditar) {
+            alert("⛔ Acesso Negado: você não tem permissão para editar ocorrências.");
             return;
         }
 
@@ -1015,7 +1017,7 @@
 
     window.excluirOcorrencia = async (id, numRegistro) => {
         if (!usuarioPodeExcluir) {
-            alert("⛔ Acesso Negado: Apenas administradores podem excluir registros.");
+            alert("⛔ Acesso Negado: você não tem permissão para excluir registros.");
             return;
         }
 
@@ -1173,17 +1175,11 @@
         l.click();
     };
 
-    window.fecharModal = fecharModal;
-    window.confirmarEncaminhamento = confirmarEncaminhamento;
-    window.abrirModalEncaminhar = abrirModalEncaminhar;
-    window.concluirOcorrencia = concluirOcorrencia;
-    window.excluirOcorrencia = excluirOcorrencia;
 }
 
 iniciarOcorrencias().catch((error) => {
     console.error("Erro ao carregar ocorrencias:", error);
     alert("Erro ao conectar com Firebase. Verifique a conexão e atualize a página.");
 });
-
 
 

@@ -1094,3 +1094,685 @@ body[data-theme="night"] .ocorrencias-title {
     text-shadow: none !important;
     filter: none !important;
 }
+
+body:not([data-theme="night"]),
+body[data-theme="day"] {
+    --metal-bg: #D1D0CA;
+    --metal-panel: #D1D0CA;
+    --metal-panel-soft: #D1D0CA;
+    --metal-header: #D1D0CA;
+    --metal-table-head: #D1D0CA;
+    --metal-shadow: none;
+    --metal-shadow-soft: none;
+    --metal-inset: none;
+    background: #D1D0CA !important;
+}
+
+body:not([data-theme="night"]) .page-header,
+body[data-theme="day"] .page-header,
+body:not([data-theme="night"]) .header,
+body[data-theme="day"] .header,
+body:not([data-theme="night"]) .header-box,
+body[data-theme="day"] .header-box,
+body:not([data-theme="night"]) .hero-title,
+body[data-theme="day"] .hero-title,
+body:not([data-theme="night"]) .app-menu-dropdown,
+body[data-theme="day"] .app-menu-dropdown,
+body:not([data-theme="night"]) .footer-menu,
+body[data-theme="day"] .footer-menu,
+body:not([data-theme="night"]) .admin-shell,
+body[data-theme="day"] .admin-shell,
+body:not([data-theme="night"]) .reports-shell,
+body[data-theme="day"] .reports-shell,
+body:not([data-theme="night"]) .panel-shell,
+body[data-theme="day"] .panel-shell,
+body:not([data-theme="night"]) .users-panel,
+body[data-theme="day"] .users-panel,
+body:not([data-theme="night"]) .editor-panel,
+body[data-theme="day"] .editor-panel,
+body:not([data-theme="night"]) .agents-admin-panel,
+body[data-theme="day"] .agents-admin-panel,
+body:not([data-theme="night"]) .agents-list-card,
+body[data-theme="day"] .agents-list-card,
+body:not([data-theme="night"]) .agent-editor-card,
+body[data-theme="day"] .agent-editor-card,
+body:not([data-theme="night"]) .card,
+body[data-theme="day"] .card,
+body:not([data-theme="night"]) .auth-panel,
+body[data-theme="day"] .auth-panel,
+body:not([data-theme="night"]) .first-access-card,
+body[data-theme="day"] .first-access-card,
+body:not([data-theme="night"]) .registro-panel,
+body[data-theme="day"] .registro-panel,
+body:not([data-theme="night"]) .registro-section,
+body[data-theme="day"] .registro-section,
+body:not([data-theme="night"]) .table-container,
+body[data-theme="day"] .table-container,
+body:not([data-theme="night"]) .filtros-container,
+body[data-theme="day"] .filtros-container,
+body:not([data-theme="night"]) .controls,
+body[data-theme="day"] .controls,
+body:not([data-theme="night"]) .report-card,
+body[data-theme="day"] .report-card,
+body:not([data-theme="night"]) .chart-container,
+body[data-theme="day"] .chart-container,
+body:not([data-theme="night"]) .summary-card,
+body[data-theme="day"] .summary-card,
+body:not([data-theme="night"]) .stats-card,
+body[data-theme="day"] .stats-card,
+body:not([data-theme="night"]) .permissions-shell,
+body[data-theme="day"] .permissions-shell,
+body:not([data-theme="night"]) .permission-card,
+body[data-theme="day"] .permission-card,
+body:not([data-theme="night"]) .main-container,
+body[data-theme="day"] .main-container,
+body:not([data-theme="night"]) .container,
+body[data-theme="day"] .container,
+body:not([data-theme="night"]) .content,
+body[data-theme="day"] .content,
+body:not([data-theme="night"]) .box,
+body[data-theme="day"] .box,
+body:not([data-theme="night"]) section[class*="panel"],
+body[data-theme="day"] section[class*="panel"],
+body:not([data-theme="night"]) div[class*="panel"],
+body[data-theme="day"] div[class*="panel"],
+body:not([data-theme="night"]) .menu-card,
+body[data-theme="day"] .menu-card,
+body:not([data-theme="night"]) table,
+body[data-theme="day"] table,
+body:not([data-theme="night"]) .users-table,
+body[data-theme="day"] .users-table,
+body:not([data-theme="night"]) .agents-table,
+body[data-theme="day"] .agents-table,
+body:not([data-theme="night"]) .permission-table,
+body[data-theme="day"] .permission-table,
+body:not([data-theme="night"]) .table-custom,
+body[data-theme="day"] .table-custom,
+body:not([data-theme="night"]) #tabelaAtivos,
+body[data-theme="day"] #tabelaAtivos,
+body:not([data-theme="night"]) #relatorioFinal,
+body[data-theme="day"] #relatorioFinal,
+body:not([data-theme="night"]) #tabelaPendentes,
+body[data-theme="day"] #tabelaPendentes,
+body:not([data-theme="night"]) #relatorioTable,
+body[data-theme="day"] #relatorioTable,
+body:not([data-theme="night"]) thead th,
+body[data-theme="day"] thead th,
+body:not([data-theme="night"]) table th,
+body[data-theme="day"] table th,
+body:not([data-theme="night"]) .data-header,
+body[data-theme="day"] .data-header {
+    background: #D1D0CA !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body:not([data-theme="night"]) .title-container,
+body[data-theme="day"] .title-container,
+body:not([data-theme="night"]) .header h2,
+body[data-theme="day"] .header h2,
+body:not([data-theme="night"]) .header-title,
+body[data-theme="day"] .header-title,
+body:not([data-theme="night"]) .hero-title,
+body[data-theme="day"] .hero-title,
+body:not([data-theme="night"]) .section-title,
+body[data-theme="day"] .section-title,
+body:not([data-theme="night"]) h1,
+body[data-theme="day"] h1,
+body:not([data-theme="night"]) h2,
+body[data-theme="day"] h2,
+body:not([data-theme="night"]) h3,
+body[data-theme="day"] h3 {
+    text-shadow: none !important;
+}
+
+body:not([data-theme="night"]) button,
+body[data-theme="day"] button,
+body:not([data-theme="night"]) .btn,
+body[data-theme="day"] .btn,
+body:not([data-theme="night"]) .toolbar-btn,
+body[data-theme="day"] .toolbar-btn,
+body:not([data-theme="night"]) .icon-tool,
+body[data-theme="day"] .icon-tool,
+body:not([data-theme="night"]) .agent-edit-button,
+body[data-theme="day"] .agent-edit-button,
+body:not([data-theme="night"]) .btn-email,
+body[data-theme="day"] .btn-email,
+body:not([data-theme="night"]) .primary-button,
+body[data-theme="day"] .primary-button,
+body:not([data-theme="night"]) .secondary-button,
+body[data-theme="day"] .secondary-button,
+body:not([data-theme="night"]) .ativos-filter-btn,
+body[data-theme="day"] .ativos-filter-btn,
+body:not([data-theme="night"]) input,
+body[data-theme="day"] input,
+body:not([data-theme="night"]) select,
+body[data-theme="day"] select,
+body:not([data-theme="night"]) textarea,
+body[data-theme="day"] textarea,
+body:not([data-theme="night"]) .search-box,
+body[data-theme="day"] .search-box,
+body:not([data-theme="night"]) .input-shell,
+body[data-theme="day"] .input-shell,
+body:not([data-theme="night"]) .input-row,
+body[data-theme="day"] .input-row,
+body:not([data-theme="night"]) .password-field,
+body[data-theme="day"] .password-field,
+body:not([data-theme="night"]) .counter-current,
+body[data-theme="day"] .counter-current,
+body:not([data-theme="night"]) .inline-admin-1,
+body[data-theme="day"] .inline-admin-1,
+body:not([data-theme="night"]) td,
+body[data-theme="day"] td,
+body:not([data-theme="night"]) tr,
+body[data-theme="day"] tr,
+body:not([data-theme="night"]) tbody tr,
+body[data-theme="day"] tbody tr,
+body:not([data-theme="night"]) thead tr,
+body[data-theme="day"] thead tr,
+body:not([data-theme="night"]) .users-table td,
+body[data-theme="day"] .users-table td,
+body:not([data-theme="night"]) .users-table tr,
+body[data-theme="day"] .users-table tr,
+body:not([data-theme="night"]) .users-table tbody tr,
+body[data-theme="day"] .users-table tbody tr,
+body:not([data-theme="night"]) .agents-table td,
+body[data-theme="day"] .agents-table td,
+body:not([data-theme="night"]) .agents-table tr,
+body[data-theme="day"] .agents-table tr,
+body:not([data-theme="night"]) .agents-table tbody tr,
+body[data-theme="day"] .agents-table tbody tr,
+body:not([data-theme="night"]) .permission-table td,
+body[data-theme="day"] .permission-table td,
+body:not([data-theme="night"]) .permission-table tr,
+body[data-theme="day"] .permission-table tr,
+body:not([data-theme="night"]) .permission-table tbody tr,
+body[data-theme="day"] .permission-table tbody tr,
+body:not([data-theme="night"]) .table-custom td,
+body[data-theme="day"] .table-custom td,
+body:not([data-theme="night"]) .table-custom tr,
+body[data-theme="day"] .table-custom tr,
+body:not([data-theme="night"]) .table-custom tbody tr,
+body[data-theme="day"] .table-custom tbody tr,
+body:not([data-theme="night"]) #tabelaAtivos td,
+body[data-theme="day"] #tabelaAtivos td,
+body:not([data-theme="night"]) #tabelaAtivos tr,
+body[data-theme="day"] #tabelaAtivos tr,
+body:not([data-theme="night"]) #tabelaAtivos tbody tr,
+body[data-theme="day"] #tabelaAtivos tbody tr,
+body:not([data-theme="night"]) #relatorioFinal td,
+body[data-theme="day"] #relatorioFinal td,
+body:not([data-theme="night"]) #relatorioFinal tr,
+body[data-theme="day"] #relatorioFinal tr,
+body:not([data-theme="night"]) #relatorioFinal tbody tr,
+body[data-theme="day"] #relatorioFinal tbody tr,
+body:not([data-theme="night"]) #tabelaPendentes td,
+body[data-theme="day"] #tabelaPendentes td,
+body:not([data-theme="night"]) #tabelaPendentes tr,
+body[data-theme="day"] #tabelaPendentes tr,
+body:not([data-theme="night"]) #tabelaPendentes tbody tr,
+body[data-theme="day"] #tabelaPendentes tbody tr,
+body:not([data-theme="night"]) #relatorioTable td,
+body[data-theme="day"] #relatorioTable td,
+body:not([data-theme="night"]) #relatorioTable tr,
+body[data-theme="day"] #relatorioTable tr,
+body:not([data-theme="night"]) #relatorioTable tbody tr {
+    background: #D1D0CA !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body:not([data-theme="night"]) button:hover,
+body[data-theme="day"] button:hover,
+body:not([data-theme="night"]) .btn:hover,
+body[data-theme="day"] .btn:hover,
+body:not([data-theme="night"]) .toolbar-btn:hover,
+body[data-theme="day"] .toolbar-btn:hover,
+body:not([data-theme="night"]) .icon-tool:hover,
+body[data-theme="day"] .icon-tool:hover,
+body:not([data-theme="night"]) .agent-edit-button:hover,
+body[data-theme="day"] .agent-edit-button:hover,
+body:not([data-theme="night"]) .btn-email:hover,
+body[data-theme="day"] .btn-email:hover,
+body:not([data-theme="night"]) .primary-button:hover,
+body[data-theme="day"] .primary-button:hover,
+body:not([data-theme="night"]) .secondary-button:hover,
+body[data-theme="day"] .secondary-button:hover,
+body:not([data-theme="night"]) .ativos-filter-btn:hover,
+body[data-theme="day"] .ativos-filter-btn:hover,
+body:not([data-theme="night"]) input:focus,
+body[data-theme="day"] input:focus,
+body:not([data-theme="night"]) select:focus,
+body[data-theme="day"] select:focus,
+body:not([data-theme="night"]) textarea:focus,
+body[data-theme="day"] textarea:focus {
+    background: #D1D0CA !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+body:not([data-theme="night"]) #tabelaAtivos tbody tr,
+body[data-theme="day"] #tabelaAtivos tbody tr,
+body:not([data-theme="night"]) #tabelaAtivos tbody td,
+body[data-theme="day"] #tabelaAtivos tbody td,
+body:not([data-theme="night"]) #tabelaAtivos tbody td:nth-child(7),
+body[data-theme="day"] #tabelaAtivos tbody td:nth-child(7),
+body:not([data-theme="night"]) #tabelaAtivos tbody td[class*="regiao-"],
+body[data-theme="day"] #tabelaAtivos tbody td[class*="regiao-"],
+body:not([data-theme="night"]) #tabelaAtivos tbody td.regiao-geral,
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-geral {
+    background: #D1D0CA !important;
+    background-color: #D1D0CA !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body:not([data-theme="night"]) #tabelaAtivos tbody td:nth-child(7)::before,
+body[data-theme="day"] #tabelaAtivos tbody td:nth-child(7)::before {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+body:not([data-theme="night"]) button,
+body[data-theme="day"] button,
+body:not([data-theme="night"]) .btn,
+body[data-theme="day"] .btn,
+body:not([data-theme="night"]) .toolbar-btn,
+body[data-theme="day"] .toolbar-btn,
+body:not([data-theme="night"]) .icon-tool,
+body[data-theme="day"] .icon-tool,
+body:not([data-theme="night"]) .secondary-button,
+body[data-theme="day"] .secondary-button,
+body:not([data-theme="night"]) .app-home-shortcut,
+body[data-theme="day"] .app-home-shortcut,
+body:not([data-theme="night"]) .app-menu-toggle,
+body[data-theme="day"] .app-menu-toggle,
+body:not([data-theme="night"]) .ativos-filter-btn,
+body[data-theme="day"] .ativos-filter-btn {
+    color: #0b1720 !important;
+    border-color: #7f8582 !important;
+    background: #b8bbb5 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body:not([data-theme="night"]) button:hover,
+body[data-theme="day"] button:hover,
+body:not([data-theme="night"]) .btn:hover,
+body[data-theme="day"] .btn:hover,
+body:not([data-theme="night"]) .toolbar-btn:hover,
+body[data-theme="day"] .toolbar-btn:hover,
+body:not([data-theme="night"]) .icon-tool:hover,
+body[data-theme="day"] .icon-tool:hover,
+body:not([data-theme="night"]) .secondary-button:hover,
+body[data-theme="day"] .secondary-button:hover,
+body:not([data-theme="night"]) .app-home-shortcut:hover,
+body[data-theme="day"] .app-home-shortcut:hover,
+body:not([data-theme="night"]) .app-menu-toggle:hover,
+body[data-theme="day"] .app-menu-toggle:hover,
+body:not([data-theme="night"]) .ativos-filter-btn:hover,
+body[data-theme="day"] .ativos-filter-btn:hover {
+    background: #aeb2ac !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+body:not([data-theme="night"]) .btn-salvar,
+body[data-theme="day"] .btn-salvar,
+body:not([data-theme="night"]) .btn-carregar,
+body[data-theme="day"] .btn-carregar,
+body:not([data-theme="night"]) .btn-report-main,
+body[data-theme="day"] .btn-report-main,
+body:not([data-theme="night"]) .primary-button,
+body[data-theme="day"] .primary-button,
+body:not([data-theme="night"]) .toolbar-btn.add,
+body[data-theme="day"] .toolbar-btn.add,
+body:not([data-theme="night"]) .agent-edit-button,
+body[data-theme="day"] .agent-edit-button,
+body:not([data-theme="night"]) .btn-editar-ocorrencia,
+body[data-theme="day"] .btn-editar-ocorrencia,
+body:not([data-theme="night"]) .btn-editar-ativo,
+body[data-theme="day"] .btn-editar-ativo,
+body:not([data-theme="night"]) .btn-editar-salvar,
+body[data-theme="day"] .btn-editar-salvar {
+    color: #ffffff !important;
+    border-color: #145a9e !important;
+    background: #1f77c8 !important;
+    background-image: none !important;
+}
+
+body:not([data-theme="night"]) .btn-confirmar,
+body[data-theme="day"] .btn-confirmar,
+body:not([data-theme="night"]) .btn-download,
+body[data-theme="day"] .btn-download,
+body:not([data-theme="night"]) .btn-definir,
+body[data-theme="day"] .btn-definir,
+body:not([data-theme="night"]) .btn-report-blue,
+body[data-theme="day"] .btn-report-blue,
+body:not([data-theme="night"]) .btn-csv,
+body[data-theme="day"] .btn-csv,
+body:not([data-theme="night"]) .btn-concluir,
+body[data-theme="day"] .btn-concluir,
+body:not([data-theme="night"]) .btn-disponibilidade-smartwall[data-disponivel="true"],
+body[data-theme="day"] .btn-disponibilidade-smartwall[data-disponivel="true"],
+body:not([data-theme="night"]) .btn-salvar-editor-historico,
+body[data-theme="day"] .btn-salvar-editor-historico,
+body:not([data-theme="night"]) .btn-motivo-confirmar,
+body[data-theme="day"] .btn-motivo-confirmar {
+    color: #ffffff !important;
+    border-color: #0f6b3a !important;
+    background: #16884f !important;
+    background-image: none !important;
+}
+
+body:not([data-theme="night"]) .btn-devolver,
+body[data-theme="day"] .btn-devolver,
+body:not([data-theme="night"]) .btn-excluir,
+body[data-theme="day"] .btn-excluir,
+body:not([data-theme="night"]) .btn-excluir-x,
+body[data-theme="day"] .btn-excluir-x,
+body:not([data-theme="night"]) .btn-sair,
+body[data-theme="day"] .btn-sair,
+body:not([data-theme="night"]) .btn-sair-topo,
+body[data-theme="day"] .btn-sair-topo,
+body:not([data-theme="night"]) .btn-logout,
+body[data-theme="day"] .btn-logout,
+body:not([data-theme="night"]) .app-logout-button,
+body[data-theme="day"] .app-logout-button,
+body:not([data-theme="night"]) .row-action.delete,
+body[data-theme="day"] .row-action.delete,
+body:not([data-theme="night"]) .btn-trash,
+body[data-theme="day"] .btn-trash,
+body:not([data-theme="night"]) .btn-limpar-ocorrencia,
+body[data-theme="day"] .btn-limpar-ocorrencia {
+    color: #ffffff !important;
+    border-color: #9d2e27 !important;
+    background: #c63c32 !important;
+    background-image: none !important;
+}
+
+body:not([data-theme="night"]) .btn-encaminhar,
+body[data-theme="day"] .btn-encaminhar {
+    color: #ffffff !important;
+    border-color: #a95208 !important;
+    background: #d06d10 !important;
+    background-image: none !important;
+}
+
+body:not([data-theme="night"]) .btn-view,
+body[data-theme="day"] .btn-view,
+body:not([data-theme="night"]) .btn-email,
+body[data-theme="day"] .btn-email,
+body:not([data-theme="night"]) .btn-visualizar-registro,
+body[data-theme="day"] .btn-visualizar-registro,
+body:not([data-theme="night"]) .btn-report-purple,
+body[data-theme="day"] .btn-report-purple,
+body:not([data-theme="night"]) .btn-editar-historico,
+body[data-theme="day"] .btn-editar-historico {
+    color: #ffffff !important;
+    border-color: #087686 !important;
+    background: #0093a6 !important;
+    background-image: none !important;
+}
+
+body:not([data-theme="night"]) .ativos-filter-btn.active,
+body[data-theme="day"] .ativos-filter-btn.active,
+body:not([data-theme="night"]) .btn-zerar,
+body[data-theme="day"] .btn-zerar {
+    color: #111111 !important;
+    border-color: #b78100 !important;
+    background: #d9a300 !important;
+    background-image: none !important;
+}
+
+body:not([data-theme="night"]) button:disabled,
+body[data-theme="day"] button:disabled,
+body:not([data-theme="night"]) .btn:disabled,
+body[data-theme="day"] .btn:disabled,
+body:not([data-theme="night"]) .btn-disponibilidade-smartwall[data-disponivel="false"],
+body[data-theme="day"] .btn-disponibilidade-smartwall[data-disponivel="false"] {
+    color: #25313a !important;
+    border-color: #858d91 !important;
+    background: #a7aca8 !important;
+    background-image: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos td.regiao-1,
+body[data-theme="day"] #relatorioFinal td.regiao-1,
+body[data-theme="day"] form td.regiao-1,
+body[data-theme="day"] #tabelaPendentes td.regiao-1,
+body[data-theme="day"] #relatorioTable td.regiao-1 {
+    color: #ffffff !important;
+    background: #2b2444 !important;
+    background-color: #2b2444 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos td.regiao-2,
+body[data-theme="day"] #relatorioFinal td.regiao-2,
+body[data-theme="day"] form td.regiao-2,
+body[data-theme="day"] #tabelaPendentes td.regiao-2,
+body[data-theme="day"] #relatorioTable td.regiao-2 {
+    color: #111111 !important;
+    background: #f1ff00 !important;
+    background-color: #f1ff00 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos td.regiao-3,
+body[data-theme="day"] #relatorioFinal td.regiao-3,
+body[data-theme="day"] form td.regiao-3,
+body[data-theme="day"] #tabelaPendentes td.regiao-3,
+body[data-theme="day"] #relatorioTable td.regiao-3 {
+    color: #111111 !important;
+    background: #5dff00 !important;
+    background-color: #5dff00 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos td.regiao-4,
+body[data-theme="day"] #relatorioFinal td.regiao-4,
+body[data-theme="day"] form td.regiao-4,
+body[data-theme="day"] #tabelaPendentes td.regiao-4,
+body[data-theme="day"] #relatorioTable td.regiao-4 {
+    color: #ffffff !important;
+    background: #005ecb !important;
+    background-color: #005ecb !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos td.regiao-5,
+body[data-theme="day"] #relatorioFinal td.regiao-5,
+body[data-theme="day"] form td.regiao-5,
+body[data-theme="day"] #tabelaPendentes td.regiao-5,
+body[data-theme="day"] #relatorioTable td.regiao-5 {
+    color: #ffffff !important;
+    background: #d00000 !important;
+    background-color: #d00000 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos td.regiao-geral,
+body[data-theme="day"] #relatorioFinal td.regiao-geral,
+body[data-theme="day"] form td.regiao-geral,
+body[data-theme="day"] #tabelaPendentes td.regiao-geral,
+body[data-theme="day"] #relatorioTable td.regiao-geral {
+    color: #ffffff !important;
+    background: #5b2fa0 !important;
+    background-color: #5b2fa0 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaPendentes td.status-concluida,
+body[data-theme="day"] #relatorioTable td.status-concluida {
+    color: #ffffff !important;
+    background: #138a3d !important;
+    background-color: #138a3d !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaPendentes td.status-encaminhada,
+body[data-theme="day"] #relatorioTable td.status-encaminhada {
+    color: #111111 !important;
+    background: #ff9d00 !important;
+    background-color: #ff9d00 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaPendentes td.status-despacho,
+body[data-theme="day"] #relatorioTable td.status-despacho {
+    color: #ffffff !important;
+    background: #c9281b !important;
+    background-color: #c9281b !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaPendentes td.status-pendente,
+body[data-theme="day"] #relatorioTable td.status-pendente {
+    color: #ffffff !important;
+    background: #d71920 !important;
+    background-color: #d71920 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos,
+body[data-theme="day"] #tabelaAtivos tbody,
+body[data-theme="day"] #tabelaAtivos tbody tr {
+    background: #D1D0CA !important;
+    background-color: #D1D0CA !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos tbody tr + tr {
+    border-top-color: #8f8d86 !important;
+    box-shadow: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos tbody td:nth-child(7).regiao-1,
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-1:nth-child(7) {
+    color: #ffffff !important;
+    background: #2b2444 !important;
+    background-color: #2b2444 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos tbody td:nth-child(7).regiao-2,
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-2:nth-child(7) {
+    color: #111111 !important;
+    background: #f1ff00 !important;
+    background-color: #f1ff00 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos tbody td:nth-child(7).regiao-3,
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-3:nth-child(7) {
+    color: #111111 !important;
+    background: #5dff00 !important;
+    background-color: #5dff00 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos tbody td:nth-child(7).regiao-4,
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-4:nth-child(7) {
+    color: #ffffff !important;
+    background: #005ecb !important;
+    background-color: #005ecb !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos tbody td:nth-child(7).regiao-5,
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-5:nth-child(7) {
+    color: #ffffff !important;
+    background: #d00000 !important;
+    background-color: #d00000 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] #tabelaAtivos tbody td:nth-child(7).regiao-geral,
+body[data-theme="day"] #tabelaAtivos tbody td.regiao-geral:nth-child(7) {
+    color: #ffffff !important;
+    background: #5b2fa0 !important;
+    background-color: #5b2fa0 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+body[data-theme="day"] th,
+body[data-theme="day"] table th,
+body[data-theme="day"] thead th,
+body[data-theme="day"] .data-header,
+body[data-theme="day"] #headerOriginalRow .data-header,
+body[data-theme="day"] #tabelaAtivos th,
+body[data-theme="day"] #relatorioFinal th,
+body[data-theme="day"] #tabelaPendentes th,
+body[data-theme="day"] #relatorioTable th {
+    color: #ffffff !important;
+    background: #3f3f3f !important;
+    background-color: #3f3f3f !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
