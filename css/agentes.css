@@ -1269,7 +1269,7 @@ body[data-theme="night"] #registroForm .campo-numerico {
     #tabelaAtivos td:nth-child(1)::before { content: "Veículo e local"; }
     #tabelaAtivos td:nth-child(2)::before { content: "Agentes e condutor"; }
     #tabelaAtivos td:nth-child(3)::before { content: "HT (Nº)"; }
-    #tabelaAtivos td:nth-child(4)::before { content: "ASE (Nº)"; }
+    #tabelaAtivos td:nth-child(4)::before { content: "DO (Nº)"; }
     #tabelaAtivos td:nth-child(5)::before { content: "Função da equipe"; }
     #tabelaAtivos td:nth-child(6)::before { content: "Maletas (Nº)"; }
     #tabelaAtivos td:nth-child(7)::before { content: "Região atual"; }
@@ -2525,7 +2525,7 @@ body[data-theme="night"] .historico-editor-form label {
     }
 
     #tabelaAtivos td:nth-child(3)::before { content: "HT (Nº)"; }
-    #tabelaAtivos td:nth-child(4)::before { content: "ASE (Nº)"; }
+    #tabelaAtivos td:nth-child(4)::before { content: "DO (Nº)"; }
     #tabelaAtivos td:nth-child(5)::before { content: "Função da equipe"; }
     #tabelaAtivos td:nth-child(6)::before { content: "Maletas (Nº)"; }
     #tabelaAtivos td:nth-child(7)::before { content: "Região atual"; }

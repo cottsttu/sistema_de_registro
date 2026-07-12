@@ -702,7 +702,7 @@
             let inputASE = document.createElement('input');
             inputASE.type = 'text'; 
             inputASE.className = 'campo-numerico only-numbers input-multiplo input-dinamico-ase';
-            inputASE.placeholder = qtd > 1 ? `ASE ${i+1}` : 'Nº ASE';
+            inputASE.placeholder = qtd > 1 ? `DO ${i+1}` : 'Nº DO';
             // PERMITINDO VÍRGULA
             inputASE.oninput = function() { this.value = this.value.replace(/[^0-9,]/g, ''); };
             containerASE.appendChild(inputASE);
@@ -1552,5 +1552,4 @@ iniciarAgentes2().catch((error) => {
     console.error("Erro ao carregar agentes-2:", error);
     alert("Erro ao conectar com Firebase. Verifique a conexão e atualize a página.");
 });
-
 
