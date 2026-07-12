@@ -342,6 +342,10 @@
         registros.forEach(data => {
             const id = data.id;
             const horaFormatada = data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString('pt-BR') : "Processando...";
+            const textoExibicao = (data.texto || "").replace(
+                /^(?:INFORMAÇÕES GERAIS|INFORMACOES GERAIS|OBSERVAÇÕES GERAIS|OBSERVAÇÃO GERAL):/i,
+                "INFORMAÇÃO:"
+            );
             
             const item = document.createElement('div');
             item.className = 'registro-item';
@@ -349,7 +353,7 @@
             let html = `
                 <div class="timestamp">[${horaFormatada}]</div>
                 <div class="texto-registro">
-                    <span>${data.texto}</span>
+                    <span>${textoExibicao}</span>
                     ${data.baixa ? `<span class="status-devolvido">| DEVOLVIDO ÀS ${data.baixa}</span>` : ""}
                 </div>
             `;
@@ -847,7 +851,7 @@
     document.getElementById('btn-registrar-obs-geral').onclick = () => {
         if (!usuarioPodeCriar) return;
         const obs = document.getElementById('texto-obs-geral').value.trim();
-        if (obs) { salvarObservacao(`OBSERVAÇÃO GERAL: ${obs}`); document.getElementById('texto-obs-geral').value = ""; }
+        if (obs) { salvarObservacao(`INFORMAÇÃO: ${obs}`); document.getElementById('texto-obs-geral').value = ""; }
     };
 
     document.getElementById('btn-registrar-cones').onclick = () => {
