@@ -5021,30 +5021,6 @@ body[data-theme="day"] .region-panel .region-visual .panel-title svg {
         padding: 0 8px 12px;
     }
 
-    .shift-filter {
-        width: min(100%, 38rem);
-        gap: 8px;
-        margin-top: 14px;
-        padding: 12px;
-        border-radius: 18px;
-    }
-
-    .shift-filter-btn {
-        min-height: 4rem;
-        border-radius: 14px;
-    }
-
-    .shift-filter-icon,
-    .shift-filter-icon svg {
-        width: 1.2rem;
-        height: 1.2rem;
-        flex-basis: 1.2rem;
-    }
-
-    .shift-filter-btn strong {
-        font-size: 0.72rem;
-    }
-
     .region-ranking-panel {
         gap: 10px;
         padding: 12px;
@@ -5369,30 +5345,6 @@ body[data-theme="day"] .region-panel .region-visual .panel-title svg {
     .region-chart-wrap {
         width: min(100%, 68vh, 52rem);
         padding: 0 10px 14px;
-    }
-
-    .shift-filter {
-        width: min(100%, 42rem);
-        gap: 10px;
-        margin-top: 16px;
-        padding: 14px;
-        border-radius: 20px;
-    }
-
-    .shift-filter-btn {
-        min-height: 4.5rem;
-        border-radius: 16px;
-    }
-
-    .shift-filter-icon,
-    .shift-filter-icon svg {
-        width: 1.35rem;
-        height: 1.35rem;
-        flex-basis: 1.35rem;
-    }
-
-    .shift-filter-btn strong {
-        font-size: 0.82rem;
     }
 
     .region-ranking-panel {
