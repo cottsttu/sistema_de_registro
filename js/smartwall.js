@@ -19,6 +19,7 @@ async function iniciarSmartwall() {
 
     const STATUS_CONCLUIDOS = new Set(["CONCLU\u00cdDA", "CONCLUIDA", "N\u00c3O ATENDIDA", "NAO ATENDIDA"]);
     const STATUS_PAINEL_PENDENTES = ["ENCAMINHADA", "EM ANDAMENTO", "N\u00c3O ATENDIDA", "PARA O DESPACHO", "PARA O PR\u00d3XIMO TURNO"];
+    const STATUS_VISIVEIS_PAINEL_PENDENTES = new Set(["ENCAMINHADA", "EM ANDAMENTO", "PARA O DESPACHO", "PARA O PR\u00d3XIMO TURNO"]);
     const STATUS_DESPACHO = new Set(["PARA O DESPACHO"]);
     const STATUS_EM_ANDAMENTO = new Set(["ENCAMINHADA", "EM ANDAMENTO"]);
     const STATUS_ATIVOS_SMARTWALL = new Set([...STATUS_DESPACHO, ...STATUS_EM_ANDAMENTO]);
@@ -46,10 +47,10 @@ async function iniciarSmartwall() {
     };
     const turnosAtendimento = [
         { key: "total", label: "TOTAL", range: "Historico + abertos", icon: "src/total_png.png", color: "#2be477" },
-        { key: "manha", label: "MANH\u00c3", range: "06:00:00 \u00e0s 11:59:59", inicio: 21600, fim: 43199, icon: "src/andamento_png.png", color: "#1188ff" },
+        { key: "manha", label: "MANH\u00c3", range: "05:00:00 \u00e0s 11:59:59", inicio: 18000, fim: 43199, icon: "src/andamento_png.png", color: "#1188ff" },
         { key: "tarde", label: "TARDE", range: "12:00:00 \u00e0s 17:59:59", inicio: 43200, fim: 64799, icon: "src/total_png.png", color: "#ff9f1c" },
         { key: "noite", label: "NOITE", range: "18:00:00 \u00e0s 23:59:59", inicio: 64800, fim: 86399, icon: "src/concluido_png.png", color: "#9b5dff" },
-        { key: "corujao", label: "CORUJ\u00c3O", range: "00:00:00 \u00e0s 05:59:59", inicio: 0, fim: 21599, icon: "src/live_png.png", color: "#16c8d8" }
+        { key: "corujao", label: "CORUJ\u00c3O", range: "00:00:00 \u00e0s 04:59:59", inicio: 0, fim: 17999, icon: "src/live_png.png", color: "#16c8d8" }
     ];
     const mtIconImg = new Image();
     const vtIconImg = new Image();
@@ -65,6 +66,7 @@ async function iniciarSmartwall() {
     let ultimosDocsAtivosAgentes = [];
     let ultimosDocsHistoricoAgentes = [];
     let ultimasOcorrenciasAtivas = [];
+    let ultimasOcorrenciasPainelPendentes = [];
     let ultimaContagemRegiaoAtivas = {};
     const ocorrenciasModal = new Map();
     const zonasAtendimentoRecolhidas = new Set();
@@ -172,6 +174,10 @@ async function iniciarSmartwall() {
         return STATUS_ATIVOS_SMARTWALL.has(normalizarTexto(ocorrencia?.situacao));
     }
 
+    function isVisivelNoPainelPendentes(ocorrencia) {
+        return STATUS_VISIVEIS_PAINEL_PENDENTES.has(normalizarTexto(ocorrencia?.situacao));
+    }
+
     function escapeHtml(valor) {
         return String(valor ?? "")
             .replaceAll("&", "&amp;")
@@ -225,6 +231,25 @@ async function iniciarSmartwall() {
 
     function filtrarPorTurnoAtendimento(registros) {
         return registros.filter((item) => itemNoTurnoAtendimento(item, turnoAtendimentoAtual));
+    }
+
+    function registroAgentePertenceAoTurno(item) {
+        if (turnoAtendimentoAtual === "total") return true;
+
+        const turno = turnosAtendimento.find((opcao) => opcao.key === turnoAtendimentoAtual);
+        if (!turno) return false;
+
+        const segundosInicio = getHoraSegundos(item?.horaInicio || item?.inicio);
+        if (segundosInicio < 0) return false;
+        return segundosInicio >= turno.inicio && segundosInicio <= turno.fim;
+    }
+
+    function filtrarAgentesAtivosPorTurno(registros) {
+        return registros.filter(registroAgentePertenceAoTurno);
+    }
+
+    function filtrarHistoricoAgentesPorTurno(registros) {
+        return registros.filter(registroAgentePertenceAoTurno);
     }
 
     function calcularContagemRegiao(registros) {
@@ -404,7 +429,9 @@ async function iniciarSmartwall() {
         const todas = Array.from(mapaUnico.values());
         const hoje = todas.filter((ocorrencia) => ocorrencia.data_filtro === dataFiltro);
         const ativas = todas.filter(isAtivaNoPainelPendentes).sort(ordenarRecentes);
+        const ocorrenciasPainelPendentes = todas.filter(isVisivelNoPainelPendentes).sort(ordenarRecentes);
         ultimasOcorrenciasAtivas = ativas;
+        ultimasOcorrenciasPainelPendentes = ocorrenciasPainelPendentes;
         const concluidasHoje = hoje.filter(isConcluida);
         const qtdDespacho = ativas.filter((ocorrencia) => STATUS_DESPACHO.has(normalizarTexto(ocorrencia.situacao))).length;
         const qtdAndamento = ativas.filter((ocorrencia) => STATUS_EM_ANDAMENTO.has(normalizarTexto(ocorrencia.situacao))).length;
@@ -418,10 +445,15 @@ async function iniciarSmartwall() {
         const frotaAtivaPorRegiao = calcularFrotaOcorrenciasPorRegiao(ativasTurno);
         const frotaOcorrenciasHoje = calcularFrotaOcorrencias(hojeTurno);
         const frotaOcorrenciasHojePorRegiao = calcularFrotaOcorrenciasPorRegiaoPeriodo(hojeTurno);
-        // O painel de equipes deve espelhar exatamente "Veículos em Operação"
-        // de agentes.html. Ocorrências, histórico e filtro de turno não alteram
-        // os veículos ou agentes que estão em operação neste momento.
-        const agentesPorRegiao = calcularAgentesPorRegiao(docsAtivosAgentes, ativas);
+        // Equipes em operação e histórico encerrado aparecem apenas no turno selecionado.
+        const docsAtivosDisponiveis = filtrarAgentesAtivosPorTurno(docsAtivosAgentes)
+            .map((item) => ({ ...item, origemSmartwall: "ativo" }));
+        const docsHistoricoAgentesTurno = filtrarHistoricoAgentesPorTurno(docsHistoricoAgentes)
+            .map((item) => ({ ...item, origemSmartwall: "historico" }));
+        const agentesPorRegiao = calcularAgentesPorRegiao(
+            [...docsAtivosDisponiveis, ...docsHistoricoAgentesTurno],
+            ocorrenciasPainelPendentes
+        );
         const frotaDisponivelPainel = calcularFrotaDisponivelPainel(agentesPorRegiao);
 
         atualizarResumoAtendimento(ativasHojeTurno.length);
@@ -565,6 +597,7 @@ async function iniciarSmartwall() {
     }
 
     function equipeContabilizavelPainel(equipe) {
+        if (!Array.isArray(equipe) && equipe?.origemSmartwall === "historico") return false;
         const disponivelSmartwall = Array.isArray(equipe) ? true : equipe?.disponivelSmartwall !== false;
         return disponivelSmartwall;
     }
@@ -639,18 +672,23 @@ async function iniciarSmartwall() {
         ]));
     }
 
-    function calcularAgentesPorRegiao(docsAtivosAgentes, ocorrenciasAtivas = []) {
+    function calcularAgentesPorRegiao(docsAtivosAgentes, ocorrenciasPendentes = []) {
         const base = Object.fromEntries(regioesBase.map((regiao) => [regiao, { mt: [], vt: [] }]));
         const equipesPainelPorChave = new Map();
         const atendimentosPorCodigo = new Map();
 
-        ocorrenciasAtivas.forEach((ocorrencia) => {
+        ocorrenciasPendentes.forEach((ocorrencia) => {
+            const situacaoAtendimento = normalizarTexto(ocorrencia?.situacao);
             const zonaAtendimento = getZona(ocorrencia);
             const indiceZona = regioesBase.indexOf(zonaAtendimento);
             if (indiceZona < 0) return;
 
             const origemEquipe = ocorrencia?.equipe || ocorrencia?.veiculo || ocorrencia?.codigoEquipe;
-            const status = normalizarTexto(ocorrencia?.situacao) === "EM ANDAMENTO" ? "andamento" : "despacho";
+            const status = situacaoAtendimento === "EM ANDAMENTO"
+                ? "andamento"
+                : situacaoAtendimento === "ENCAMINHADA"
+                    ? "encaminhada"
+                    : "pendente";
             ["VT", "MT"].forEach((tipo) => {
                 extrairCodigosEquipe(origemEquipe, tipo).forEach((codigo) => {
                     const atual = atendimentosPorCodigo.get(codigo);
@@ -673,9 +711,16 @@ async function iniciarSmartwall() {
             const nomes = [...new Set([...(existente?.nomes || []), ...extrairAgentes(item)])];
             const disponivelSmartwall = item?.disponivelSmartwall !== false;
             const motivoIndisponibilidadeSmartwall = item?.motivoIndisponibilidadeSmartwall || "";
-            const atendimento = atendimentosPorCodigo.get(codigo);
+            const origemSmartwall = item?.origemSmartwall || "ativo";
+            // Ocorrências só alteram temporariamente a apresentação de equipes
+            // que ainda estão no painel sincronizado. Registros históricos nunca
+            // herdam um atendimento atual de um código MT/VT reutilizado.
+            const atendimento = origemSmartwall === "ativo" ? atendimentosPorCodigo.get(codigo) : null;
 
             if (existente) {
+                // A equipe sincronizada atual prevalece sobre registros encerrados
+                // do mesmo MT/VT, evitando misturar agentes de turnos diferentes.
+                if (existente.origemSmartwall === "ativo" && origemSmartwall === "historico") return;
                 existente.nomes = nomes;
                 existente.disponivelSmartwall = existente.disponivelSmartwall !== false && disponivelSmartwall;
                 existente.motivoIndisponibilidadeSmartwall = motivoIndisponibilidadeSmartwall || existente.motivoIndisponibilidadeSmartwall;
@@ -694,10 +739,11 @@ async function iniciarSmartwall() {
                 disponivelSmartwall,
                 motivoIndisponibilidadeSmartwall,
                 ocorrencias: atendimento?.ocorrencias || [],
-                atendimentoStatus: atendimento?.status || "disponivel",
+                atendimentoStatus: atendimento?.status || (origemSmartwall === "historico" ? "historico" : "disponivel"),
                 atendimentoZona: atendimento?.zona || "",
                 atendimentoCor: atendimento?.cor || "",
-                historicoSmartwall: false
+                origemSmartwall,
+                historicoSmartwall: origemSmartwall === "historico"
             };
             const destino = tipo === "MT" ? base[zona].mt : base[zona].vt;
             destino.push(equipe);
@@ -994,7 +1040,14 @@ async function iniciarSmartwall() {
             renderizarFiltroTurnos();
             const hojeTurno = filtrarPorTurnoAtendimento(ultimosDocsHoje);
             const ocorrenciasAtivasTurno = filtrarPorTurnoAtendimento(ultimasOcorrenciasAtivas);
-            const agentesPorRegiaoTurno = calcularAgentesPorRegiao(ultimosDocsAtivosAgentes, ultimasOcorrenciasAtivas);
+            const ativosAgentesDisponiveis = filtrarAgentesAtivosPorTurno(ultimosDocsAtivosAgentes)
+                .map((item) => ({ ...item, origemSmartwall: "ativo" }));
+            const historicoAgentesTurno = filtrarHistoricoAgentesPorTurno(ultimosDocsHistoricoAgentes)
+                .map((item) => ({ ...item, origemSmartwall: "historico" }));
+            const agentesPorRegiaoTurno = calcularAgentesPorRegiao(
+                [...ativosAgentesDisponiveis, ...historicoAgentesTurno],
+                ultimasOcorrenciasPainelPendentes
+            );
             const frotaAtivaPorRegiao = calcularFrotaOcorrenciasPorRegiao(ocorrenciasAtivasTurno);
             const contagemRegiaoAtivas = calcularContagemRegiaoComEquipe(ocorrenciasAtivasTurno);
             ultimaContagemRegiaoAtivas = contagemRegiaoAtivas;
@@ -1081,8 +1134,10 @@ async function iniciarSmartwall() {
             const agentes = agentesPorRegiao?.[regiao] || { mt: [], vt: [] };
             const agentesMt = agentes.mt || [];
             const agentesVt = agentes.vt || [];
-            const totalMtPainel = agentesMt.filter(equipeContabilizavelPainel).length;
-            const totalVtPainel = agentesVt.filter(equipeContabilizavelPainel).length;
+            // A barra "Total geral" representa tudo o que está visível no turno:
+            // equipes em operação e atividades encerradas, já deduplicadas por código.
+            const totalMtPainel = agentesMt.length;
+            const totalVtPainel = agentesVt.length;
             const total = totalMtPainel + totalVtPainel;
             return {
                 regiao,
