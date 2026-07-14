@@ -104,10 +104,14 @@ async function iniciarSmartwall() {
         document.documentElement.style.setProperty("--smartwall-viewport-height", `${altura}px`);
         const paisagem = largura >= altura;
         const areaEfetiva = larguraEfetiva * alturaEfetiva;
+        const navegadorSmartTv = /SMART-TV|Tizen|WebOS|NetCast|HbbTV/i.test(navigator.userAgent || "");
         // Navegadores de Smart TV costumam reservar parte da altura para a
         // própria interface. As margens abaixo mantêm o modo TV nesses casos.
         const tv4k = paisagem && larguraEfetiva >= 3200 && alturaEfetiva >= 1400 && areaEfetiva >= 4400000;
-        const tvFhd = paisagem && !tv4k && larguraEfetiva >= 1800 && alturaEfetiva >= 850 && dpr <= 1.5;
+        const tvFhd = paisagem && !tv4k && (
+            (larguraEfetiva >= 1800 && alturaEfetiva >= 850 && dpr <= 1.5) ||
+            navegadorSmartTv
+        );
         const modoAtual = tv4k ? "tv-4k" : tvFhd ? "tv-fhd" : "default";
 
         if (document.body.dataset.smartwallDisplay === modoAtual) return;

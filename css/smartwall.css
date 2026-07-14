@@ -9121,33 +9121,77 @@ body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon {
     height: 11px !important;
 }
 
-/* Mantém no modo TV o mesmo layout responsivo do filtro usado no desktop/mobile. */
+/* Filtro compacto dos turnos em TVs: mesmo visual usado no desktop/mobile. */
 body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter,
 body[data-smartwall-display="tv-4k"] .region-panel .shift-filter {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    align-items: center;
-    justify-content: center;
-    justify-self: center;
-    width: min(92%, 30rem);
-    max-width: 100%;
-    min-width: 0;
-    gap: clamp(0.125rem, 0.45vw, 0.375rem);
-    margin: clamp(0.375rem, 1vh, 0.75rem) auto 0;
-    padding: clamp(0.1875rem, 0.55vw, 0.4375rem);
-    border-radius: clamp(0.625rem, 1.2vw, 1rem);
-    overflow: hidden;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    align-items: center !important;
+    justify-content: center !important;
+    justify-self: center !important;
+    width: 92% !important;
+    width: min(92%, 30rem) !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    gap: 0.3rem !important;
+    margin: 0.5rem auto 0 !important;
+    padding: 0.28rem !important;
+    border: 2px solid #174d68 !important;
+    border-radius: 0.9rem !important;
+    background: #031724 !important;
+    box-shadow: 0 0 0 2px rgba(3, 23, 36, 0.82), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    overflow: hidden !important;
 }
 
 body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn,
 body[data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn {
-    min-width: 0;
-    max-width: 100%;
-    min-height: clamp(2.25rem, 5.4vh, 3.5rem);
-    gap: clamp(0.125rem, 0.35vw, 0.25rem);
-    padding: clamp(0.1875rem, 0.5vw, 0.375rem) clamp(0.0625rem, 0.32vw, 0.25rem);
-    border-radius: clamp(0.5rem, 1vw, 0.8125rem);
-    overflow: hidden;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    min-height: 2.65rem !important;
+    min-height: clamp(2.65rem, 5.4vh, 3.25rem) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.2rem !important;
+    padding: 0.3rem 0.12rem !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-radius: 0.75rem !important;
+    color: #ffffff !important;
+    background-image: none !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.72) !important;
+    overflow: hidden !important;
+}
+
+body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn[data-shift="total"],
+body[data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn[data-shift="total"] {
+    border-color: #218f69 !important;
+    background: #08372f !important;
+}
+
+body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn[data-shift="manha"],
+body[data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn[data-shift="manha"] {
+    border-color: #328bd5 !important;
+    background: #123e68 !important;
+}
+
+body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn[data-shift="tarde"],
+body[data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn[data-shift="tarde"] {
+    border-color: #a8752b !important;
+    background: #43321b !important;
+}
+
+body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn[data-shift="noite"],
+body[data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn[data-shift="noite"] {
+    border-color: #7558a5 !important;
+    background: #30254b !important;
+}
+
+body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn[data-shift="corujao"],
+body[data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn[data-shift="corujao"] {
+    border-color: #258795 !important;
+    background: #103a43 !important;
 }
 
 body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn.active,
@@ -9156,25 +9200,96 @@ body[data-theme="day"][data-smartwall-display="tv-fhd"] .region-panel .shift-fil
 body[data-theme="day"][data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn.active,
 body[data-theme="night"][data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn.active,
 body[data-theme="night"][data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn.active {
-    animation: shiftActiveBlink 0.8s steps(1, end) infinite !important;
+    border-color: var(--shift-color) !important;
+    background: var(--shift-color) !important;
+    animation: smartwallTvShiftBlink 0.8s steps(1, end) infinite !important;
 }
 
 body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-icon,
 body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-icon svg,
 body[data-smartwall-display="tv-4k"] .region-panel .shift-filter-icon,
 body[data-smartwall-display="tv-4k"] .region-panel .shift-filter-icon svg {
-    width: clamp(0.875rem, 1.35vw, 1.25rem);
-    height: clamp(0.875rem, 1.35vw, 1.25rem);
-    flex-basis: clamp(0.875rem, 1.35vw, 1.25rem);
+    width: 1.15rem !important;
+    height: 1.15rem !important;
+    flex-basis: 1.15rem !important;
+    color: #ffffff !important;
+    stroke: #ffffff !important;
 }
 
 body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn strong,
 body[data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn strong {
-    font-size: clamp(0.34rem, 0.52vw, 0.62rem);
-    line-height: 1;
-    overflow-wrap: anywhere;
-    text-overflow: clip;
-    white-space: normal;
+    color: #ffffff !important;
+    font-size: 0.52rem !important;
+    font-size: clamp(0.45rem, 0.5vw, 0.58rem) !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+    overflow-wrap: normal !important;
+    text-overflow: clip !important;
+    white-space: nowrap !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.72) !important;
+}
+
+/* No tema dia, todos os turnos permanecem vivos como no layout desktop/mobile. */
+body[data-theme="day"][data-smartwall-display="tv-fhd"] .region-panel .shift-filter,
+body[data-theme="day"][data-smartwall-display="tv-4k"] .region-panel .shift-filter {
+    border-color: #aeb7b2 !important;
+    background: #d9ddda !important;
+    box-shadow: 0 0 0 2px rgba(238, 241, 239, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
+}
+
+body[data-theme="day"][data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn,
+body[data-theme="day"][data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn,
+body[data-theme="day"][data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn strong,
+body[data-theme="day"][data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn strong,
+body[data-theme="day"][data-smartwall-display="tv-fhd"] .region-panel .shift-filter-icon,
+body[data-theme="day"][data-smartwall-display="tv-4k"] .region-panel .shift-filter-icon,
+body[data-theme="day"][data-smartwall-display="tv-fhd"] .region-panel .shift-filter-icon svg,
+body[data-theme="day"][data-smartwall-display="tv-4k"] .region-panel .shift-filter-icon svg {
+    color: #050b0e !important;
+    stroke: #050b0e !important;
+    text-shadow: none !important;
+}
+
+body[data-theme="day"][data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn[data-shift="total"],
+body[data-theme="day"][data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn[data-shift="total"] {
+    border-color: #20a85a !important;
+    background: #2bca6a !important;
+}
+
+body[data-theme="day"][data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn[data-shift="manha"],
+body[data-theme="day"][data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn[data-shift="manha"] {
+    border-color: #0b6fc5 !important;
+    background: #168df0 !important;
+}
+
+body[data-theme="day"][data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn[data-shift="tarde"],
+body[data-theme="day"][data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn[data-shift="tarde"] {
+    border-color: #bd7410 !important;
+    background: #ec9918 !important;
+}
+
+body[data-theme="day"][data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn[data-shift="noite"],
+body[data-theme="day"][data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn[data-shift="noite"] {
+    border-color: #6b39b9 !important;
+    background: #8955df !important;
+}
+
+body[data-theme="day"][data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn[data-shift="corujao"],
+body[data-theme="day"][data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn[data-shift="corujao"] {
+    border-color: #087f8b !important;
+    background: #16a9b7 !important;
+}
+
+@keyframes smartwallTvShiftBlink {
+    0%,
+    49% {
+        opacity: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 0.58;
+    }
 }
 
 /* Atendimento: a cor vem da zona da ocorrência vinculada ao código MT/VT. */
