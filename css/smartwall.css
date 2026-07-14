@@ -9121,6 +9121,21 @@ body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon {
     height: 11px !important;
 }
 
+/* Nomes das equipes exibidos no pop-up aberto pelo donut de zona. */
+body[data-theme="night"] .smart-modal .region-agent-name.region-agent-name-available {
+    color: #ffffff !important;
+}
+
+body[data-theme="day"] .smart-modal .region-agent-name.region-agent-name-available {
+    color: #000000 !important;
+    border: 0 !important;
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
 /* Filtro compacto dos turnos em TVs: mesmo visual usado no desktop/mobile. */
 body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter,
 body[data-smartwall-display="tv-4k"] .region-panel .shift-filter {
