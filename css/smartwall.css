@@ -9160,6 +9160,44 @@ body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon {
     height: 11px !important;
 }
 
+/* Atendimento: a cor vem da zona da ocorrência vinculada ao código MT/VT. */
+body .region-panel .region-agent-name.region-agent-name-attending,
+body[data-theme="day"] .region-panel .region-agent-name.region-agent-name-attending,
+body[data-theme="night"] .region-panel .region-agent-name.region-agent-name-attending,
+body .region-panel button.region-agent-name.region-agent-name-attending,
+body[data-theme="day"] .region-panel button.region-agent-name.region-agent-name-attending,
+body[data-theme="night"] .region-panel button.region-agent-name.region-agent-name-attending {
+    color: #07111a !important;
+    border-color: var(--attendance-color) !important;
+    background: var(--attendance-color) !important;
+    background-image: none !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+    animation: smartwallAgentAttendanceBlink 0.8s ease-in-out infinite !important;
+}
+
+@keyframes smartwallAgentAttendanceBlink {
+    0%,
+    100% {
+        background-color: var(--attendance-color);
+        box-shadow: 0 0 0 1px var(--attendance-color), 0 0 12px var(--attendance-color);
+        opacity: 1;
+    }
+
+    50% {
+        background-color: color-mix(in srgb, var(--attendance-color) 28%, transparent);
+        box-shadow: 0 0 0 1px color-mix(in srgb, var(--attendance-color) 55%, transparent);
+        opacity: 0.72;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body .region-panel .region-agent-name.region-agent-name-attending,
+    body[data-theme="day"] .region-panel .region-agent-name.region-agent-name-attending,
+    body[data-theme="night"] .region-panel .region-agent-name.region-agent-name-attending {
+        animation: none !important;
+    }
+}
+
 .smart-theme-switch.theme-switch,
 .smart-header .smart-theme-switch.theme-switch,
 body[data-theme="day"] .smart-theme-switch.theme-switch,
