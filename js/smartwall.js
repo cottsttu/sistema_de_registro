@@ -597,7 +597,6 @@ async function iniciarSmartwall() {
     }
 
     function equipeContabilizavelPainel(equipe) {
-        if (!Array.isArray(equipe) && equipe?.origemSmartwall === "historico") return false;
         const disponivelSmartwall = Array.isArray(equipe) ? true : equipe?.disponivelSmartwall !== false;
         return disponivelSmartwall;
     }
@@ -1134,10 +1133,10 @@ async function iniciarSmartwall() {
             const agentes = agentesPorRegiao?.[regiao] || { mt: [], vt: [] };
             const agentesMt = agentes.mt || [];
             const agentesVt = agentes.vt || [];
-            // A barra "Total geral" representa tudo o que está visível no turno:
-            // equipes em operação e atividades encerradas, já deduplicadas por código.
-            const totalMtPainel = agentesMt.length;
-            const totalVtPainel = agentesVt.length;
+            // KPI e "Total geral" compartilham a mesma regra: contam tudo o que
+            // pertence ao turno e reduzem apenas equipes marcadas indisponíveis.
+            const totalMtPainel = agentesMt.filter(equipeContabilizavelPainel).length;
+            const totalVtPainel = agentesVt.filter(equipeContabilizavelPainel).length;
             const total = totalMtPainel + totalVtPainel;
             return {
                 regiao,
