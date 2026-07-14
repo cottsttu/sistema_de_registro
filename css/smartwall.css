@@ -9169,6 +9169,62 @@ body[data-theme="night"] .smart-header .smart-theme-switch .theme-icon {
     height: 11px !important;
 }
 
+/* Mantém no modo TV o mesmo layout responsivo do filtro usado no desktop/mobile. */
+body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter,
+body[data-smartwall-display="tv-4k"] .region-panel .shift-filter {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+    width: min(92%, 30rem);
+    max-width: 100%;
+    min-width: 0;
+    gap: clamp(0.125rem, 0.45vw, 0.375rem);
+    margin: clamp(0.375rem, 1vh, 0.75rem) auto 0;
+    padding: clamp(0.1875rem, 0.55vw, 0.4375rem);
+    border-radius: clamp(0.625rem, 1.2vw, 1rem);
+    overflow: hidden;
+}
+
+body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn,
+body[data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn {
+    min-width: 0;
+    max-width: 100%;
+    min-height: clamp(2.25rem, 5.4vh, 3.5rem);
+    gap: clamp(0.125rem, 0.35vw, 0.25rem);
+    padding: clamp(0.1875rem, 0.5vw, 0.375rem) clamp(0.0625rem, 0.32vw, 0.25rem);
+    border-radius: clamp(0.5rem, 1vw, 0.8125rem);
+    overflow: hidden;
+}
+
+body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn.active,
+body[data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn.active,
+body[data-theme="day"][data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn.active,
+body[data-theme="day"][data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn.active,
+body[data-theme="night"][data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn.active,
+body[data-theme="night"][data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn.active {
+    animation: shiftActiveBlink 0.8s steps(1, end) infinite !important;
+}
+
+body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-icon,
+body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-icon svg,
+body[data-smartwall-display="tv-4k"] .region-panel .shift-filter-icon,
+body[data-smartwall-display="tv-4k"] .region-panel .shift-filter-icon svg {
+    width: clamp(0.875rem, 1.35vw, 1.25rem);
+    height: clamp(0.875rem, 1.35vw, 1.25rem);
+    flex-basis: clamp(0.875rem, 1.35vw, 1.25rem);
+}
+
+body[data-smartwall-display="tv-fhd"] .region-panel .shift-filter-btn strong,
+body[data-smartwall-display="tv-4k"] .region-panel .shift-filter-btn strong {
+    font-size: clamp(0.34rem, 0.52vw, 0.62rem);
+    line-height: 1;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+}
+
 /* Atendimento: a cor vem da zona da ocorrência vinculada ao código MT/VT. */
 body .region-panel .region-agent-name.region-agent-name-attending,
 body[data-theme="day"] .region-panel .region-agent-name.region-agent-name-attending,
