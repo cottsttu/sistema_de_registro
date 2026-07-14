@@ -86,8 +86,9 @@ async function iniciarSmartwall() {
     Chart.defaults.animation = false;
 
     function obterViewportEfetivo() {
-        const largura = window.innerWidth || document.documentElement.clientWidth || 0;
-        const altura = window.innerHeight || document.documentElement.clientHeight || 0;
+        const viewportVisual = window.visualViewport;
+        const largura = Math.round(viewportVisual?.width || window.innerWidth || document.documentElement.clientWidth || 0);
+        const altura = Math.round(viewportVisual?.height || window.innerHeight || document.documentElement.clientHeight || 0);
         const dpr = window.devicePixelRatio || 1;
         return {
             largura,
@@ -100,10 +101,13 @@ async function iniciarSmartwall() {
 
     function atualizarModoDisplaySmartwall() {
         const { largura, altura, dpr, larguraEfetiva, alturaEfetiva } = obterViewportEfetivo();
+        document.documentElement.style.setProperty("--smartwall-viewport-height", `${altura}px`);
         const paisagem = largura >= altura;
         const areaEfetiva = larguraEfetiva * alturaEfetiva;
-        const tv4k = paisagem && larguraEfetiva >= 3200 && alturaEfetiva >= 1600 && areaEfetiva >= 5000000;
-        const tvFhd = paisagem && !tv4k && larguraEfetiva >= 1800 && alturaEfetiva >= 980 && dpr <= 1.5;
+        // Navegadores de Smart TV costumam reservar parte da altura para a
+        // própria interface. As margens abaixo mantêm o modo TV nesses casos.
+        const tv4k = paisagem && larguraEfetiva >= 3200 && alturaEfetiva >= 1400 && areaEfetiva >= 4400000;
+        const tvFhd = paisagem && !tv4k && larguraEfetiva >= 1800 && alturaEfetiva >= 850 && dpr <= 1.5;
         const modoAtual = tv4k ? "tv-4k" : tvFhd ? "tv-fhd" : "default";
 
         if (document.body.dataset.smartwallDisplay === modoAtual) return;
@@ -121,6 +125,7 @@ async function iniciarSmartwall() {
     atualizarModoDisplaySmartwall();
     window.addEventListener("resize", agendarAtualizacaoModoDisplaySmartwall);
     window.addEventListener("orientationchange", agendarAtualizacaoModoDisplaySmartwall);
+    window.visualViewport?.addEventListener("resize", agendarAtualizacaoModoDisplaySmartwall);
 
     function atualizarTemaGraficos() {
         if (myChartRegioes) {
