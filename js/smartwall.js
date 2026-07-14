@@ -69,6 +69,7 @@ async function iniciarSmartwall() {
     let ultimasOcorrenciasPainelPendentes = [];
     let ultimaContagemRegiaoAtivas = {};
     const ocorrenciasModal = new Map();
+    const ocorrenciasAtendimentoModal = new Map();
     const zonasAtendimentoRecolhidas = new Set();
     const kpiValoresAnteriores = {
         total: null,
@@ -1023,6 +1024,12 @@ async function iniciarSmartwall() {
     }
 
     document.addEventListener("click", (event) => {
+        const nomeEmAtendimento = event.target.closest(".region-agent-name-occurrence[data-attendance-modal-id]");
+        if (nomeEmAtendimento) {
+            abrirModalRegistro(ocorrenciasAtendimentoModal.get(nomeEmAtendimento.dataset.attendanceModalId));
+            return;
+        }
+
         const nomeIndisponivel = event.target.closest(".region-agent-name-reason");
         if (nomeIndisponivel) {
             abrirModalMotivoIndisponibilidade(
@@ -1129,6 +1136,8 @@ async function iniciarSmartwall() {
     function renderizarRankingGraficoRegiao(labels, frotaPorRegiao, agentesPorRegiao, ocorrenciasPorRegiao = {}) {
         const legend = document.getElementById("regionRankingPanel");
         if (!legend) return;
+        ocorrenciasAtendimentoModal.clear();
+        let sequenciaModalAtendimento = 0;
         const linhas = labels.map((regiao, index) => {
             const agentes = agentesPorRegiao?.[regiao] || { mt: [], vt: [] };
             const agentesMt = agentes.mt || [];
@@ -1181,6 +1190,14 @@ async function iniciarSmartwall() {
                 const zonaAtendimento = Array.isArray(equipe) ? "" : equipe.atendimentoZona || "";
                 const corAtendimento = Array.isArray(equipe) ? "" : equipe.atendimentoCor || "";
                 const classeNomeAtendimento = ocorrencias.length ? " region-agent-name-attending" : "";
+                const ocorrenciaAtendimento = [...ocorrencias].sort((a, b) => {
+                    const prioridade = (ocorrencia) => normalizarTexto(ocorrencia?.situacao) === "EM ANDAMENTO" ? 0 : 1;
+                    return prioridade(a) - prioridade(b) || getTimestamp(b) - getTimestamp(a);
+                })[0];
+                const modalIdAtendimento = ocorrenciaAtendimento
+                    ? `equipe-atendimento-${sequenciaModalAtendimento++}`
+                    : "";
+                if (modalIdAtendimento) ocorrenciasAtendimentoModal.set(modalIdAtendimento, ocorrenciaAtendimento);
                 const nomesUnicos = [...new Set((nomes || []).filter(Boolean))];
                 const classeStatus = statusEquipe === "andamento"
                     ? "region-agent-group-andamento"
@@ -1209,10 +1226,17 @@ async function iniciarSmartwall() {
                             if (nomeDuplicado) {
                                 return `<span class="region-agent-name region-agent-name-duplicated${classeNomeAtendimento}" title="${escapeHtml(nomeExibido)}">${escapeHtml(nomeCurto)}</span>`;
                             }
-                            const tituloAtendimento = zonaAtendimento ? `${nome} — atendimento na ${zonaAtendimento}` : nome;
+                            const tituloAtendimento = modalIdAtendimento
+                                ? `${nome} — clique para ver a ocorrência em atendimento${zonaAtendimento ? ` na ${zonaAtendimento}` : ""}`
+                                : zonaAtendimento ? `${nome} — atendimento na ${zonaAtendimento}` : nome;
+                            const atributosModal = modalIdAtendimento
+                                ? ` data-attendance-modal-id="${escapeHtml(modalIdAtendimento)}" aria-haspopup="dialog"`
+                                : "";
                             return disponivelSmartwall
-                                ? `<span class="region-agent-name region-agent-name-available${classeNomeAtendimento}" title="${escapeHtml(tituloAtendimento)}">${escapeHtml(nomeCurto)}</span>`
-                                : `<button type="button" class="region-agent-name region-agent-name-unavailable region-agent-name-reason${classeNomeAtendimento}" data-agent-name="${escapeHtml(nome)}" data-reason="${escapeHtml(motivoIndisponibilidadeSmartwall)}" data-codigo="${escapeHtml(codigoEquipe)}" title="${escapeHtml(tituloAtendimento)}">${escapeHtml(nomeCurto)}</button>`;
+                                ? modalIdAtendimento
+                                    ? `<button type="button" class="region-agent-name region-agent-name-available region-agent-name-occurrence${classeNomeAtendimento}"${atributosModal} title="${escapeHtml(tituloAtendimento)}">${escapeHtml(nomeCurto)}</button>`
+                                    : `<span class="region-agent-name region-agent-name-available${classeNomeAtendimento}" title="${escapeHtml(tituloAtendimento)}">${escapeHtml(nomeCurto)}</span>`
+                                : `<button type="button" class="region-agent-name region-agent-name-unavailable region-agent-name-reason${modalIdAtendimento ? " region-agent-name-occurrence" : ""}${classeNomeAtendimento}"${atributosModal} data-agent-name="${escapeHtml(nome)}" data-reason="${escapeHtml(motivoIndisponibilidadeSmartwall)}" data-codigo="${escapeHtml(codigoEquipe)}" title="${escapeHtml(tituloAtendimento)}">${escapeHtml(nomeCurto)}</button>`;
                         }).join("")}
                     </span>
                 </span>
