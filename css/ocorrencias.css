@@ -411,6 +411,7 @@
         .regiao-5 { background-color: #d30000 !important; color: black; text-align: center; font-weight: bold; } 
         
         option:disabled { color: #c0392b; font-weight: bold; background: #eee; }
+        option.ocorrencia-destaque { color: #c62828 !important; font-weight: bold; }
 
 
 /* Estilos inline migrados do HTML */

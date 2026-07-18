@@ -739,6 +739,14 @@
                 btnCon.onclick = () => window.concluirOcorrencia(id, d);
                 acCell.appendChild(btnCon);
 
+                if (usuarioPodeEditar) {
+                    const btnEditar = document.createElement('button');
+                    btnEditar.className = 'btn btn-editar-ocorrencia btn-acao-tabela';
+                    btnEditar.innerText = 'EDITAR';
+                    btnEditar.onclick = () => window.abrirModalEditarOcorrencia(id, d);
+                    acCell.appendChild(btnEditar);
+                }
+
                 const btnPdf = document.createElement('button');
                 btnPdf.className = 'btn btn-acao-tabela';
                 btnPdf.style.backgroundColor = '#c0392b';
@@ -1181,5 +1189,4 @@ iniciarOcorrencias().catch((error) => {
     console.error("Erro ao carregar ocorrencias:", error);
     alert("Erro ao conectar com Firebase. Verifique a conexão e atualize a página.");
 });
-
 
