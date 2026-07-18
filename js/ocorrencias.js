@@ -590,6 +590,195 @@
         if (modal) modal.style.display = 'none';
     };
 
+    function criarEditorTexto(valor, tipo = 'input') {
+        const editor = document.createElement(tipo);
+        editor.className = 'editor-celula';
+        editor.value = valor || '';
+        editor.spellcheck = tipo === 'textarea';
+        if (tipo === 'textarea') editor.rows = 3;
+        return editor;
+    }
+
+    function criarEditorSelect(selectOrigemId, valorAtual) {
+        const editor = document.createElement('select');
+        editor.className = 'editor-celula';
+        const selectOrigem = document.getElementById(selectOrigemId);
+
+        if (selectOrigem) {
+            Array.from(selectOrigem.options).forEach((opcaoOrigem) => {
+                if (!opcaoOrigem.value) return;
+                const opcao = new Option(opcaoOrigem.textContent, opcaoOrigem.value);
+                opcao.className = opcaoOrigem.className;
+                editor.add(opcao);
+            });
+        }
+
+        const valorExato = String(valorAtual || '');
+        if (valorExato && !Array.from(editor.options).some((opcao) => opcao.value === valorExato)) {
+            editor.add(new Option(valorExato, valorExato));
+        }
+        editor.value = valorExato;
+        return editor;
+    }
+
+    function normalizarTextoEdicao(valor) {
+        return String(valor || '').trim().toUpperCase();
+    }
+
+    function descreverAlteracoesLinha(antigos, novos, nomeOriginal, nomeNovo) {
+        const mudancas = [];
+        const comparar = (campo, rotulo) => {
+            if (normalizarTextoEdicao(antigos[campo]) !== normalizarTextoEdicao(novos[campo])) {
+                mudancas.push(`${rotulo}: ${antigos[campo] || '-'} ➔ ${novos[campo] || '-'}`);
+            }
+        };
+
+        comparar('numRegistro', 'Nº registro');
+        if (normalizarTextoEdicao(nomeOriginal) !== normalizarTextoEdicao(nomeNovo)) {
+            mudancas.push(`Solicitante: ${nomeOriginal || '-'} ➔ ${nomeNovo || '-'}`);
+        }
+        comparar('contato', 'Contato');
+        comparar('ocorrencia', 'Ocorrência');
+        comparar('local', 'Local');
+        comparar('detalhamento', 'Detalhe');
+        comparar('zona', 'Região');
+        comparar('equipe', 'Equipe(s)');
+        comparar('horaEnvio', 'Hora envio');
+        comparar('situacao', 'Situação');
+        comparar('horaFinal', 'Hora final');
+        comparar('resultadoFinal', 'Resultado');
+        return mudancas;
+    }
+
+    async function salvarEdicaoLinha(row, id, dadosAntigos, botaoSalvar) {
+        if (!usuarioPodeEditar) return;
+
+        const valor = (indice) => row.cells[indice].querySelector('.editor-celula')?.value || '';
+        const nomeOriginal = dadosAntigos.sobrenome
+            ? `${dadosAntigos.solicitante || ''} ${dadosAntigos.sobrenome}`.trim()
+            : String(dadosAntigos.solicitante || '').trim();
+        const nomeNovo = normalizarTextoEdicao(valor(1));
+
+        let solicitante = dadosAntigos.solicitante || '';
+        let sobrenome = dadosAntigos.sobrenome || '';
+        if (normalizarTextoEdicao(nomeOriginal) !== nomeNovo) {
+            const partesNome = nomeNovo.split(/\s+/).filter(Boolean);
+            solicitante = partesNome.shift() || '';
+            sobrenome = partesNome.join(' ');
+        }
+
+        const equipes = normalizarTextoEdicao(valor(7))
+            .split(',')
+            .map((equipe) => equipe.trim())
+            .filter(Boolean)
+            .join(', ');
+
+        const novos = {
+            numRegistro: normalizarTextoEdicao(valor(0)),
+            solicitante: normalizarTextoEdicao(solicitante),
+            sobrenome: normalizarTextoEdicao(sobrenome),
+            contato: normalizarTextoEdicao(valor(2)),
+            ocorrencia: valor(3),
+            local: normalizarTextoEdicao(valor(4)),
+            detalhamento: normalizarTextoEdicao(valor(5)),
+            zona: valor(6),
+            equipe: equipes,
+            horaEnvio: normalizarTextoEdicao(valor(8)),
+            situacao: valor(9),
+            horaFinal: normalizarTextoEdicao(valor(10)),
+            resultadoFinal: normalizarTextoEdicao(valor(11))
+        };
+
+        if (!novos.numRegistro || !nomeNovo || !novos.ocorrencia || !novos.local || !novos.zona || !novos.situacao) {
+            alert('⚠️ Preencha os campos obrigatórios antes de salvar.');
+            return;
+        }
+
+        const mudancas = descreverAlteracoesLinha(dadosAntigos, novos, nomeOriginal, nomeNovo);
+        if (mudancas.length === 0) {
+            renderizarTabelas();
+            return;
+        }
+
+        botaoSalvar.disabled = true;
+        botaoSalvar.innerText = 'SALVANDO...';
+
+        try {
+            const novaHora = getHoraAtual();
+            await updateDoc(doc(db, 'ocorrencias_sttu', id), {
+                ...novos,
+                historicoLogs: arrayUnion(`[${novaHora}] Editado por ${nomeUsuarioLogado} | ${mudancas.join(' | ')}`)
+            });
+
+            registrarLogAuditoria(
+                'EDITAR OCORRÊNCIA',
+                `Registro nº ${dadosAntigos.numRegistro} editado por ${nomeUsuarioLogado}. Detalhes: ${mudancas.join(', ')}`
+            );
+
+            Object.assign(dadosAntigos, novos);
+            renderizarTabelas();
+            alert('✅ Ocorrência atualizada com sucesso!');
+        } catch (error) {
+            console.error('Erro ao editar ocorrência na tabela:', error);
+            botaoSalvar.disabled = false;
+            botaoSalvar.innerText = 'SALVAR';
+            alert('❌ Não foi possível salvar as alterações. Tente novamente.');
+        }
+    }
+
+    function ativarEdicaoLinha(row, id, dados) {
+        if (!usuarioPodeEditar) {
+            alert('⛔ Acesso Negado: você não tem permissão para editar ocorrências.');
+            return;
+        }
+
+        const nomeExibicao = dados.sobrenome
+            ? `${dados.solicitante || ''} ${dados.sobrenome}`.trim()
+            : (dados.solicitante || '');
+        const editores = [
+            criarEditorTexto(dados.numRegistro),
+            criarEditorTexto(nomeExibicao),
+            criarEditorTexto(dados.contato),
+            criarEditorSelect('ocorrencia', dados.ocorrencia),
+            criarEditorTexto(dados.local, 'textarea'),
+            criarEditorTexto(dados.detalhamento, 'textarea'),
+            criarEditorSelect('zona', dados.zona),
+            criarEditorTexto(dados.equipe),
+            criarEditorTexto(formatarHoraComSegundos(dados.horaEnvio)),
+            criarEditorSelect('situacao', dados.situacao),
+            criarEditorTexto(formatarHoraComSegundos(dados.horaFinal)),
+            criarEditorTexto(dados.resultadoFinal, 'textarea')
+        ];
+
+        row.classList.add('linha-em-edicao');
+        editores.forEach((editor, indice) => {
+            const cell = row.cells[indice];
+            cell.className = 'celula-em-edicao';
+            cell.removeAttribute('title');
+            cell.replaceChildren(editor);
+        });
+
+        const cellAcoes = row.cells[13];
+        cellAcoes.replaceChildren();
+        cellAcoes.className = 'col-acao acoes-edicao-linha';
+
+        const botaoSalvar = document.createElement('button');
+        botaoSalvar.type = 'button';
+        botaoSalvar.className = 'btn btn-salvar btn-acao-tabela';
+        botaoSalvar.innerText = 'SALVAR';
+        botaoSalvar.onclick = () => salvarEdicaoLinha(row, id, dados, botaoSalvar);
+
+        const botaoCancelar = document.createElement('button');
+        botaoCancelar.type = 'button';
+        botaoCancelar.className = 'btn btn-close-modal btn-acao-tabela';
+        botaoCancelar.innerText = 'CANCELAR';
+        botaoCancelar.onclick = () => renderizarTabelas();
+
+        cellAcoes.append(botaoSalvar, botaoCancelar);
+        editores[0].focus();
+        editores[0].select();
+    }
+
     function renderizarTabelas() {
         const tPendentes = document.getElementById('tabelaPendentes').getElementsByTagName('tbody')[0];
         const tConcluidas = document.getElementById('relatorioTable').getElementsByTagName('tbody')[0];
@@ -743,7 +932,7 @@
                     const btnEditar = document.createElement('button');
                     btnEditar.className = 'btn btn-editar-ocorrencia btn-acao-tabela';
                     btnEditar.innerText = 'EDITAR';
-                    btnEditar.onclick = () => window.abrirModalEditarOcorrencia(id, d);
+                    btnEditar.onclick = () => ativarEdicaoLinha(row, id, d);
                     acCell.appendChild(btnEditar);
                 }
 
@@ -781,7 +970,7 @@
                     const btnEditar = document.createElement('button');
                     btnEditar.className = 'btn btn-editar-ocorrencia btn-acao-tabela';
                     btnEditar.innerText = 'EDITAR';
-                    btnEditar.onclick = () => window.abrirModalEditarOcorrencia(id, d);
+                    btnEditar.onclick = () => ativarEdicaoLinha(row, id, d);
                     cellDel.appendChild(btnEditar);
                 }
 
@@ -1189,4 +1378,3 @@ iniciarOcorrencias().catch((error) => {
     console.error("Erro ao carregar ocorrencias:", error);
     alert("Erro ao conectar com Firebase. Verifique a conexão e atualize a página.");
 });
-
